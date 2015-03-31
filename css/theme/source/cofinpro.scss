@@ -50,6 +50,25 @@ section.has-dark-background {
   background-size:  200px 94px;
   height: 150px;
   width: 200px;
+  z-index: 100;
+}
+
+// center diagrams
+div.bjs-container {
+    width: 50%;
+    margin: 0 auto;
+}
+
+a.bjs-powered-by {
+  visibility: hidden;
+
+    bottom: 0px !important;
+    right: 0px !important;
+    }
+
+a.bjs-powered-by img {
+  height: 0px;
+  width: 0px;
 }
 
 // Theme template ------------------------------
