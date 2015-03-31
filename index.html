@@ -44,7 +44,7 @@
 
 				<section>
 			 	<h3>Some BPMN</h3>
-				<div id="canvas" style="width: 50%; margin: 0 auto;" />
+				<div class="bpmn" src="bpmn/event-none.bpmn" style="width: 50%; margin: 0 auto;" />
 
 				</section>
 				<section>
@@ -397,7 +397,6 @@ Reveal.addEventListener( 'customevent', function() {
 		<aside id="logo"/>
 		</div>
 
-
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
 		<script>
@@ -414,7 +413,8 @@ Reveal.addEventListener( 'customevent', function() {
 
 				// Optional reveal.js plugins
 				dependencies: [
-					//{ src: 'plugin/bpmn-js/bpmn-viewer.min.js'},
+					{ src: 'plugin/bpmn-js/bpmn-viewer.js'},
+					{ src: 'plugin/bpmn-js/bpmn.js'},
 					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
 					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
@@ -425,58 +425,6 @@ Reveal.addEventListener( 'customevent', function() {
 			});
 
 		</script>
-
-
-				<script src="plugin/bpmn-js/bpmn-viewer.js"></script>
-									<script type="text/javascript">
-
-var BpmnViewer = window.BpmnJS;
-		var viewer = new BpmnViewer({ container: '#canvas', height: 200, width: 400 });
-
-var xhr = new XMLHttpRequest();
-url = 'bpmn/event-none.bpmn';
-
-datacharset = 'utf-8';
-
-// see https://developer.mozilla.org/en-US/docs/Web/API/element.getAttribute#Notes
-if( datacharset != null && datacharset != '' ) {
-	xhr.overrideMimeType( 'text/html; charset=' + datacharset );
-}
-
-xhr.onreadystatechange = function() {
-	if( xhr.readyState === 4 ) {
-		// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
-		if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
-		
-		viewer.importXML(xhr.responseText, function(err) {
-
-		  if (!err) {
-		    viewer.get('canvas').zoom('fit-viewport');
-		  } else {
-		    console.log('something went wrong:', err);
-		  }
-
-		});
-	} else {
-			section.outerHTML = '<section data-state="alert">' +
-				'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
-				'Check your browser\'s JavaScript console for more details.' +
-				'<p>Remember that you need to serve the presentation HTML from a HTTP server.</p>' +
-				'</section>';
-
-		}
-	}
-};
-
-xhr.open( 'GET', url, true);
-
-try {
-	xhr.send();
-}
-catch ( e ) {
-	alert( 'Failed to get the Markdown file ' + url + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e );
-}
-					</script>
 
 
 	</body>
