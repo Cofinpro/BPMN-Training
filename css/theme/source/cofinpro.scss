@@ -44,11 +44,11 @@ section.has-dark-background {
 
 #logo {
   position: fixed;
-  right: 24px;
+  right: 0px;
   top: 30px;
   background: transparent url(../../img/logo.png) 0 0 no-repeat;
   background-size:  200px 94px;
-  height: 150px;
+  height: 94px;
   width: 200px;
   z-index: 100;
 }
@@ -59,16 +59,16 @@ div.bjs-container {
     margin: 0 auto;
 }
 
+// hide the huge camunda logo
 a.bjs-powered-by {
   visibility: hidden;
+  bottom: 0px !important;
+  right: 0px !important;
 
-    bottom: 0px !important;
-    right: 0px !important;
-    }
-
-a.bjs-powered-by img {
-  height: 0px;
-  width: 0px;
+  img {
+    height: 0px;
+    width: 0px;
+  }
 }
 
 // Theme template ------------------------------
