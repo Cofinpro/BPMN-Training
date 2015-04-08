@@ -10,15 +10,9 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   position: fixed;
   right: 0px;
   top: 30px;
-  background: transparent url(../../img/logo.png) 0 0 no-repeat;
-  background-size: 200px 94px;
-  height: 94px;
-  width: 200px;
+  content: url(../../img/logo.png);
+  width: 15%;
   z-index: 100; }
-
-div.bjs-container {
-  width: 50%;
-  margin: 0 auto; }
 
 a.bjs-powered-by {
   visibility: hidden;

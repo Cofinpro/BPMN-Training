@@ -46,17 +46,10 @@ section.has-dark-background {
   position: fixed;
   right: 0px;
   top: 30px;
-  background: transparent url(../../img/logo.png) 0 0 no-repeat;
-  background-size:  200px 94px;
-  height: 94px;
-  width: 200px;
-  z-index: 100;
-}
+  content: url(../../img/logo.png);
+  width: 15%;
 
-// center diagrams
-div.bjs-container {
-    width: 50%;
-    margin: 0 auto;
+  z-index: 100;
 }
 
 // hide the huge camunda logo
