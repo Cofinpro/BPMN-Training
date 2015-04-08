@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" id="_B2Mk4N2zEeSBio6i50wC1g" exporter="camunda modeler" exporterVersion="2.7.0" targetNamespace="http://activiti.org/bpmn">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Exclusive Gateway (XOR)"/>
+    <bpmn2:inclusiveGateway id="Incluse" name="Incluse Gateway (OR)"/>
+    <bpmn2:parallelGateway id="ParallelGateway_1" name="Parallel Gateway (AND)"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_4" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="48.0" y="12.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="124.0" x="11.0" y="67.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ParallelGateway_2" bpmnElement="ParallelGateway_1">
+        <dc:Bounds height="50.0" width="50.0" x="180.0" y="12.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="114.0" x="148.0" y="67.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_InclusiveGateway_2" bpmnElement="Incluse">
+        <dc:Bounds height="50.0" width="50.0" x="300.0" y="12.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="17.0" width="107.0" x="271.0" y="67.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
