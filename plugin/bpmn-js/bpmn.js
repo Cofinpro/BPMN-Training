@@ -75,6 +75,11 @@ var RevealBPMN = (function( root, factory)  {
 		    console.log('Rendered diagram in:', bpmn_node);
 		    viewer.get('canvas').zoom(scale, center);
 		    Reveal.layout();
+
+		    // Relayout when slide turns visible
+			Reveal.addEventListener( 'slidechanged', function( event ) {
+				viewer.get('canvas').zoom(scale, center);
+			} );
 		  } else {
 		    console.log('something went wrong:', err);
 		  }
