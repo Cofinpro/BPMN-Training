@@ -31,7 +31,7 @@ body {
 
 .reveal {
   font-family: Verdana, Helvetica, sans-serif;
-  font-size: 38px;
+  font-size: 32px;
   font-weight: normal;
   color: #222; }
 
@@ -274,3 +274,9 @@ body {
  *********************************************/
 .reveal .slide-number {
   color: #ee7f00; }
+
+.reveal ul {
+  list-style-type: square; }
+
+.reveal ul ul {
+  list-style-type: disc; }

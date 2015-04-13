@@ -21,7 +21,7 @@
 ## Einführung
 
 * Business-Process-Model-Notation
-* OMG Standard (aktuell 2.0)
+* OMG Standard (aktuell 2.0.2)
 
 * Anspruch
 	* Notation für Geschäftsprozesse

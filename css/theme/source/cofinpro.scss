@@ -20,7 +20,7 @@ $backgroundColor: white;
 $mainColor: #222;
 $headingColor: #222;
 
-$mainFontSize: 38px;
+$mainFontSize: 32px;
 $mainFont: Verdana , Helvetica, sans-serif;
 $headingFont: Verdana, Helvetica, sans-serif;
 $headingTextShadow: none;
@@ -64,6 +64,16 @@ a.bjs-powered-by {
   }
 }
 
+
+
 // Theme template ------------------------------
 @import "../template/theme";
 // ---------------------------------------------
+
+.reveal ul {
+  list-style-type: square;
+}
+
+.reveal ul ul {
+  list-style-type: disc;
+}
