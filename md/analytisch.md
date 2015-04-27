@@ -5,7 +5,7 @@
 +++
 ![Events](../img/events.png "Überblick: Events")
 
-+++
+----
 ### neu in Level 2 <br/	> Intermediate Events
 
 Note:
@@ -18,7 +18,7 @@ Ende - beendet einen Prozess
 #### Throwing
 
 <div>
-	<div class="bpmn" bpmn-src="bpmn/level2/events-throwing.bpmn"/>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-throwing.bpmn" scale="1.5" />
 </div>
 
 * schwarzes Symbol
@@ -30,7 +30,7 @@ Ende - beendet einen Prozess
 #### Catching
 
 <div>
-	<div class="bpmn" bpmn-src="bpmn/level2/events-catching.bpmn" />
+	<div class="bpmn" bpmn-src="bpmn/level2/events-catching.bpmn" scale="1.5"/>
 </div>
 
 * weißes Symbol
@@ -42,7 +42,7 @@ Ende - beendet einen Prozess
 #### Boundary Intermediate Events
 
 <div>
-	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-interrupting.bpmn" style="height:300px" />
+	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-interrupting.bpmn" scale="1.2" style="height:300px" />
 </div>
 
 * am Rande einer Aktivität
@@ -54,7 +54,7 @@ Ende - beendet einen Prozess
 ##### unterbrechend
 
 <div>
-	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-interrupting.bpmn" style="height:300px"/>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-interrupting.bpmn" scale="1.2" style="height:300px"/>
 </div>
 
 beendet die Aktivität sofort
@@ -63,12 +63,13 @@ beendet die Aktivität sofort
 ##### nicht-unterbrechend
 
 <div>
-	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-non-interrupting.bpmn" style="height:300px" />
+	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-non-interrupting.bpmn" scale="1.2" style="height:300px" />
 </div>
 
++++
 ### Patterns
 
-+++
+----
 ### weitere Event-Typen
 
 +++
@@ -83,7 +84,7 @@ beendet die Aktivität sofort
 +++
 #### Link-Ereingis
 
-+++
+----
 ### Event-Subprocess
 
 ----
