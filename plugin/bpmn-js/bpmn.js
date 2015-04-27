@@ -53,7 +53,7 @@ var RevealBPMN = (function( root, factory)  {
 			scale = 'fit-viewport';
 		}
 
-		var center = null;
+		var center = bpmn_node.getAttribute( 'scale' );;
 		if (scale == 'fit-viewport') {
 			// centers the image
 			center = 'auto';
@@ -69,7 +69,6 @@ var RevealBPMN = (function( root, factory)  {
 		}
 
 		var viewer = new BpmnViewer({container: bpmn_node, width: width, height: height});
-
 		viewer.importXML(bpmn_xml, function(err) {
 		  if (!err) {
 		    console.log('Rendered diagram in:', bpmn_node);
@@ -79,10 +78,13 @@ var RevealBPMN = (function( root, factory)  {
 		    // Relayout when slide turns visible
 			Reveal.addEventListener( 'slidechanged', function( event ) {
 				viewer.get('canvas').zoom(scale, center);
+				Reveal.layout();
 			} );
 		  } else {
 		    console.log('something went wrong:', err);
 		  }
 		});
+		Reveal.layout();
+		
 	}
 })();
