@@ -18,14 +18,14 @@ var RevealBPMN = (function( root, factory)  {
 		// see https://developer.mozilla.org/en-US/docs/Web/API/element.getAttribute#Notes
 		if( charset != null && charset != '' ) {
 			xhr.overrideMimeType( 'text/html; charset=' + charset );
-		}	
+		}
 		xhr.onreadystatechange = function() {
-			
+
 			if( xhr.readyState === 4 ) {
 				// file protocol yields status code 0 (useful for local debug, mobile applications etc.)
 				if ( ( xhr.status >= 200 && xhr.status < 300 ) || xhr.status === 0 ) {
 					drawDiagram(bpmn_node, xhr.responseText);
-				} 
+				}
 				else {
 					bpmn_node.outerHTML = '<section data-state="alert">' +
 						'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
@@ -48,13 +48,14 @@ var RevealBPMN = (function( root, factory)  {
 
 	function drawDiagram(bpmn_node, bpmn_xml) {
 		var scale = bpmn_node.getAttribute( 'scale' );
-		
+
 		if (scale == null) {
 			scale = 'fit-viewport';
 		}
 
-		var center = bpmn_node.getAttribute( 'scale' );;
-		if (scale == 'fit-viewport') {
+		var center = bpmn_node.getAttribute( 'center' );
+
+		if (center == null) {
 			// centers the image
 			center = 'auto';
 		}
@@ -67,24 +68,26 @@ var RevealBPMN = (function( root, factory)  {
 		if (height === null) {
 			height = '100%';
 		}
-
 		var viewer = new BpmnViewer({container: bpmn_node, width: width, height: height});
-		viewer.importXML(bpmn_xml, function(err) {
-		  if (!err) {
-		    console.log('Rendered diagram in:', bpmn_node);
-		    viewer.get('canvas').zoom(scale, center);
-		    Reveal.layout();
+		var layout = function() {
+			// first center the diagram
+	    	viewer.get('canvas').zoom('fit-viewport', 'auto');
+	    	// then zoom
+	    	viewer.get('canvas').zoom(scale, center);
+			Reveal.layout();
+		};
 
-		    // Relayout when slide turns visible
-			Reveal.addEventListener( 'slidechanged', function( event ) {
-				viewer.get('canvas').zoom(scale, center);
-				Reveal.layout();
-			} );
-		  } else {
-		    console.log('something went wrong:', err);
-		  }
+		viewer.importXML(bpmn_xml, function(err) {
+		  	if (!err) {
+			    console.log('Rendered diagram in:', bpmn_node);
+			    // Relayout when slide turns visible
+				Reveal.addEventListener( 'slidechanged', function( event ) {
+					layout();
+				});
+			    layout();
+		  	} else {
+			 	console.log('something went wrong:', err);
+			}
 		});
-		Reveal.layout();
-		
 	}
 })();
