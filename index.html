@@ -41,25 +41,25 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				
-				<section data-markdown="md/Intro.md"  
-		         data-separator="^\-\-\-\-"  
-		         data-separator-vertical="^\+\+\+"  
-		         data-separator-notes="^Note:"  
+
+				<section data-markdown="md/Intro.md"
+		         data-separator="^\-\-\-\-"
+		         data-separator-vertical="^\+\+\+"
+		         data-separator-notes="^Note:"
 		         data-charset="utf-8">
 				</section>
 
-				<section data-markdown="md/deskriptiv.md"  
-		         data-separator="^\-\-\-\-"  
-		         data-separator-vertical="^\+\+\+"  
-		         data-separator-notes="^Note:"  
+				<section data-markdown="md/deskriptiv.md"
+		         data-separator="^\-\-\-\-"
+		         data-separator-vertical="^\+\+\+"
+		         data-separator-notes="^Note:"
 		         data-charset="utf-8">
 				</section>
 
-				<section data-markdown="md/methodik-part1.md"  
-		         data-separator="^\-\-\-\-"  
-		         data-separator-vertical="^\+\+\+"  
-		         data-separator-notes="^Note:"  
+				<section data-markdown="md/methodik-part1.md"
+		         data-separator="^\-\-\-\-"
+		         data-separator-vertical="^\+\+\+"
+		         data-separator-notes="^Note:"
 		         data-charset="utf-8">
 				</section>
 
@@ -67,17 +67,17 @@
 					<h1>Übung</h1>
 				</section>
 
-				<section data-markdown="md/style1.md"  
-		         data-separator="^\-\-\-\-"  
-		         data-separator-vertical="^\+\+\+"  
-		         data-separator-notes="^Note:"  
+				<section data-markdown="md/style1.md"
+		         data-separator="^\-\-\-\-"
+		         data-separator-vertical="^\+\+\+"
+		         data-separator-notes="^Note:"
 		         data-charset="utf-8">
 				</section>
 
-				<section data-markdown="md/analytisch.md"  
-		         data-separator="^\-\-\-\-"  
-		         data-separator-vertical="^\+\+\+"  
-		         data-separator-notes="^Note:"  
+				<section data-markdown="md/analytisch.md"
+		         data-separator="^\-\-\-\-"
+		         data-separator-vertical="^\+\+\+"
+		         data-separator-notes="^Note:"
 		         data-charset="utf-8">
 				</section>
 
@@ -107,8 +107,8 @@
 					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
 					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/bpmn-js/bpmn-viewer.js'},
-					{ src: 'plugin/bpmn-js/bpmn.js'},
+					{ src: 'plugin/bpmn-js/bpmn-viewer.min.js'},
+					{ src: 'plugin/bpmn-js/bpmn.js', async: true},
 					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
 					{ src: 'plugin/notes/notes.js', async: true }
