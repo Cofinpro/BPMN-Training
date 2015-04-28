@@ -82,7 +82,7 @@ var RevealBPMN = (function( root, factory)  {
 			    console.log('Rendered diagram in:', bpmn_node);
 			    // Relayout when slide turns visible
 				Reveal.addEventListener( 'slidechanged', function( event ) {
-					layout();
+				//	layout();
 				});
 			    layout();
 		  	} else {

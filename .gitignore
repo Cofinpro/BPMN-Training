@@ -8,3 +8,8 @@ node_modules/
 css/reveal.min.css
 js/reveal.min.js
 *.sublime-workspace
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

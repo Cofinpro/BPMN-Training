@@ -9,7 +9,7 @@
 ### neu in Level 2 <br/	> Intermediate Events
 
 Note:
-bisher 
+bisher
 Start - löst Prozess aus
 Ende - beendet einen Prozess
 
@@ -67,7 +67,6 @@ beendet die Aktivität sofort
 </div>
 
 +++
-### Patterns
 
 ----
 ### weitere Event-Typen
@@ -75,14 +74,55 @@ beendet die Aktivität sofort
 +++
 #### Escalation Event
 
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-escalate.bpmn" scale="1.2" style="height:300px"/>
+</div>
+
+
+Note:
+* nicht spezifiziert, was das Ereignis triggert
+* nur das es getriggert wird
+
 +++
 #### Signal
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-signal.bpmn" scale="1.2"/>
+</div>
+
+* Unterschied zu Message
+	* global
+	* keine Korrelation
+
++++
+#### Error Event
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-error.bpmn" scale="1.2" style="height:300px"/>
+</div>
+
+Note:
+* Parent-Level unterscheidung
+* Error Event beendet Prozess
 
 +++
 #### Conditional Event
 
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-conditional.bpmn" scale="1.2"/>
+</div>
+
+* feuert, sobald Bedingung erfüllt
+* Beschriftung!
+
 +++
 #### Link-Ereingis
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-link.bpmn" scale="1.2"/>
+</div>
+
+* beliebig viele throws-Ereignisse
 
 ----
 ### Event-Subprocess
@@ -90,15 +130,32 @@ beendet die Aktivität sofort
 ----
 ## Nachrichten
 
+### Event-Gateway
+
+### Message-Boundary-Events
+
+
+### Nachrichten in Pools
+
+### Asynchrones Messaging
+
+
 ----
 
 ## Iterationen und Instanzen
+
+### Schleifen
 
 +++
 ### Multi-Instance-Aktivität
 
 +++
-### Wiederholungen
+### Synchronisierung
+
++++
+### Batch-Verarbeitung
+
+
 ----
 
 ## Splitting und Merging
@@ -111,8 +168,8 @@ beendet die Aktivität sofort
 ### eCH-0158
 
 * Schweizer Standard der öffentl. Verwaltung
-* Ziel 
-	* Vereinheitlichung der Modellierungsoptionen (d.h. Freiheitsgrade) des BPMN-Standards 
+* Ziel
+	* Vereinheitlichung der Modellierungsoptionen (d.h. Freiheitsgrade) des BPMN-Standards
 
 * adressiert Prozessverantwortliche, Prozessmanager und Unternehmensarchitekten
 
