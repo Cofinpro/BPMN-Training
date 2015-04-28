@@ -1,11 +1,11 @@
 # Style
 ----
 ## Offizielle Regeln
-----
++++
 ### Sequenzflüsse
 
 * überschreiten nie die Poolgrenze
-* überschreiten nie Sub-Prozessgrenzen 
+* überschreiten nie Sub-Prozessgrenzen
 
 +++
 ### Sequenzflüsse
@@ -16,7 +16,7 @@
 	* Gateways
 * an _beiden_ Enden
 
-----
++++
 ### Nachrichtenflüsse
 
 * nie innerhalb eines Pools
@@ -28,7 +28,7 @@
 ----
 ## Best-Practices
 
-----
++++
 ### Elemente beschriften
 
 * Elemente beschriften:
@@ -36,7 +36,7 @@
 	* Marker
 	* Annotations
 
-----
++++
 ### Hierarchische Modelle verwenden
 
 * jedes Diagramm passt auf eine Seite
@@ -46,13 +46,13 @@
 Note:
 wenn Ende-zu-Ende - Child ohne Anpassung an Parent änderbar
 
-----
++++
 ### Black-Box-Pools für externe Teilnehmer
 
 * interne Abläufe sind nicht bekannt
 * Messages schon
 
-----
++++
 ### Primärprozesse beginnen mit Message
 
 * Message-Start-Event verwenden
@@ -61,7 +61,7 @@ Note:
 Message zu Aktivität heißt: _möglich_
 Message zu Event heißt: _muss_
 
-----
++++
 ### interne Prozesse in *einem* Pool
 
 * Lanes für Organisiationseinheiten
@@ -74,7 +74,7 @@ Note:
 problematisch: zeitlich versetzte Prozesse
 gemeinsamer Datastore
 
-----
++++
 ### Pool labels
 
 * White-Box: Prozessname
@@ -84,7 +84,7 @@ Note:
 Spec macht keine Vorgaben
 Semantische Gründe: id vs name
 
-----
++++
 ### Beschriftung von End-Events
 
 * getrennte End Events für
@@ -92,7 +92,7 @@ Semantische Gründe: id vs name
 	* Exceptions
 * _nicht_ mehrere End-Events mit selben Namen
 
-----
++++
 ### Aktivitäten beschriften
 
 * ${Substantiv} ${Verb}
@@ -103,7 +103,7 @@ Semantische Gründe: id vs name
 +++
 #### Beispiel
 
-* _Antrag bearbeiten_ statt 
+* _Antrag bearbeiten_ statt
 	* _Antrag OK_ (Zustand)
 	* _Antragsbearbeitung_ (Funktion)
 
@@ -111,7 +111,7 @@ Semantische Gründe: id vs name
 	* _Zeiten erfasst_ (Zustand)
 	* _Zeiterfassung_ (Funktion)
 
-----
++++
 ## Korrekte Startevents verwenden
 
 * Message für Impuls von Außen
