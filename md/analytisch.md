@@ -3,7 +3,7 @@
 ## Events
 
 +++
-![Events](img/events.png "Überblick: Events")
+<img data-src="img/events.png" alt="Überblick: Events" style="max-height:650px"></img>
 
 ----
 ### neu in Level 2 <br/	> Intermediate Events
@@ -234,5 +234,3 @@ Bedingung exklusiv
 
 Note:
 Diskriminator Pattern
-
-----
