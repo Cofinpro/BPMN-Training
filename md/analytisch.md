@@ -14,7 +14,6 @@ Start - löst Prozess aus
 Ende - beendet einen Prozess
 
 +++
-
 #### Throwing
 
 <div>
@@ -76,11 +75,6 @@ beendet die Aktivität sofort
 	<div class="bpmn" bpmn-src="bpmn/level2/events-escalate.bpmn" scale="1.2" style="height:300px"/>
 </div>
 
-
-Note:
-* nicht spezifiziert, was das Ereignis triggert
-* nur das es getriggert wird
-
 +++
 #### Signal
 
@@ -91,6 +85,30 @@ Note:
 * Unterschied zu Message
 	* global
 	* keine Korrelation
+
++++
+#### Conditional Event
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-conditional.bpmn" scale="1.2"/>
+</div>
+
++++
+### Timer 
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-timer.bpmn" scale="1.2" style="height:300px"/>
+</div>
+
++++
+### Timer Delay
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/events-timer-delay.bpmn" scale="1.2" style="height:300px"/>
+</div>
+
+Note:
+was bei mehreren Akivitäten?
 
 +++
 #### Error Event
@@ -123,21 +141,65 @@ Note:
 * beliebig viele throws-Ereignisse
 
 ----
-
-## Nachrichten
-
 ### Event-Gateway
 
-### Message-Boundary-Events
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/gateways-event.bpmn" scale="1.2" style="height: 300px" />
+</div>
 
+* erstes eintretendes Ereignis bestimmt Gate
+----
+## Nachrichten
 
++++
+### Send Task vs. Send Event
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/messages.bpmn" scale="1.2"/>
+</div>
+
+<ul class="fragment">
+	selbe Funktion, aber:
+
+	<li>Zuständigigkeit</li>
+	<li>Boundary Event</li>
+	<li>Marker</li>	
+	</ul>
+
++++
+### Nachrichten zwischen Pools
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-between-processes.bpmn" />
+
++++
 ### Nachrichten in Pools
 
-### Asynchrones Messaging
+<h3 class="fragment">Nein!</h3>
 
+<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes.bpmn" />
+
++++
+### Nachrichten in Pools
+
+* Sequenzfluss impliziert Nachricht
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes.bpmn" />
+
++++
+### Nachrichten in Pools
+
+* Datenobjekte können Rolle der Nachricht übernehmen
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes3.bpmn" />
+
++++
+### Nachrichten in Pools
+
+* Benachrichtigungen direkt als Task	
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes4.bpmn" />
 
 ----
-
 ## Iterationen und Instanzen
 
 ----
@@ -166,12 +228,6 @@ Entsprechung Gateway?
 ### Multi-Instance Subprozess
 
 <div class="bpmn" bpmn-src="bpmn/level2/multi-instance-subprocess.bpmn" scale="1.1" style="height: 300px" />
-
-----
-### Synchronisierung
-
-
-
 
 ----
 ## Splitting und Merging
