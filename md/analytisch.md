@@ -3,7 +3,7 @@
 ## Events
 
 +++
-![Events](../img/events.png "Überblick: Events")
+![Events](img/events.png "Überblick: Events")
 
 ----
 ### neu in Level 2 <br/	> Intermediate Events
@@ -66,8 +66,6 @@ beendet die Aktivität sofort
 	<div class="bpmn" bpmn-src="bpmn/level2/events-boundary-non-interrupting.bpmn" scale="1.2" style="height:300px" />
 </div>
 
-+++
-
 ----
 ### weitere Event-Typen
 
@@ -127,6 +125,26 @@ Note:
 ----
 ### Event-Subprocess
 
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/event-subprocess.bpmn" style="height: 350px" scale="1.1"/>
+</div>
+
+* Prozess startet bei einem Ereignis einen Unterprozess
+	* Ereignis während der kompletten Laufzeit erwartet
+	* unterbrechend oder nicht-unterbrechend
+
+
++++
+### Event-Subprocess
+
+<div>
+	<div class="bpmn" bpmn-src="bpmn/level2/event-subprocess-collapsed.bpmn" style="height: 300px" scale="1.1"/>
+</div>
+
+* auch zusammengeklappt
+	* optionaler Marker
+* _nicht_ als Call-Aktivität
 ----
 ## Nachrichten
 
@@ -144,25 +162,104 @@ Note:
 
 ## Iterationen und Instanzen
 
+----
 ### Schleifen
 
-+++
-### Multi-Instance-Aktivität
+<div class="bpmn" bpmn-src="bpmn/level2/iteration-activity.bpmn" scale="1.2" style="height: 200px"/>
 
 +++
+### Scheifen (alternativ)
+<div class="bpmn" bpmn-src="bpmn/level2/iteration-loop.bpmn" scale="1.2" style="height: 250px"/>
+
+----
+### Multi-Instance-Aktivität (Parallel)
+
+<div class="bpmn" bpmn-src="bpmn/level2/multi-instance-activity-parallel.bpmn" scale="1.2" style="height: 250px"/>
+
+Note:
+Entsprechung Gateway?
+
++++
+### Multi-Instance-Aktivität (Sequentiell)
+
+<div class="bpmn" bpmn-src="bpmn/level2/multi-instance-activity.bpmn" scale="1.2" style="height: 250px"/>
+
++++
+### Multi-Instance Subprozess
+
+<div class="bpmn" bpmn-src="bpmn/level2/multi-instance-subprocess.bpmn" scale="1.1" style="height: 300px" />
+
+----
 ### Synchronisierung
 
-+++
-### Batch-Verarbeitung
+
 
 
 ----
-
 ## Splitting und Merging
++++
+### Or-Gateway
+
+<div class="bpmn" bpmn-src="bpmn/level2/splitting-or.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Conditional Splitting
+
+<div class="bpmn" bpmn-src="bpmn/level2/splitting-conditional.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Merging Or
+
+<div class="bpmn" bpmn-src="bpmn/level2/merging-or.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Merging Or
+Beispiel
+
+<div class="bpmn" bpmn-src="bpmn/level2/merging-or-use-case.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Merging XOR
+
+<div>
+<div class="bpmn" bpmn-src="bpmn/level2/merging-xor.bpmn" scale="1.2" style="height: 350px" />
+</div>
+
+<em fragment="1">Nein!</em>
+<span fragment="2">Multi-Merge</span>
+
+Note:
+Bedingung exklusiv
+
++++
+### Merging XOR
+
+<div class="bpmn" bpmn-src="bpmn/level2/merging-xor2.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Merging And Splitting
+
+<div class="bpmn" bpmn-src="bpmn/level2/merging-and-splitting.bpmn" scale="1.1" style="height: 350px" />
+
++++
+### Zusammenfassung <br/> Implizites Merging und Splitting
+
+<div class="bpmn" bpmn-src="bpmn/level2/merging-and-splitting-implicit.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Complex Gateway
+
+(nicht Teil von Level 2)
+<div>
+<div class="bpmn" bpmn-src="bpmn/level2/merging-complex.bpmn" style="height: 350px" />
+</div>
+
+Note:
+Diskriminator Pattern
 
 ----
-
 ## Transaktionen
+
 ----
 ## Palette
 ### eCH-0158
@@ -176,7 +273,7 @@ Note:
 +++
 ### eCH-0158
 <div class="stretch">
-  <object width="100%" height="100%" type="application/pdf" data="/attachments/eCH-0158_V1.1.pdf">
+  <object width="100%" height="100%" type="application/pdf" data="attachments/eCH-0158_V1.1.pdf">
     <p>Insert your error message here, if the PDF cannot be displayed.</p>
   </object>
 </div>

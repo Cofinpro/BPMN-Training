@@ -1,4 +1,4 @@
-# Methodik 
+# Methodik
 deskriptive Prozesse
 
 ----
@@ -17,9 +17,9 @@ deskriptive Prozesse
 * verständlich für Beteiligte
 * auf Papier nachvollziehbar
 
-Note: 
+Note:
 Papier: Label-Matching
-
+f
 +++
 ### Gemeinsam verwendbar
 

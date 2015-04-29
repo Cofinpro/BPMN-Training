@@ -16,6 +16,9 @@
 	* Gateways
 * an _beiden_ Enden
 
+Note:
+Abknickwinkel beachten
+
 +++
 ### Nachrichtenflüsse
 
@@ -45,6 +48,7 @@
 
 Note:
 wenn Ende-zu-Ende - Child ohne Anpassung an Parent änderbar
+Modellierungsrichtung beachten
 
 +++
 ### Black-Box-Pools für externe Teilnehmer
@@ -75,7 +79,7 @@ problematisch: zeitlich versetzte Prozesse
 gemeinsamer Datastore
 
 +++
-### Pool labels
+### Pool Labels
 
 * White-Box: Prozessname
 * Blackbox: Name des Beteiligten

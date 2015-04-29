@@ -1,4 +1,4 @@
-# Training<br/>BPMN 2.0 
+# Training<br/>BPMN 2.0
 
 ----
 
@@ -6,12 +6,12 @@
 
 ![Praxishandbuch BPMN](img/books/praxishandbuch-bpmn.png)
 
-----
++++
 
 ## Literatur
 ![BPMN20](img/books/allweyer-bpmn20.png)
 
-----
++++
 
 ## Literatur
 ![BPMN20](img/books/bruce-silver-bpmn-method.png)
@@ -37,7 +37,7 @@
 
 ![Level](img/abstraktionslevel.png)
 
-----
++++
 
 ### Deskriptive Modelle
 
@@ -53,8 +53,7 @@
 
 * Detailgrad entspricht etwa Flussdiagrammen
 
-----
-
++++
 ### Analytische Modelle
 
 * detaillierte Beschreibung
@@ -66,7 +65,7 @@
 	* IT-Spezifikation, Simulation
 
 * Umsetzung BPMN
-	* ergänzend Einsatz von Gateways 
+	* ergänzend Einsatz von Gateways
 	* Intermediate-/Boundary-Events
 
 * Detailgrad entspricht etwa EPKs
@@ -74,7 +73,7 @@
 Note:
 Gateway: (Entscheidung, Parallelität)
 
-----
++++
 ### Ausführbare Modelle
 
 * sehr detaillierte Beschreibung
