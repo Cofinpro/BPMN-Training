@@ -16,6 +16,9 @@
 ## Literatur
 ![BPMN20](img/books/bruce-silver-bpmn-method.png)
 
+## Literatur
+
+[BPMN-Spec](http://www.omg.org/spec/BPMN/2.0.2/)
 ----
 
 ## Einführung
