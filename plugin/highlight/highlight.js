@@ -1,5 +1,5 @@
 // START CUSTOM REVEAL.JS INTEGRATION
-function() {
+(function() {
 	if( typeof window.addEventListener === 'function' ) {
 		var hljs_nodes = document.querySelectorAll( 'pre code' );
 
