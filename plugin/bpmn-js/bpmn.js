@@ -64,10 +64,12 @@ var RevealBPMN = (function( root, factory)  {
 		if (width === null) {
 			width = '100%';
 		}
+
 		var height = bpmn_node.getAttribute( 'bpmn-height' );
 		if (height === null) {
 			height = '100%';
 		}
+
 		var viewer = new BpmnViewer({container: bpmn_node, width: width, height: height});
 		var layout = function() {
 			// first center the diagram
@@ -79,15 +81,14 @@ var RevealBPMN = (function( root, factory)  {
 
 		viewer.importXML(bpmn_xml, function(err) {
 		  	if (!err) {
-			    console.log('Rendered diagram in:', bpmn_node);
 			    // Relayout when slide turns visible
-				Reveal.addEventListener( 'slidechanged', function( event ) {
-				//	layout();
-				});
+  				Reveal.addEventListener( 'slidechanged', function( event ) {
+  				//	layout();
+  				});
 			    layout();
 		  	} else {
-			 	console.log('something went wrong:', err);
-			}
+			 	     console.log('something went wrong:', err);
+			  }
 		});
 	}
 })();
