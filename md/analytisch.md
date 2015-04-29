@@ -260,6 +260,62 @@ Diskriminator Pattern
 ----
 ## Transaktionen
 
++++
+### ACID
+
+* Atomicity
+* Consistency
+* Isolation
+* Durability
+
+Note:
+* Atomic – indivisible, all-or-nothing behavior
+* Consistent – preventing an inconsistent state of the system, such as a debit with no corresponding credit
+* Isolated – systems managing each account are locked during execution
+* Durable –  state of participating systems is stored in database
+
++++
+### Business-Transaktionen
+
+* nicht atomar
+	* Aktivitäten müssen *kompensiert* werden
+* konsistent
+* nicht isoliert
+	* lang-laufend
+	* Resourcen schwer sperrbar
+* dauerhaft
+
++++
+### BPMN Transaktionen
+
+<div class="bpmn" bpmn-src="bpmn/level2/transactional.bpmn" scale="1.2" style="height: 250px" />
+
++++
+### Kompensation
+
+<div class="bpmn" bpmn-src="bpmn/level2/transaction-compensate.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Cancel Event (catch)
+
+<div class="bpmn" bpmn-src="bpmn/level2/transaction-cancel.bpmn" scale="1.2" style="height: 350px" />
+
++++
+### Cancel-Event (trow)
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/transaction-compensate2.bpmn" scale="1.2" />
+
+Note:
+compensate implizit ausgelöst
+
++++
+### Compensate-Event
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/transaction-compensate3.bpmn" />
+
+Note:
+Cancel nicht mehr möglich
+Kompensation schon
 ----
 ## Palette
 ### eCH-0158
