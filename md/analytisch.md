@@ -229,6 +229,12 @@ Entsprechung Gateway?
 
 <div class="bpmn" bpmn-src="bpmn/level2/multi-instance-subprocess.bpmn" scale="1.1" style="height: 300px" />
 
+
+----
+## Ad-Hoc Prozesse
+
+<div class="bpmn stretch" bpmn-src="bpmn/level2/adhoc.bpmn" scale="1.2" />
+
 ----
 ## Splitting und Merging
 +++
