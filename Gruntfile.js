@@ -1,6 +1,6 @@
 /* global module:false */
 module.exports = function(grunt) {
-	var port = grunt.option('port') || process.env.PORT || 8000;
+	var port = grunt.option('port') || 8000;
 	// Project configuration
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -131,7 +131,13 @@ module.exports = function(grunt) {
 				tasks: 'css-core'
 			},
             html: {
-                files: [ 'index.html']
+                files: [ 'index*.html']
+            },
+            markdown: {
+                files: [ 'md/*.html']
+            },
+            bpmn: {
+                files: [ 'bpmn/**.bpmn']
             }
 		}
 
