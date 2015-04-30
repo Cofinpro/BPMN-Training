@@ -20,8 +20,16 @@
 ## Literatur
 
 [BPMN-Spec](http://www.omg.org/spec/BPMN/2.0.2/)
-----
 
+----
+## Folien
+
+http://cofinpro.github.io/BPMN-Training/
+
+Download als PDF:<br/>
+https://github.com/Cofinpro/BPMN-Training/releases/
+
+----
 ## Einführung
 
 * Business-Process-Model-Notation
