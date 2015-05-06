@@ -1,5 +1,5 @@
 /*!
- * bpmn-js - bpmn-navigated-viewer v0.9.2
+ * bpmn-js - bpmn-navigated-viewer v0.11.0
 
  * Copyright 2014, 2015 camunda Services GmbH and other contributors
  *
@@ -8,12 +8,12 @@
  *
  * Source Code: https://github.com/bpmn-io/bpmn-js
  *
- * Date: 2015-04-26
+ * Date: 2015-08-06
  */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.BpmnJS=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(76);
+var inherits = _dereq_(81);
 
 var Viewer = _dereq_(2);
 
@@ -32,27 +32,27 @@ inherits(NavigatedViewer, Viewer);
 module.exports = NavigatedViewer;
 
 NavigatedViewer.prototype._navigationModules = [
-  _dereq_(60),
-  _dereq_(58)
+  _dereq_(62),
+  _dereq_(59)
 ];
 
 NavigatedViewer.prototype._modules = [].concat(
   NavigatedViewer.prototype._modules,
   NavigatedViewer.prototype._navigationModules);
-},{"2":2,"58":58,"60":60,"76":76}],2:[function(_dereq_,module,exports){
+},{"2":2,"59":59,"62":62,"81":81}],2:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162),
-    omit = _dereq_(166),
-    isString = _dereq_(159),
-    isNumber = _dereq_(156);
+var assign = _dereq_(177),
+    omit = _dereq_(181),
+    isString = _dereq_(174),
+    isNumber = _dereq_(171);
 
-var domify = _dereq_(176),
-    domQuery = _dereq_(178),
-    domRemove = _dereq_(179);
+var domify = _dereq_(190),
+    domQuery = _dereq_(192),
+    domRemove = _dereq_(193);
 
-var Diagram = _dereq_(35),
-    BpmnModdle = _dereq_(14);
+var Diagram = _dereq_(36),
+    BpmnModdle = _dereq_(15);
 
 var Importer = _dereq_(9);
 
@@ -100,10 +100,41 @@ function ensureUnit(val) {
 /**
  * A viewer for BPMN 2.0 diagrams.
  *
- * Includes the basic viewing functionality.
- *
  * Have a look at {@link NavigatedViewer} or {@link Modeler} for bundles that include
  * additional features.
+ *
+ *
+ * ## Extending the Viewer
+ *
+ * In order to extend the viewer pass extension modules to bootstrap via the
+ * `additionalModules` option. An extension module is an object that exposes
+ * named services.
+ *
+ * The following example depicts the integration of a simple
+ * logging component that integrates with interaction events:
+ *
+ *
+ * ```javascript
+ *
+ * // logging component
+ * function InteractionLogger(eventBus) {
+ *   eventBus.on('element.hover', function(event) {
+ *     console.log()
+ *   })
+ * }
+ *
+ * InteractionLogger.$inject = [ 'eventBus' ]; // minification save
+ *
+ * // extension module
+ * var extensionModule = {
+ *   __init__: [ 'interactionLogger' ],
+ *   interactionLogger: [ 'type', InteractionLogger ]
+ * };
+ *
+ * // extend the viewer
+ * var bpmnViewer = new Viewer({ additionalModules: [ extensionModule ] });
+ * bpmnViewer.importXML(...);
+ * ```
  *
  * @param {Object} [options] configuration options to pass to the viewer
  * @param {DOMElement} [options.container] the container to render the viewer in, defaults to body.
@@ -356,13 +387,13 @@ Viewer.prototype.on = function(event, handler) {
 // modules the viewer is composed of
 Viewer.prototype._modules = [
   _dereq_(3),
-  _dereq_(55),
-  _dereq_(51)
+  _dereq_(56),
+  _dereq_(52)
 ];
 
 module.exports = Viewer;
 
-},{"14":14,"156":156,"159":159,"162":162,"166":166,"176":176,"178":178,"179":179,"3":3,"35":35,"51":51,"55":55,"9":9}],3:[function(_dereq_,module,exports){
+},{"15":15,"171":171,"174":174,"177":177,"181":181,"190":190,"192":192,"193":193,"3":3,"36":36,"52":52,"56":56,"9":9}],3:[function(_dereq_,module,exports){
 module.exports = {
   __depends__: [
     _dereq_(6),
@@ -372,17 +403,17 @@ module.exports = {
 },{"11":11,"6":6}],4:[function(_dereq_,module,exports){
 'use strict';
 
-var inherits = _dereq_(76),
-    isArray = _dereq_(153),
-    isObject = _dereq_(157),
-    assign = _dereq_(162),
-    forEach = _dereq_(80),
-    every = _dereq_(77),
-    includes = _dereq_(82),
-    some = _dereq_(85);
+var inherits = _dereq_(81),
+    isArray = _dereq_(168),
+    isObject = _dereq_(172),
+    assign = _dereq_(177),
+    forEach = _dereq_(86),
+    every = _dereq_(83),
+    includes = _dereq_(88),
+    some = _dereq_(91);
 
-var DefaultRenderer = _dereq_(43),
-    TextUtil = _dereq_(68),
+var DefaultRenderer = _dereq_(44),
+    TextUtil = _dereq_(73),
     DiUtil = _dereq_(12);
 
 var createLine = DefaultRenderer.createLine;
@@ -454,7 +485,7 @@ function BpmnRenderer(events, styles, pathMap) {
     });
 
     createMarker('messageflow-start', {
-      element: svg.circle(6, 6, 5),
+      element: svg.circle(6, 6, 3.5),
       attrs: {
         fill: 'white',
         stroke: 'black'
@@ -463,12 +494,13 @@ function BpmnRenderer(events, styles, pathMap) {
     });
 
     createMarker('messageflow-end', {
-      element: svg.path('M 1 5 L 11 10 L 1 15 Z'),
+      element: svg.path('m 1 5 l 0 -3 l 7 3 l -7 3 z'),
       attrs: {
         fill: 'white',
-        stroke: 'black'
+        stroke: 'black',
+        strokeLinecap: 'butt'
       },
-      ref: { x: 11, y: 10 }
+      ref: { x: 8.5, y: 5 }
     });
 
     createMarker('data-association-end', {
@@ -983,8 +1015,8 @@ function BpmnRenderer(events, styles, pathMap) {
       return drawRect(p, element.width, element.height, TASK_BORDER_RADIUS, attrs);
     },
 
-    'bpmn:Task': function(p, element) {
-      var rect = renderer('bpmn:Activity')(p, element);
+    'bpmn:Task': function(p, element, attrs) {
+      var rect = renderer('bpmn:Activity')(p, element, attrs);
       renderEmbeddedLabel(p, element, 'center-middle');
       attachTaskMarkers(p, element);
       return rect;
@@ -1233,15 +1265,17 @@ function BpmnRenderer(events, styles, pathMap) {
       return outer;
     },
     'bpmn:CallActivity': function(p, element) {
-      return renderer('bpmn:SubProcess')(p, element, {
+      return renderer('bpmn:Task')(p, element, {
         strokeWidth: 5
       });
     },
     'bpmn:Participant': function(p, element) {
 
-      var lane = renderer('bpmn:Lane')(p, element);
+      var lane = renderer('bpmn:Lane')(p, element, {
+        fill: 'White'
+      });
 
-      var expandedPool = DiUtil.isExpandedPool(getSemantic(element));
+      var expandedPool = DiUtil.isExpanded(element);
 
       if (expandedPool) {
         drawLine(p, [
@@ -1264,8 +1298,8 @@ function BpmnRenderer(events, styles, pathMap) {
 
       return lane;
     },
-    'bpmn:Lane': function(p, element) {
-      var rect = drawRect(p, element.width, element.height, 0, {
+    'bpmn:Lane': function(p, element, attrs) {
+      var rect = drawRect(p, element.width, element.height, 0, attrs || {
         fill: 'none'
       });
 
@@ -1281,8 +1315,8 @@ function BpmnRenderer(events, styles, pathMap) {
     'bpmn:InclusiveGateway': function(p, element) {
       var diamond = drawDiamond(p, element.width, element.height);
 
-        /* circle path */
-        drawCircle(p, element.width, element.height, element.height * 0.24, {
+      /* circle path */
+      drawCircle(p, element.width, element.height, element.height * 0.24, {
         strokeWidth: 2.5,
         fill: 'none'
       });
@@ -1427,6 +1461,7 @@ function BpmnRenderer(events, styles, pathMap) {
     'bpmn:SequenceFlow': function(p, element) {
       var pathData = createPathFromConnection(element);
       var path = drawPath(p, pathData, {
+        strokeLinejoin: 'round',
         markerEnd: marker('sequenceflow-end')
       });
 
@@ -1453,7 +1488,8 @@ function BpmnRenderer(events, styles, pathMap) {
 
       attrs = assign({
         strokeDasharray: '1,6',
-        strokeLinecap: 'round'
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round'
       }, attrs || {});
 
       // TODO(nre): style according to directed state
@@ -1478,9 +1514,10 @@ function BpmnRenderer(events, styles, pathMap) {
       var path = drawPath(p, pathData, {
         markerEnd: marker('messageflow-end'),
         markerStart: marker('messageflow-start'),
-        strokeDasharray: '10',
+        strokeDasharray: '10, 12',
         strokeLinecap: 'round',
-        strokeWidth: 1
+        strokeLinejoin: 'round',
+        strokeWidth: '1.5px'
       });
 
       if (semantic.messageRef) {
@@ -1580,16 +1617,16 @@ function BpmnRenderer(events, styles, pathMap) {
           cancel = semantic.cancelActivity;
 
       var attrs = {
-        strokeLinecap: 'round',
         strokeWidth: 1
       };
 
       if (!cancel) {
         attrs.strokeDasharray = '6';
+        attrs.strokeLinecap = 'round';
       }
 
       var outer = renderer('bpmn:Event')(p, element, attrs);
-      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, attrs);
+      /* inner path */ drawCircle(p, element.width, element.height, INNER_OUTER_DIST, assign(attrs, { fill: 'none' }));
 
       renderEventContent(element, p);
 
@@ -1996,10 +2033,10 @@ BpmnRenderer.$inject = [ 'eventBus', 'styles', 'pathMap' ];
 
 module.exports = BpmnRenderer;
 
-},{"12":12,"153":153,"157":157,"162":162,"43":43,"68":68,"76":76,"77":77,"80":80,"82":82,"85":85}],5:[function(_dereq_,module,exports){
+},{"12":12,"168":168,"172":172,"177":177,"44":44,"73":73,"81":81,"83":83,"86":86,"88":88,"91":91}],5:[function(_dereq_,module,exports){
 'use strict';
 
-var Snap = _dereq_(71);
+var Snap = _dereq_(76);
 
 /**
  * Map containing SVG paths needed by BpmnRenderer.
@@ -2451,7 +2488,7 @@ function PathMap() {
 
 module.exports = PathMap;
 
-},{"71":71}],6:[function(_dereq_,module,exports){
+},{"76":76}],6:[function(_dereq_,module,exports){
 module.exports = {
   renderer: [ 'type', _dereq_(4) ],
   pathMap: [ 'type', _dereq_(5) ]
@@ -2459,10 +2496,12 @@ module.exports = {
 },{"4":4,"5":5}],7:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162),
-    map = _dereq_(83);
+var assign = _dereq_(177),
+    map = _dereq_(89);
 
 var LabelUtil = _dereq_(13);
+
+var is = _dereq_(14).is;
 
 var hasExternalLabel = LabelUtil.hasExternalLabel,
     getExternalLabelBounds = LabelUtil.getExternalLabelBounds,
@@ -2484,6 +2523,11 @@ function collectWaypoints(waypoints) {
   });
 }
 
+function notYetDrawn(semantic, refSemantic, property) {
+  return new Error(
+      'element ' + elementToString(refSemantic) + ' referenced by ' +
+      elementToString(semantic) + '#' + property + ' not yet drawn');
+}
 
 /**
  * An importer that adds bpmn elements to the canvas
@@ -2543,6 +2587,10 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
       height: Math.round(bounds.height)
     }));
 
+    if (is(semantic, 'bpmn:BoundaryEvent')) {
+      this._attachBoundary(semantic, element);
+    }
+
     this._canvas.addShape(element, parentElement);
   }
 
@@ -2572,6 +2620,40 @@ BpmnImporter.prototype.add = function(semantic, parentElement) {
   this._eventBus.fire('bpmnElement.added', { element: element });
 
   return element;
+};
+
+
+/**
+ * Attach the boundary element to the given host
+ *
+ * @param {ModdleElement} boundarySemantic
+ * @param {djs.model.Base} boundaryElement
+ */
+BpmnImporter.prototype._attachBoundary = function(boundarySemantic, boundaryElement) {
+
+  var hostSemantic = boundarySemantic.attachedToRef;
+
+  if (!hostSemantic) {
+    throw new Error('missing ' + elementToString(boundarySemantic) + '#attachedToRef');
+  }
+
+  var host = this._elementRegistry.get(hostSemantic.id),
+      attachers = host && host.attachers;
+
+  if (!host) {
+    throw notYetDrawn(boundarySemantic, hostSemantic, 'attachedToRef');
+  }
+
+  // wire element.host <> host.attachers
+  boundaryElement.host = host;
+
+  if (!attachers) {
+    host.attachers = attachers = [];
+  }
+
+  if (attachers.indexOf(boundaryElement) === -1) {
+    attachers.push(boundaryElement);
+  }
 };
 
 
@@ -2627,9 +2709,7 @@ BpmnImporter.prototype._getEnd = function(semantic, side) {
   }
 
   if (refSemantic) {
-    throw new Error(
-      'element ' + elementToString(refSemantic) + ' referenced by ' +
-      elementToString(semantic) + '#' + side + 'Ref not yet drawn');
+    throw notYetDrawn(semantic, refSemantic, side + 'Ref');
   } else {
     throw new Error(elementToString(semantic) + '#' + side + 'Ref not specified');
   }
@@ -2647,15 +2727,14 @@ BpmnImporter.prototype._getTarget = function(semantic) {
 BpmnImporter.prototype._getElement = function(semantic) {
   return this._elementRegistry.get(semantic.id);
 };
-
-},{"10":10,"12":12,"13":13,"162":162,"83":83}],8:[function(_dereq_,module,exports){
+},{"10":10,"12":12,"13":13,"14":14,"177":177,"89":89}],8:[function(_dereq_,module,exports){
 'use strict';
 
-var filter = _dereq_(78),
-    find = _dereq_(79),
-    forEach = _dereq_(80);
+var filter = _dereq_(84),
+    find = _dereq_(85),
+    forEach = _dereq_(86);
 
-var Refs = _dereq_(188);
+var Refs = _dereq_(202);
 
 var elementToString = _dereq_(10).elementToString;
 
@@ -3056,7 +3135,7 @@ function BpmnTreeWalker(handler) {
 }
 
 module.exports = BpmnTreeWalker;
-},{"10":10,"188":188,"78":78,"79":79,"80":80}],9:[function(_dereq_,module,exports){
+},{"10":10,"202":202,"84":84,"85":85,"86":86}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var BpmnTreeWalker = _dereq_(8);
@@ -3132,25 +3211,30 @@ module.exports = {
 },{"7":7}],12:[function(_dereq_,module,exports){
 'use strict';
 
-module.exports.isExpandedPool = function(semantic) {
-  return !!semantic.processRef;
+var is = _dereq_(14).is,
+    getBusinessObject = _dereq_(14).getBusinessObject;
+
+module.exports.isExpanded = function(element) {
+
+  if (is(element, 'bpmn:CallActivity')) {
+    return false;
+  }
+
+  if (is(element, 'bpmn:SubProcess')) {
+    return getBusinessObject(element).di.isExpanded;
+  }
+
+  if (is(element, 'bpmn:Participant')) {
+    return !!getBusinessObject(element).processRef;
+  }
+
+  return true;
 };
 
-module.exports.isExpanded = function(semantic) {
-
-  // Is type expanded by default?
-  var isDefaultExpanded = !(semantic.$instanceOf('bpmn:SubProcess') || semantic.$instanceOf('bpmn:CallActivity'));
-
-  // For non default expanded types -> evaluate the expanded flag
-  var isExpanded = isDefaultExpanded || semantic.di.isExpanded;
-
-  return isExpanded;
-};
-
-},{}],13:[function(_dereq_,module,exports){
+},{"14":14}],13:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162);
+var assign = _dereq_(177);
 
 
 var DEFAULT_LABEL_SIZE = module.exports.DEFAULT_LABEL_SIZE = {
@@ -3247,18 +3331,51 @@ module.exports.getExternalLabelBounds = function(semantic, element) {
     y: mid.y - size.height / 2
   }, size);
 };
-},{"162":162}],14:[function(_dereq_,module,exports){
-module.exports = _dereq_(16);
-},{"16":16}],15:[function(_dereq_,module,exports){
+},{"177":177}],14:[function(_dereq_,module,exports){
 'use strict';
 
-var isString = _dereq_(159),
-    isFunction = _dereq_(154),
-    assign = _dereq_(162);
+/**
+ * Is an element of the given BPMN type?
+ *
+ * @param  {djs.model.Base|ModdleElement} element
+ * @param  {String} type
+ *
+ * @return {Boolean}
+ */
+function is(element, type) {
+  var bo = getBusinessObject(element);
 
-var Moddle = _dereq_(22),
-    XmlReader = _dereq_(18),
-    XmlWriter = _dereq_(19);
+  return bo && bo.$instanceOf(type);
+}
+
+module.exports.is = is;
+
+
+/**
+ * Return the business object for a given element.
+ *
+ * @param  {djs.model.Base|ModdleElement} element
+ *
+ * @return {ModdleElement}
+ */
+function getBusinessObject(element) {
+  return (element && element.businessObject) || element;
+}
+
+module.exports.getBusinessObject = getBusinessObject;
+
+},{}],15:[function(_dereq_,module,exports){
+module.exports = _dereq_(17);
+},{"17":17}],16:[function(_dereq_,module,exports){
+'use strict';
+
+var isString = _dereq_(174),
+    isFunction = _dereq_(169),
+    assign = _dereq_(177);
+
+var Moddle = _dereq_(23),
+    XmlReader = _dereq_(19),
+    XmlWriter = _dereq_(20);
 
 /**
  * A sub class of {@link Moddle} with support for import and export of BPMN 2.0 xml files.
@@ -3330,24 +3447,24 @@ BpmnModdle.prototype.toXML = function(element, options, done) {
   }
 };
 
-},{"154":154,"159":159,"162":162,"18":18,"19":19,"22":22}],16:[function(_dereq_,module,exports){
+},{"169":169,"174":174,"177":177,"19":19,"20":20,"23":23}],17:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162);
+var assign = _dereq_(177);
 
-var BpmnModdle = _dereq_(15);
+var BpmnModdle = _dereq_(16);
 
 var packages = {
-  bpmn: _dereq_(31),
-  bpmndi: _dereq_(32),
-  dc: _dereq_(33),
-  di: _dereq_(34)
+  bpmn: _dereq_(32),
+  bpmndi: _dereq_(33),
+  dc: _dereq_(34),
+  di: _dereq_(35)
 };
 
 module.exports = function(additionalPackages, options) {
   return new BpmnModdle(assign({}, packages, additionalPackages), options);
 };
-},{"15":15,"162":162,"31":31,"32":32,"33":33,"34":34}],17:[function(_dereq_,module,exports){
+},{"16":16,"177":177,"32":32,"33":33,"34":34,"35":35}],18:[function(_dereq_,module,exports){
 'use strict';
 
 function capitalize(string) {
@@ -3383,26 +3500,39 @@ module.exports.DEFAULT_NS_MAP = {
   'xsi': 'http://www.w3.org/2001/XMLSchema-instance'
 };
 
-module.exports.XSI_TYPE = 'xsi:type';
-},{}],18:[function(_dereq_,module,exports){
+var XSI_TYPE = module.exports.XSI_TYPE = 'xsi:type';
+
+function serializeFormat(element) {
+  return element.xml && element.xml.serialize;
+}
+
+module.exports.serializeAsType = function(element) {
+  return serializeFormat(element) === XSI_TYPE;
+};
+
+module.exports.serializeAsProperty = function(element) {
+  return serializeFormat(element) === 'property';
+};
+},{}],19:[function(_dereq_,module,exports){
 'use strict';
 
-var reduce = _dereq_(84),
-    forEach = _dereq_(80),
-    find = _dereq_(79),
-    assign = _dereq_(162),
-    defer = _dereq_(88);
+var reduce = _dereq_(90),
+    forEach = _dereq_(86),
+    find = _dereq_(85),
+    assign = _dereq_(177),
+    defer = _dereq_(94);
 
-var Stack = _dereq_(21),
-    SaxParser = _dereq_(20).parser,
-    Moddle = _dereq_(22),
-    parseNameNs = _dereq_(27).parseName,
-    Types = _dereq_(30),
+var Stack = _dereq_(22),
+    SaxParser = _dereq_(21).parser,
+    Moddle = _dereq_(23),
+    parseNameNs = _dereq_(28).parseName,
+    Types = _dereq_(31),
     coerceType = Types.coerceType,
     isSimpleType = Types.isSimple,
-    common = _dereq_(17),
+    common = _dereq_(18),
     XSI_TYPE = common.XSI_TYPE,
     XSI_URI = common.DEFAULT_NS_MAP.xsi,
+    serializeAsType = common.serializeAsType,
     aliasToName = common.aliasToName;
 
 function parseNodeAttributes(node) {
@@ -3710,7 +3840,7 @@ ElementHandler.prototype.getPropertyForNode = function(node) {
 
   if (property) {
 
-    if (property.serialize === XSI_TYPE) {
+    if (serializeAsType(property)) {
       typeAnnotation = node.attributes[XSI_TYPE];
 
       // xsi type is optional, if it does not exists the
@@ -4023,19 +4153,21 @@ XMLReader.prototype.handler = function(name) {
 
 module.exports = XMLReader;
 module.exports.ElementHandler = ElementHandler;
-},{"162":162,"17":17,"20":20,"21":21,"22":22,"27":27,"30":30,"79":79,"80":80,"84":84,"88":88}],19:[function(_dereq_,module,exports){
+},{"177":177,"18":18,"21":21,"22":22,"23":23,"28":28,"31":31,"85":85,"86":86,"90":90,"94":94}],20:[function(_dereq_,module,exports){
 'use strict';
 
-var map = _dereq_(83),
-    forEach = _dereq_(80),
-    isString = _dereq_(159),
-    filter = _dereq_(78),
-    assign = _dereq_(162);
+var map = _dereq_(89),
+    forEach = _dereq_(86),
+    isString = _dereq_(174),
+    filter = _dereq_(84),
+    assign = _dereq_(177);
 
-var Types = _dereq_(30),
-    parseNameNs = _dereq_(27).parseName,
-    common = _dereq_(17),
-    nameToAlias = common.nameToAlias;
+var Types = _dereq_(31),
+    parseNameNs = _dereq_(28).parseName,
+    common = _dereq_(18),
+    nameToAlias = common.nameToAlias,
+    serializeAsType = common.serializeAsType,
+    serializeAsProperty = common.serializeAsProperty;
 
 var XML_PREAMBLE = '<?xml version="1.0" encoding="UTF-8"?>\n',
     ESCAPE_CHARS = /(<|>|'|"|&|\n\r|\n)/g,
@@ -4353,13 +4485,17 @@ ElementSerializer.prototype.parseContainments = function(properties) {
     } else {
       // allow serialization via type
       // rather than element name
-      var asType = p.serialize === XSI_TYPE;
+      var asType = serializeAsType(p),
+          asProperty = serializeAsProperty(p);
 
       forEach(value, function(v) {
         var serializer;
 
         if (asType) {
           serializer = new TypeSerializer(self, ns);
+        } else
+        if (asProperty) {
+          serializer = new ElementSerializer(self, ns);
         } else {
           serializer = new ElementSerializer(self);
         }
@@ -4627,7 +4763,8 @@ function XMLWriter(options) {
 }
 
 module.exports = XMLWriter;
-},{"159":159,"162":162,"17":17,"27":27,"30":30,"78":78,"80":80,"83":83}],20:[function(_dereq_,module,exports){
+
+},{"174":174,"177":177,"18":18,"28":28,"31":31,"84":84,"86":86,"89":89}],21:[function(_dereq_,module,exports){
 (function (Buffer){
 // wrapper for non-node envs
 ;(function (sax) {
@@ -6041,8 +6178,8 @@ if (!String.fromCodePoint) {
 })(typeof exports === "undefined" ? sax = {} : exports);
 
 }).call(this,undefined)
-
-},{"undefined":undefined}],21:[function(_dereq_,module,exports){
+//# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9icG1uLW1vZGRsZS9ub2RlX21vZHVsZXMvbW9kZGxlLXhtbC9ub2RlX21vZHVsZXMvc2F4L2xpYi9zYXguanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6ImdlbmVyYXRlZC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzQ29udGVudCI6WyIvLyB3cmFwcGVyIGZvciBub24tbm9kZSBlbnZzXG47KGZ1bmN0aW9uIChzYXgpIHtcblxuc2F4LnBhcnNlciA9IGZ1bmN0aW9uIChzdHJpY3QsIG9wdCkgeyByZXR1cm4gbmV3IFNBWFBhcnNlcihzdHJpY3QsIG9wdCkgfVxuc2F4LlNBWFBhcnNlciA9IFNBWFBhcnNlclxuc2F4LlNBWFN0cmVhbSA9IFNBWFN0cmVhbVxuc2F4LmNyZWF0ZVN0cmVhbSA9IGNyZWF0ZVN0cmVhbVxuXG4vLyBXaGVuIHdlIHBhc3MgdGhlIE1BWF9CVUZGRVJfTEVOR1RIIHBvc2l0aW9uLCBzdGFydCBjaGVja2luZyBmb3IgYnVmZmVyIG92ZXJydW5zLlxuLy8gV2hlbiB3ZSBjaGVjaywgc2NoZWR1bGUgdGhlIG5leHQgY2hlY2sgZm9yIE1BWF9CVUZGRVJfTEVOR1RIIC0gKG1heChidWZmZXIgbGVuZ3RocykpLFxuLy8gc2luY2UgdGhhdCdzIHRoZSBlYXJsaWVzdCB0aGF0IGEgYnVmZmVyIG92ZXJydW4gY291bGQgb2NjdXIuICBUaGlzIHdheSwgY2hlY2tzIGFyZVxuLy8gYXMgcmFyZSBhcyByZXF1aXJlZCwgYnV0IGFzIG9mdGVuIGFzIG5lY2Vzc2FyeSB0byBlbnN1cmUgbmV2ZXIgY3Jvc3NpbmcgdGhpcyBib3VuZC5cbi8vIEZ1cnRoZXJtb3JlLCBidWZmZXJzIGFyZSBvbmx5IHRlc3RlZCBhdCBtb3N0IG9uY2UgcGVyIHdyaXRlKCksIHNvIHBhc3NpbmcgYSB2ZXJ5XG4vLyBsYXJnZSBzdHJpbmcgaW50byB3cml0ZSgpIG1pZ2h0IGhhdmUgdW5kZXNpcmFibGUgZWZmZWN0cywgYnV0IHRoaXMgaXMgbWFuYWdlYWJsZSBieVxuLy8gdGhlIGNhbGxlciwgc28gaXQgaXMgYXNzdW1lZCB0byBiZSBzYWZlLiAgVGh1cywgYSBjYWxsIHRvIHdyaXRlKCkgbWF5LCBpbiB0aGUgZXh0cmVtZVxuLy8gZWRnZSBjYXNlLCByZXN1bHQgaW4gY3JlYXRpbmcgYXQgbW9zdCBvbmUgY29tcGxldGUgY29weSBvZiB0aGUgc3RyaW5nIHBhc3NlZCBpbi5cbi8vIFNldCB0byBJbmZpbml0eSB0byBoYXZlIHVubGltaXRlZCBidWZmZXJzLlxuc2F4Lk1BWF9CVUZGRVJfTEVOR1RIID0gNjQgKiAxMDI0XG5cbnZhciBidWZmZXJzID0gW1xuICBcImNvbW1lbnRcIiwgXCJzZ21sRGVjbFwiLCBcInRleHROb2RlXCIsIFwidGFnTmFtZVwiLCBcImRvY3R5cGVcIixcbiAgXCJwcm9jSW5zdE5hbWVcIiwgXCJwcm9jSW5zdEJvZHlcIiwgXCJlbnRpdHlcIiwgXCJhdHRyaWJOYW1lXCIsXG4gIFwiYXR0cmliVmFsdWVcIiwgXCJjZGF0YVwiLCBcInNjcmlwdFwiXG5dXG5cbnNheC5FVkVOVFMgPSAvLyBmb3IgZGlzY292ZXJhYmlsaXR5LlxuICBbIFwidGV4dFwiXG4gICwgXCJwcm9jZXNzaW5naW5zdHJ1Y3Rpb25cIlxuICAsIFwic2dtbGRlY2xhcmF0aW9uXCJcbiAgLCBcImRvY3R5cGVcIlxuICAsIFwiY29tbWVudFwiXG4gICwgXCJhdHRyaWJ1dGVcIlxuICAsIFwib3BlbnRhZ1wiXG4gICwgXCJjbG9zZXRhZ1wiXG4gICwgXCJvcGVuY2RhdGFcIlxuICAsIFwiY2RhdGFcIlxuICAsIFwiY2xvc2VjZGF0YVwiXG4gICwgXCJlcnJvclwiXG4gICwgXCJlbmRcIlxuICAsIFwicmVhZHlcIlxuICAsIFwic2NyaXB0XCJcbiAgLCBcIm9wZW5uYW1lc3BhY2VcIlxuICAsIFwiY2xvc2VuYW1lc3BhY2VcIlxuICBdXG5cbmZ1bmN0aW9uIFNBWFBhcnNlciAoc3RyaWN0LCBvcHQpIHtcbiAgaWYgKCEodGhpcyBpbnN0YW5jZW9mIFNBWFBhcnNlcikpIHJldHVybiBuZXcgU0FYUGFyc2VyKHN0cmljdCwgb3B0KVxuXG4gIHZhciBwYXJzZXIgPSB0aGlzXG4gIGNsZWFyQnVmZmVycyhwYXJzZXIpXG4gIHBhcnNlci5xID0gcGFyc2VyLmMgPSBcIlwiXG4gIHBhcnNlci5idWZmZXJDaGVja1Bvc2l0aW9uID0gc2F4Lk1BWF9CVUZGRVJfTEVOR1RIXG4gIHBhcnNlci5vcHQgPSBvcHQgfHwge31cbiAgcGFyc2VyLm9wdC5sb3dlcmNhc2UgPSBwYXJzZXIub3B0Lmxvd2VyY2FzZSB8fCBwYXJzZXIub3B0Lmxvd2VyY2FzZXRhZ3NcbiAgcGFyc2VyLmxvb3NlQ2FzZSA9IHBhcnNlci5vcHQubG93ZXJjYXNlID8gXCJ0b0xvd2VyQ2FzZVwiIDogXCJ0b1VwcGVyQ2FzZVwiXG4gIHBhcnNlci50YWdzID0gW11cbiAgcGFyc2VyLmNsb3NlZCA9IHBhcnNlci5jbG9zZWRSb290ID0gcGFyc2VyLnNhd1Jvb3QgPSBmYWxzZVxuICBwYXJzZXIudGFnID0gcGFyc2VyLmVycm9yID0gbnVsbFxuICBwYXJzZXIuc3RyaWN0ID0gISFzdHJpY3RcbiAgcGFyc2VyLm5vc2NyaXB0ID0gISEoc3RyaWN0IHx8IHBhcnNlci5vcHQubm9zY3JpcHQpXG4gIHBhcnNlci5zdGF0ZSA9IFMuQkVHSU5cbiAgcGFyc2VyLkVOVElUSUVTID0gT2JqZWN0LmNyZWF0ZShzYXguRU5USVRJRVMpXG4gIHBhcnNlci5hdHRyaWJMaXN0ID0gW11cblxuICAvLyBuYW1lc3BhY2VzIGZvcm0gYSBwcm90b3R5cGUgY2hhaW4uXG4gIC8vIGl0IGFsd2F5cyBwb2ludHMgYXQgdGhlIGN1cnJlbnQgdGFnLFxuICAvLyB3aGljaCBwcm90b3MgdG8gaXRzIHBhcmVudCB0YWcuXG4gIGlmIChwYXJzZXIub3B0LnhtbG5zKSBwYXJzZXIubnMgPSBPYmplY3QuY3JlYXRlKHJvb3ROUylcblxuICAvLyBtb3N0bHkganVzdCBmb3IgZXJyb3IgcmVwb3J0aW5nXG4gIHBhcnNlci50cmFja1Bvc2l0aW9uID0gcGFyc2VyLm9wdC5wb3NpdGlvbiAhPT0gZmFsc2VcbiAgaWYgKHBhcnNlci50cmFja1Bvc2l0aW9uKSB7XG4gICAgcGFyc2VyLnBvc2l0aW9uID0gcGFyc2VyLmxpbmUgPSBwYXJzZXIuY29sdW1uID0gMFxuICB9XG4gIGVtaXQocGFyc2VyLCBcIm9ucmVhZHlcIilcbn1cblxuaWYgKCFPYmplY3QuY3JlYXRlKSBPYmplY3QuY3JlYXRlID0gZnVuY3Rpb24gKG8pIHtcbiAgZnVuY3Rpb24gZiAoKSB7IHRoaXMuX19wcm90b19fID0gbyB9XG4gIGYucHJvdG90eXBlID0gb1xuICByZXR1cm4gbmV3IGZcbn1cblxuaWYgKCFPYmplY3QuZ2V0UHJvdG90eXBlT2YpIE9iamVjdC5nZXRQcm90b3R5cGVPZiA9IGZ1bmN0aW9uIChvKSB7XG4gIHJldHVybiBvLl9fcHJvdG9fX1xufVxuXG5pZiAoIU9iamVjdC5rZXlzKSBPYmplY3Qua2V5cyA9IGZ1bmN0aW9uIChvKSB7XG4gIHZhciBhID0gW11cbiAgZm9yICh2YXIgaSBpbiBvKSBpZiAoby5oYXNPd25Qcm9wZXJ0eShpKSkgYS5wdXNoKGkpXG4gIHJldHVybiBhXG59XG5cbmZ1bmN0aW9uIGNoZWNrQnVmZmVyTGVuZ3RoIChwYXJzZXIpIHtcbiAgdmFyIG1heEFsbG93ZWQgPSBNYXRoLm1heChzYXguTUFYX0JVRkZFUl9MRU5HVEgsIDEwKVxuICAgICwgbWF4QWN0dWFsID0gMFxuICBmb3IgKHZhciBpID0gMCwgbCA9IGJ1ZmZlcnMubGVuZ3RoOyBpIDwgbDsgaSArKykge1xuICAgIHZhciBsZW4gPSBwYXJzZXJbYnVmZmVyc1tpXV0ubGVuZ3RoXG4gICAgaWYgKGxlbiA+IG1heEFsbG93ZWQpIHtcbiAgICAgIC8vIFRleHQvY2RhdGEgbm9kZXMgY2FuIGdldCBiaWcsIGFuZCBzaW5jZSB0aGV5J3JlIGJ1ZmZlcmVkLFxuICAgICAgLy8gd2UgY2FuIGdldCBoZXJlIHVuZGVyIG5vcm1hbCBjb25kaXRpb25zLlxuICAgICAgLy8gQXZvaWQgaXNzdWVzIGJ5IGVtaXR0aW5nIHRoZSB0ZXh0IG5vZGUgbm93LFxuICAgICAgLy8gc28gYXQgbGVhc3QgaXQgd29uJ3QgZ2V0IGFueSBiaWdnZXIuXG4gICAgICBzd2l0Y2ggKGJ1ZmZlcnNbaV0pIHtcbiAgICAgICAgY2FzZSBcInRleHROb2RlXCI6XG4gICAgICAgICAgY2xvc2VUZXh0KHBhcnNlcilcbiAgICAgICAgYnJlYWtcblxuICAgICAgICBjYXNlIFwiY2RhdGFcIjpcbiAgICAgICAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25jZGF0YVwiLCBwYXJzZXIuY2RhdGEpXG4gICAgICAgICAgcGFyc2VyLmNkYXRhID0gXCJcIlxuICAgICAgICBicmVha1xuXG4gICAgICAgIGNhc2UgXCJzY3JpcHRcIjpcbiAgICAgICAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25zY3JpcHRcIiwgcGFyc2VyLnNjcmlwdClcbiAgICAgICAgICBwYXJzZXIuc2NyaXB0ID0gXCJcIlxuICAgICAgICBicmVha1xuXG4gICAgICAgIGRlZmF1bHQ6XG4gICAgICAgICAgZXJyb3IocGFyc2VyLCBcIk1heCBidWZmZXIgbGVuZ3RoIGV4Y2VlZGVkOiBcIitidWZmZXJzW2ldKVxuICAgICAgfVxuICAgIH1cbiAgICBtYXhBY3R1YWwgPSBNYXRoLm1heChtYXhBY3R1YWwsIGxlbilcbiAgfVxuICAvLyBzY2hlZHVsZSB0aGUgbmV4dCBjaGVjayBmb3IgdGhlIGVhcmxpZXN0IHBvc3NpYmxlIGJ1ZmZlciBvdmVycnVuLlxuICBwYXJzZXIuYnVmZmVyQ2hlY2tQb3NpdGlvbiA9IChzYXguTUFYX0JVRkZFUl9MRU5HVEggLSBtYXhBY3R1YWwpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICsgcGFyc2VyLnBvc2l0aW9uXG59XG5cbmZ1bmN0aW9uIGNsZWFyQnVmZmVycyAocGFyc2VyKSB7XG4gIGZvciAodmFyIGkgPSAwLCBsID0gYnVmZmVycy5sZW5ndGg7IGkgPCBsOyBpICsrKSB7XG4gICAgcGFyc2VyW2J1ZmZlcnNbaV1dID0gXCJcIlxuICB9XG59XG5cbmZ1bmN0aW9uIGZsdXNoQnVmZmVycyAocGFyc2VyKSB7XG4gIGNsb3NlVGV4dChwYXJzZXIpXG4gIGlmIChwYXJzZXIuY2RhdGEgIT09IFwiXCIpIHtcbiAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25jZGF0YVwiLCBwYXJzZXIuY2RhdGEpXG4gICAgcGFyc2VyLmNkYXRhID0gXCJcIlxuICB9XG4gIGlmIChwYXJzZXIuc2NyaXB0ICE9PSBcIlwiKSB7XG4gICAgZW1pdE5vZGUocGFyc2VyLCBcIm9uc2NyaXB0XCIsIHBhcnNlci5zY3JpcHQpXG4gICAgcGFyc2VyLnNjcmlwdCA9IFwiXCJcbiAgfVxufVxuXG5TQVhQYXJzZXIucHJvdG90eXBlID1cbiAgeyBlbmQ6IGZ1bmN0aW9uICgpIHsgZW5kKHRoaXMpIH1cbiAgLCB3cml0ZTogd3JpdGVcbiAgLCByZXN1bWU6IGZ1bmN0aW9uICgpIHsgdGhpcy5lcnJvciA9IG51bGw7IHJldHVybiB0aGlzIH1cbiAgLCBjbG9zZTogZnVuY3Rpb24gKCkgeyByZXR1cm4gdGhpcy53cml0ZShudWxsKSB9XG4gICwgZmx1c2g6IGZ1bmN0aW9uICgpIHsgZmx1c2hCdWZmZXJzKHRoaXMpIH1cbiAgfVxuXG50cnkge1xuICB2YXIgU3RyZWFtID0gcmVxdWlyZShcInN0cmVhbVwiKS5TdHJlYW1cbn0gY2F0Y2ggKGV4KSB7XG4gIHZhciBTdHJlYW0gPSBmdW5jdGlvbiAoKSB7fVxufVxuXG5cbnZhciBzdHJlYW1XcmFwcyA9IHNheC5FVkVOVFMuZmlsdGVyKGZ1bmN0aW9uIChldikge1xuICByZXR1cm4gZXYgIT09IFwiZXJyb3JcIiAmJiBldiAhPT0gXCJlbmRcIlxufSlcblxuZnVuY3Rpb24gY3JlYXRlU3RyZWFtIChzdHJpY3QsIG9wdCkge1xuICByZXR1cm4gbmV3IFNBWFN0cmVhbShzdHJpY3QsIG9wdClcbn1cblxuZnVuY3Rpb24gU0FYU3RyZWFtIChzdHJpY3QsIG9wdCkge1xuICBpZiAoISh0aGlzIGluc3RhbmNlb2YgU0FYU3RyZWFtKSkgcmV0dXJuIG5ldyBTQVhTdHJlYW0oc3RyaWN0LCBvcHQpXG5cbiAgU3RyZWFtLmFwcGx5KHRoaXMpXG5cbiAgdGhpcy5fcGFyc2VyID0gbmV3IFNBWFBhcnNlcihzdHJpY3QsIG9wdClcbiAgdGhpcy53cml0YWJsZSA9IHRydWVcbiAgdGhpcy5yZWFkYWJsZSA9IHRydWVcblxuXG4gIHZhciBtZSA9IHRoaXNcblxuICB0aGlzLl9wYXJzZXIub25lbmQgPSBmdW5jdGlvbiAoKSB7XG4gICAgbWUuZW1pdChcImVuZFwiKVxuICB9XG5cbiAgdGhpcy5fcGFyc2VyLm9uZXJyb3IgPSBmdW5jdGlvbiAoZXIpIHtcbiAgICBtZS5lbWl0KFwiZXJyb3JcIiwgZXIpXG5cbiAgICAvLyBpZiBkaWRuJ3QgdGhyb3csIHRoZW4gbWVhbnMgZXJyb3Igd2FzIGhhbmRsZWQuXG4gICAgLy8gZ28gYWhlYWQgYW5kIGNsZWFyIGVycm9yLCBzbyB3ZSBjYW4gd3JpdGUgYWdhaW4uXG4gICAgbWUuX3BhcnNlci5lcnJvciA9IG51bGxcbiAgfVxuXG4gIHRoaXMuX2RlY29kZXIgPSBudWxsO1xuXG4gIHN0cmVhbVdyYXBzLmZvckVhY2goZnVuY3Rpb24gKGV2KSB7XG4gICAgT2JqZWN0LmRlZmluZVByb3BlcnR5KG1lLCBcIm9uXCIgKyBldiwge1xuICAgICAgZ2V0OiBmdW5jdGlvbiAoKSB7IHJldHVybiBtZS5fcGFyc2VyW1wib25cIiArIGV2XSB9LFxuICAgICAgc2V0OiBmdW5jdGlvbiAoaCkge1xuICAgICAgICBpZiAoIWgpIHtcbiAgICAgICAgICBtZS5yZW1vdmVBbGxMaXN0ZW5lcnMoZXYpXG4gICAgICAgICAgcmV0dXJuIG1lLl9wYXJzZXJbXCJvblwiK2V2XSA9IGhcbiAgICAgICAgfVxuICAgICAgICBtZS5vbihldiwgaClcbiAgICAgIH0sXG4gICAgICBlbnVtZXJhYmxlOiB0cnVlLFxuICAgICAgY29uZmlndXJhYmxlOiBmYWxzZVxuICAgIH0pXG4gIH0pXG59XG5cblNBWFN0cmVhbS5wcm90b3R5cGUgPSBPYmplY3QuY3JlYXRlKFN0cmVhbS5wcm90b3R5cGUsXG4gIHsgY29uc3RydWN0b3I6IHsgdmFsdWU6IFNBWFN0cmVhbSB9IH0pXG5cblNBWFN0cmVhbS5wcm90b3R5cGUud3JpdGUgPSBmdW5jdGlvbiAoZGF0YSkge1xuICBpZiAodHlwZW9mIEJ1ZmZlciA9PT0gJ2Z1bmN0aW9uJyAmJlxuICAgICAgdHlwZW9mIEJ1ZmZlci5pc0J1ZmZlciA9PT0gJ2Z1bmN0aW9uJyAmJlxuICAgICAgQnVmZmVyLmlzQnVmZmVyKGRhdGEpKSB7XG4gICAgaWYgKCF0aGlzLl9kZWNvZGVyKSB7XG4gICAgICB2YXIgU0QgPSByZXF1aXJlKCdzdHJpbmdfZGVjb2RlcicpLlN0cmluZ0RlY29kZXJcbiAgICAgIHRoaXMuX2RlY29kZXIgPSBuZXcgU0QoJ3V0ZjgnKVxuICAgIH1cbiAgICBkYXRhID0gdGhpcy5fZGVjb2Rlci53cml0ZShkYXRhKTtcbiAgfVxuXG4gIHRoaXMuX3BhcnNlci53cml0ZShkYXRhLnRvU3RyaW5nKCkpXG4gIHRoaXMuZW1pdChcImRhdGFcIiwgZGF0YSlcbiAgcmV0dXJuIHRydWVcbn1cblxuU0FYU3RyZWFtLnByb3RvdHlwZS5lbmQgPSBmdW5jdGlvbiAoY2h1bmspIHtcbiAgaWYgKGNodW5rICYmIGNodW5rLmxlbmd0aCkgdGhpcy53cml0ZShjaHVuaylcbiAgdGhpcy5fcGFyc2VyLmVuZCgpXG4gIHJldHVybiB0cnVlXG59XG5cblNBWFN0cmVhbS5wcm90b3R5cGUub24gPSBmdW5jdGlvbiAoZXYsIGhhbmRsZXIpIHtcbiAgdmFyIG1lID0gdGhpc1xuICBpZiAoIW1lLl9wYXJzZXJbXCJvblwiK2V2XSAmJiBzdHJlYW1XcmFwcy5pbmRleE9mKGV2KSAhPT0gLTEpIHtcbiAgICBtZS5fcGFyc2VyW1wib25cIitldl0gPSBmdW5jdGlvbiAoKSB7XG4gICAgICB2YXIgYXJncyA9IGFyZ3VtZW50cy5sZW5ndGggPT09IDEgPyBbYXJndW1lbnRzWzBdXVxuICAgICAgICAgICAgICAgOiBBcnJheS5hcHBseShudWxsLCBhcmd1bWVudHMpXG4gICAgICBhcmdzLnNwbGljZSgwLCAwLCBldilcbiAgICAgIG1lLmVtaXQuYXBwbHkobWUsIGFyZ3MpXG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIFN0cmVhbS5wcm90b3R5cGUub24uY2FsbChtZSwgZXYsIGhhbmRsZXIpXG59XG5cblxuXG4vLyBjaGFyYWN0ZXIgY2xhc3NlcyBhbmQgdG9rZW5zXG52YXIgd2hpdGVzcGFjZSA9IFwiXFxyXFxuXFx0IFwiXG4gIC8vIHRoaXMgcmVhbGx5IG5lZWRzIHRvIGJlIHJlcGxhY2VkIHdpdGggY2hhcmFjdGVyIGNsYXNzZXMuXG4gIC8vIFhNTCBhbGxvd3MgYWxsIG1hbm5lciBvZiByaWRpY3Vsb3VzIG51bWJlcnMgYW5kIGRpZ2l0cy5cbiAgLCBudW1iZXIgPSBcIjAxMjQzNTY3ODlcIlxuICAsIGxldHRlciA9IFwiYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWlwiXG4gIC8vIChMZXR0ZXIgfCBcIl9cIiB8IFwiOlwiKVxuICAsIHF1b3RlID0gXCInXFxcIlwiXG4gICwgZW50aXR5ID0gbnVtYmVyK2xldHRlcitcIiNcIlxuICAsIGF0dHJpYkVuZCA9IHdoaXRlc3BhY2UgKyBcIj5cIlxuICAsIENEQVRBID0gXCJbQ0RBVEFbXCJcbiAgLCBET0NUWVBFID0gXCJET0NUWVBFXCJcbiAgLCBYTUxfTkFNRVNQQUNFID0gXCJodHRwOi8vd3d3LnczLm9yZy9YTUwvMTk5OC9uYW1lc3BhY2VcIlxuICAsIFhNTE5TX05BTUVTUEFDRSA9IFwiaHR0cDovL3d3dy53My5vcmcvMjAwMC94bWxucy9cIlxuICAsIHJvb3ROUyA9IHsgeG1sOiBYTUxfTkFNRVNQQUNFLCB4bWxuczogWE1MTlNfTkFNRVNQQUNFIH1cblxuLy8gdHVybiBhbGwgdGhlIHN0cmluZyBjaGFyYWN0ZXIgc2V0cyBpbnRvIGNoYXJhY3RlciBjbGFzcyBvYmplY3RzLlxud2hpdGVzcGFjZSA9IGNoYXJDbGFzcyh3aGl0ZXNwYWNlKVxubnVtYmVyID0gY2hhckNsYXNzKG51bWJlcilcbmxldHRlciA9IGNoYXJDbGFzcyhsZXR0ZXIpXG5cbi8vIGh0dHA6Ly93d3cudzMub3JnL1RSL1JFQy14bWwvI05ULU5hbWVTdGFydENoYXJcbi8vIFRoaXMgaW1wbGVtZW50YXRpb24gd29ya3Mgb24gc3RyaW5ncywgYSBzaW5nbGUgY2hhcmFjdGVyIGF0IGEgdGltZVxuLy8gYXMgc3VjaCwgaXQgY2Fubm90IGV2ZXIgc3VwcG9ydCBhc3RyYWwtcGxhbmUgY2hhcmFjdGVycyAoMTAwMDAtRUZGRkYpXG4vLyB3aXRob3V0IGEgc2lnbmlmaWNhbnQgYnJlYWtpbmcgY2hhbmdlIHRvIGVpdGhlciB0aGlzICBwYXJzZXIsIG9yIHRoZVxuLy8gSmF2YVNjcmlwdCBsYW5ndWFnZS4gIEltcGxlbWVudGF0aW9uIG9mIGFuIGVtb2ppLWNhcGFibGUgeG1sIHBhcnNlclxuLy8gaXMgbGVmdCBhcyBhbiBleGVyY2lzZSBmb3IgdGhlIHJlYWRlci5cbnZhciBuYW1lU3RhcnQgPSAvWzpfQS1aYS16XFx1MDBDMC1cXHUwMEQ2XFx1MDBEOC1cXHUwMEY2XFx1MDBGOC1cXHUwMkZGXFx1MDM3MC1cXHUwMzdEXFx1MDM3Ri1cXHUxRkZGXFx1MjAwQy1cXHUyMDBEXFx1MjA3MC1cXHUyMThGXFx1MkMwMC1cXHUyRkVGXFx1MzAwMS1cXHVEN0ZGXFx1RjkwMC1cXHVGRENGXFx1RkRGMC1cXHVGRkZEXS9cblxudmFyIG5hbWVCb2R5ID0gL1s6X0EtWmEtelxcdTAwQzAtXFx1MDBENlxcdTAwRDgtXFx1MDBGNlxcdTAwRjgtXFx1MDJGRlxcdTAzNzAtXFx1MDM3RFxcdTAzN0YtXFx1MUZGRlxcdTIwMEMtXFx1MjAwRFxcdTIwNzAtXFx1MjE4RlxcdTJDMDAtXFx1MkZFRlxcdTMwMDEtXFx1RDdGRlxcdUY5MDAtXFx1RkRDRlxcdUZERjAtXFx1RkZGRFxcdTAwQjdcXHUwMzAwLVxcdTAzNkZcXHUyMDNGLVxcdTIwNDBcXC5cXGQtXS9cblxucXVvdGUgPSBjaGFyQ2xhc3MocXVvdGUpXG5lbnRpdHkgPSBjaGFyQ2xhc3MoZW50aXR5KVxuYXR0cmliRW5kID0gY2hhckNsYXNzKGF0dHJpYkVuZClcblxuZnVuY3Rpb24gY2hhckNsYXNzIChzdHIpIHtcbiAgcmV0dXJuIHN0ci5zcGxpdChcIlwiKS5yZWR1Y2UoZnVuY3Rpb24gKHMsIGMpIHtcbiAgICBzW2NdID0gdHJ1ZVxuICAgIHJldHVybiBzXG4gIH0sIHt9KVxufVxuXG5mdW5jdGlvbiBpc1JlZ0V4cCAoYykge1xuICByZXR1cm4gT2JqZWN0LnByb3RvdHlwZS50b1N0cmluZy5jYWxsKGMpID09PSAnW29iamVjdCBSZWdFeHBdJ1xufVxuXG5mdW5jdGlvbiBpcyAoY2hhcmNsYXNzLCBjKSB7XG4gIHJldHVybiBpc1JlZ0V4cChjaGFyY2xhc3MpID8gISFjLm1hdGNoKGNoYXJjbGFzcykgOiBjaGFyY2xhc3NbY11cbn1cblxuZnVuY3Rpb24gbm90IChjaGFyY2xhc3MsIGMpIHtcbiAgcmV0dXJuICFpcyhjaGFyY2xhc3MsIGMpXG59XG5cbnZhciBTID0gMFxuc2F4LlNUQVRFID1cbnsgQkVHSU4gICAgICAgICAgICAgICAgICAgICA6IFMrK1xuLCBURVhUICAgICAgICAgICAgICAgICAgICAgIDogUysrIC8vIGdlbmVyYWwgc3R1ZmZcbiwgVEVYVF9FTlRJVFkgICAgICAgICAgICAgICA6IFMrKyAvLyAmYW1wIGFuZCBzdWNoLlxuLCBPUEVOX1dBS0EgICAgICAgICAgICAgICAgIDogUysrIC8vIDxcbiwgU0dNTF9ERUNMICAgICAgICAgICAgICAgICA6IFMrKyAvLyA8IUJMQVJHXG4sIFNHTUxfREVDTF9RVU9URUQgICAgICAgICAgOiBTKysgLy8gPCFCTEFSRyBmb28gXCJiYXJcbiwgRE9DVFlQRSAgICAgICAgICAgICAgICAgICA6IFMrKyAvLyA8IURPQ1RZUEVcbiwgRE9DVFlQRV9RVU9URUQgICAgICAgICAgICA6IFMrKyAvLyA8IURPQ1RZUEUgXCIvL2JsYWhcbiwgRE9DVFlQRV9EVEQgICAgICAgICAgICAgICA6IFMrKyAvLyA8IURPQ1RZUEUgXCIvL2JsYWhcIiBbIC4uLlxuLCBET0NUWVBFX0RURF9RVU9URUQgICAgICAgIDogUysrIC8vIDwhRE9DVFlQRSBcIi8vYmxhaFwiIFsgXCJmb29cbiwgQ09NTUVOVF9TVEFSVElORyAgICAgICAgICA6IFMrKyAvLyA8IS1cbiwgQ09NTUVOVCAgICAgICAgICAgICAgICAgICA6IFMrKyAvLyA8IS0tXG4sIENPTU1FTlRfRU5ESU5HICAgICAgICAgICAgOiBTKysgLy8gPCEtLSBibGFoIC1cbiwgQ09NTUVOVF9FTkRFRCAgICAgICAgICAgICA6IFMrKyAvLyA8IS0tIGJsYWggLS1cbiwgQ0RBVEEgICAgICAgICAgICAgICAgICAgICA6IFMrKyAvLyA8IVtDREFUQVsgc29tZXRoaW5nXG4sIENEQVRBX0VORElORyAgICAgICAgICAgICAgOiBTKysgLy8gXVxuLCBDREFUQV9FTkRJTkdfMiAgICAgICAgICAgIDogUysrIC8vIF1dXG4sIFBST0NfSU5TVCAgICAgICAgICAgICAgICAgOiBTKysgLy8gPD9oaVxuLCBQUk9DX0lOU1RfQk9EWSAgICAgICAgICAgIDogUysrIC8vIDw/aGkgdGhlcmVcbiwgUFJPQ19JTlNUX0VORElORyAgICAgICAgICA6IFMrKyAvLyA8P2hpIFwidGhlcmVcIiA/XG4sIE9QRU5fVEFHICAgICAgICAgICAgICAgICAgOiBTKysgLy8gPHN0cm9uZ1xuLCBPUEVOX1RBR19TTEFTSCAgICAgICAgICAgIDogUysrIC8vIDxzdHJvbmcgL1xuLCBBVFRSSUIgICAgICAgICAgICAgICAgICAgIDogUysrIC8vIDxhXG4sIEFUVFJJQl9OQU1FICAgICAgICAgICAgICAgOiBTKysgLy8gPGEgZm9vXG4sIEFUVFJJQl9OQU1FX1NBV19XSElURSAgICAgOiBTKysgLy8gPGEgZm9vIF9cbiwgQVRUUklCX1ZBTFVFICAgICAgICAgICAgICA6IFMrKyAvLyA8YSBmb289XG4sIEFUVFJJQl9WQUxVRV9RVU9URUQgICAgICAgOiBTKysgLy8gPGEgZm9vPVwiYmFyXG4sIEFUVFJJQl9WQUxVRV9DTE9TRUQgICAgICAgOiBTKysgLy8gPGEgZm9vPVwiYmFyXCJcbiwgQVRUUklCX1ZBTFVFX1VOUVVPVEVEICAgICA6IFMrKyAvLyA8YSBmb289YmFyXG4sIEFUVFJJQl9WQUxVRV9FTlRJVFlfUSAgICAgOiBTKysgLy8gPGZvbyBiYXI9XCImcXVvdDtcIlxuLCBBVFRSSUJfVkFMVUVfRU5USVRZX1UgICAgIDogUysrIC8vIDxmb28gYmFyPSZxdW90O1xuLCBDTE9TRV9UQUcgICAgICAgICAgICAgICAgIDogUysrIC8vIDwvYVxuLCBDTE9TRV9UQUdfU0FXX1dISVRFICAgICAgIDogUysrIC8vIDwvYSAgID5cbiwgU0NSSVBUICAgICAgICAgICAgICAgICAgICA6IFMrKyAvLyA8c2NyaXB0PiAuLi5cbiwgU0NSSVBUX0VORElORyAgICAgICAgICAgICA6IFMrKyAvLyA8c2NyaXB0PiAuLi4gPFxufVxuXG5zYXguRU5USVRJRVMgPVxueyBcImFtcFwiIDogXCImXCJcbiwgXCJndFwiIDogXCI+XCJcbiwgXCJsdFwiIDogXCI8XCJcbiwgXCJxdW90XCIgOiBcIlxcXCJcIlxuLCBcImFwb3NcIiA6IFwiJ1wiXG4sIFwiQUVsaWdcIiA6IDE5OFxuLCBcIkFhY3V0ZVwiIDogMTkzXG4sIFwiQWNpcmNcIiA6IDE5NFxuLCBcIkFncmF2ZVwiIDogMTkyXG4sIFwiQXJpbmdcIiA6IDE5N1xuLCBcIkF0aWxkZVwiIDogMTk1XG4sIFwiQXVtbFwiIDogMTk2XG4sIFwiQ2NlZGlsXCIgOiAxOTlcbiwgXCJFVEhcIiA6IDIwOFxuLCBcIkVhY3V0ZVwiIDogMjAxXG4sIFwiRWNpcmNcIiA6IDIwMlxuLCBcIkVncmF2ZVwiIDogMjAwXG4sIFwiRXVtbFwiIDogMjAzXG4sIFwiSWFjdXRlXCIgOiAyMDVcbiwgXCJJY2lyY1wiIDogMjA2XG4sIFwiSWdyYXZlXCIgOiAyMDRcbiwgXCJJdW1sXCIgOiAyMDdcbiwgXCJOdGlsZGVcIiA6IDIwOVxuLCBcIk9hY3V0ZVwiIDogMjExXG4sIFwiT2NpcmNcIiA6IDIxMlxuLCBcIk9ncmF2ZVwiIDogMjEwXG4sIFwiT3NsYXNoXCIgOiAyMTZcbiwgXCJPdGlsZGVcIiA6IDIxM1xuLCBcIk91bWxcIiA6IDIxNFxuLCBcIlRIT1JOXCIgOiAyMjJcbiwgXCJVYWN1dGVcIiA6IDIxOFxuLCBcIlVjaXJjXCIgOiAyMTlcbiwgXCJVZ3JhdmVcIiA6IDIxN1xuLCBcIlV1bWxcIiA6IDIyMFxuLCBcIllhY3V0ZVwiIDogMjIxXG4sIFwiYWFjdXRlXCIgOiAyMjVcbiwgXCJhY2lyY1wiIDogMjI2XG4sIFwiYWVsaWdcIiA6IDIzMFxuLCBcImFncmF2ZVwiIDogMjI0XG4sIFwiYXJpbmdcIiA6IDIyOVxuLCBcImF0aWxkZVwiIDogMjI3XG4sIFwiYXVtbFwiIDogMjI4XG4sIFwiY2NlZGlsXCIgOiAyMzFcbiwgXCJlYWN1dGVcIiA6IDIzM1xuLCBcImVjaXJjXCIgOiAyMzRcbiwgXCJlZ3JhdmVcIiA6IDIzMlxuLCBcImV0aFwiIDogMjQwXG4sIFwiZXVtbFwiIDogMjM1XG4sIFwiaWFjdXRlXCIgOiAyMzdcbiwgXCJpY2lyY1wiIDogMjM4XG4sIFwiaWdyYXZlXCIgOiAyMzZcbiwgXCJpdW1sXCIgOiAyMzlcbiwgXCJudGlsZGVcIiA6IDI0MVxuLCBcIm9hY3V0ZVwiIDogMjQzXG4sIFwib2NpcmNcIiA6IDI0NFxuLCBcIm9ncmF2ZVwiIDogMjQyXG4sIFwib3NsYXNoXCIgOiAyNDhcbiwgXCJvdGlsZGVcIiA6IDI0NVxuLCBcIm91bWxcIiA6IDI0NlxuLCBcInN6bGlnXCIgOiAyMjNcbiwgXCJ0aG9yblwiIDogMjU0XG4sIFwidWFjdXRlXCIgOiAyNTBcbiwgXCJ1Y2lyY1wiIDogMjUxXG4sIFwidWdyYXZlXCIgOiAyNDlcbiwgXCJ1dW1sXCIgOiAyNTJcbiwgXCJ5YWN1dGVcIiA6IDI1M1xuLCBcInl1bWxcIiA6IDI1NVxuLCBcImNvcHlcIiA6IDE2OVxuLCBcInJlZ1wiIDogMTc0XG4sIFwibmJzcFwiIDogMTYwXG4sIFwiaWV4Y2xcIiA6IDE2MVxuLCBcImNlbnRcIiA6IDE2MlxuLCBcInBvdW5kXCIgOiAxNjNcbiwgXCJjdXJyZW5cIiA6IDE2NFxuLCBcInllblwiIDogMTY1XG4sIFwiYnJ2YmFyXCIgOiAxNjZcbiwgXCJzZWN0XCIgOiAxNjdcbiwgXCJ1bWxcIiA6IDE2OFxuLCBcIm9yZGZcIiA6IDE3MFxuLCBcImxhcXVvXCIgOiAxNzFcbiwgXCJub3RcIiA6IDE3MlxuLCBcInNoeVwiIDogMTczXG4sIFwibWFjclwiIDogMTc1XG4sIFwiZGVnXCIgOiAxNzZcbiwgXCJwbHVzbW5cIiA6IDE3N1xuLCBcInN1cDFcIiA6IDE4NVxuLCBcInN1cDJcIiA6IDE3OFxuLCBcInN1cDNcIiA6IDE3OVxuLCBcImFjdXRlXCIgOiAxODBcbiwgXCJtaWNyb1wiIDogMTgxXG4sIFwicGFyYVwiIDogMTgyXG4sIFwibWlkZG90XCIgOiAxODNcbiwgXCJjZWRpbFwiIDogMTg0XG4sIFwib3JkbVwiIDogMTg2XG4sIFwicmFxdW9cIiA6IDE4N1xuLCBcImZyYWMxNFwiIDogMTg4XG4sIFwiZnJhYzEyXCIgOiAxODlcbiwgXCJmcmFjMzRcIiA6IDE5MFxuLCBcImlxdWVzdFwiIDogMTkxXG4sIFwidGltZXNcIiA6IDIxNVxuLCBcImRpdmlkZVwiIDogMjQ3XG4sIFwiT0VsaWdcIiA6IDMzOFxuLCBcIm9lbGlnXCIgOiAzMzlcbiwgXCJTY2Fyb25cIiA6IDM1MlxuLCBcInNjYXJvblwiIDogMzUzXG4sIFwiWXVtbFwiIDogMzc2XG4sIFwiZm5vZlwiIDogNDAyXG4sIFwiY2lyY1wiIDogNzEwXG4sIFwidGlsZGVcIiA6IDczMlxuLCBcIkFscGhhXCIgOiA5MTNcbiwgXCJCZXRhXCIgOiA5MTRcbiwgXCJHYW1tYVwiIDogOTE1XG4sIFwiRGVsdGFcIiA6IDkxNlxuLCBcIkVwc2lsb25cIiA6IDkxN1xuLCBcIlpldGFcIiA6IDkxOFxuLCBcIkV0YVwiIDogOTE5XG4sIFwiVGhldGFcIiA6IDkyMFxuLCBcIklvdGFcIiA6IDkyMVxuLCBcIkthcHBhXCIgOiA5MjJcbiwgXCJMYW1iZGFcIiA6IDkyM1xuLCBcIk11XCIgOiA5MjRcbiwgXCJOdVwiIDogOTI1XG4sIFwiWGlcIiA6IDkyNlxuLCBcIk9taWNyb25cIiA6IDkyN1xuLCBcIlBpXCIgOiA5MjhcbiwgXCJSaG9cIiA6IDkyOVxuLCBcIlNpZ21hXCIgOiA5MzFcbiwgXCJUYXVcIiA6IDkzMlxuLCBcIlVwc2lsb25cIiA6IDkzM1xuLCBcIlBoaVwiIDogOTM0XG4sIFwiQ2hpXCIgOiA5MzVcbiwgXCJQc2lcIiA6IDkzNlxuLCBcIk9tZWdhXCIgOiA5MzdcbiwgXCJhbHBoYVwiIDogOTQ1XG4sIFwiYmV0YVwiIDogOTQ2XG4sIFwiZ2FtbWFcIiA6IDk0N1xuLCBcImRlbHRhXCIgOiA5NDhcbiwgXCJlcHNpbG9uXCIgOiA5NDlcbiwgXCJ6ZXRhXCIgOiA5NTBcbiwgXCJldGFcIiA6IDk1MVxuLCBcInRoZXRhXCIgOiA5NTJcbiwgXCJpb3RhXCIgOiA5NTNcbiwgXCJrYXBwYVwiIDogOTU0XG4sIFwibGFtYmRhXCIgOiA5NTVcbiwgXCJtdVwiIDogOTU2XG4sIFwibnVcIiA6IDk1N1xuLCBcInhpXCIgOiA5NThcbiwgXCJvbWljcm9uXCIgOiA5NTlcbiwgXCJwaVwiIDogOTYwXG4sIFwicmhvXCIgOiA5NjFcbiwgXCJzaWdtYWZcIiA6IDk2MlxuLCBcInNpZ21hXCIgOiA5NjNcbiwgXCJ0YXVcIiA6IDk2NFxuLCBcInVwc2lsb25cIiA6IDk2NVxuLCBcInBoaVwiIDogOTY2XG4sIFwiY2hpXCIgOiA5NjdcbiwgXCJwc2lcIiA6IDk2OFxuLCBcIm9tZWdhXCIgOiA5NjlcbiwgXCJ0aGV0YXN5bVwiIDogOTc3XG4sIFwidXBzaWhcIiA6IDk3OFxuLCBcInBpdlwiIDogOTgyXG4sIFwiZW5zcFwiIDogODE5NFxuLCBcImVtc3BcIiA6IDgxOTVcbiwgXCJ0aGluc3BcIiA6IDgyMDFcbiwgXCJ6d25qXCIgOiA4MjA0XG4sIFwiendqXCIgOiA4MjA1XG4sIFwibHJtXCIgOiA4MjA2XG4sIFwicmxtXCIgOiA4MjA3XG4sIFwibmRhc2hcIiA6IDgyMTFcbiwgXCJtZGFzaFwiIDogODIxMlxuLCBcImxzcXVvXCIgOiA4MjE2XG4sIFwicnNxdW9cIiA6IDgyMTdcbiwgXCJzYnF1b1wiIDogODIxOFxuLCBcImxkcXVvXCIgOiA4MjIwXG4sIFwicmRxdW9cIiA6IDgyMjFcbiwgXCJiZHF1b1wiIDogODIyMlxuLCBcImRhZ2dlclwiIDogODIyNFxuLCBcIkRhZ2dlclwiIDogODIyNVxuLCBcImJ1bGxcIiA6IDgyMjZcbiwgXCJoZWxsaXBcIiA6IDgyMzBcbiwgXCJwZXJtaWxcIiA6IDgyNDBcbiwgXCJwcmltZVwiIDogODI0MlxuLCBcIlByaW1lXCIgOiA4MjQzXG4sIFwibHNhcXVvXCIgOiA4MjQ5XG4sIFwicnNhcXVvXCIgOiA4MjUwXG4sIFwib2xpbmVcIiA6IDgyNTRcbiwgXCJmcmFzbFwiIDogODI2MFxuLCBcImV1cm9cIiA6IDgzNjRcbiwgXCJpbWFnZVwiIDogODQ2NVxuLCBcIndlaWVycFwiIDogODQ3MlxuLCBcInJlYWxcIiA6IDg0NzZcbiwgXCJ0cmFkZVwiIDogODQ4MlxuLCBcImFsZWZzeW1cIiA6IDg1MDFcbiwgXCJsYXJyXCIgOiA4NTkyXG4sIFwidWFyclwiIDogODU5M1xuLCBcInJhcnJcIiA6IDg1OTRcbiwgXCJkYXJyXCIgOiA4NTk1XG4sIFwiaGFyclwiIDogODU5NlxuLCBcImNyYXJyXCIgOiA4NjI5XG4sIFwibEFyclwiIDogODY1NlxuLCBcInVBcnJcIiA6IDg2NTdcbiwgXCJyQXJyXCIgOiA4NjU4XG4sIFwiZEFyclwiIDogODY1OVxuLCBcImhBcnJcIiA6IDg2NjBcbiwgXCJmb3JhbGxcIiA6IDg3MDRcbiwgXCJwYXJ0XCIgOiA4NzA2XG4sIFwiZXhpc3RcIiA6IDg3MDdcbiwgXCJlbXB0eVwiIDogODcwOVxuLCBcIm5hYmxhXCIgOiA4NzExXG4sIFwiaXNpblwiIDogODcxMlxuLCBcIm5vdGluXCIgOiA4NzEzXG4sIFwibmlcIiA6IDg3MTVcbiwgXCJwcm9kXCIgOiA4NzE5XG4sIFwic3VtXCIgOiA4NzIxXG4sIFwibWludXNcIiA6IDg3MjJcbiwgXCJsb3dhc3RcIiA6IDg3MjdcbiwgXCJyYWRpY1wiIDogODczMFxuLCBcInByb3BcIiA6IDg3MzNcbiwgXCJpbmZpblwiIDogODczNFxuLCBcImFuZ1wiIDogODczNlxuLCBcImFuZFwiIDogODc0M1xuLCBcIm9yXCIgOiA4NzQ0XG4sIFwiY2FwXCIgOiA4NzQ1XG4sIFwiY3VwXCIgOiA4NzQ2XG4sIFwiaW50XCIgOiA4NzQ3XG4sIFwidGhlcmU0XCIgOiA4NzU2XG4sIFwic2ltXCIgOiA4NzY0XG4sIFwiY29uZ1wiIDogODc3M1xuLCBcImFzeW1wXCIgOiA4Nzc2XG4sIFwibmVcIiA6IDg4MDBcbiwgXCJlcXVpdlwiIDogODgwMVxuLCBcImxlXCIgOiA4ODA0XG4sIFwiZ2VcIiA6IDg4MDVcbiwgXCJzdWJcIiA6IDg4MzRcbiwgXCJzdXBcIiA6IDg4MzVcbiwgXCJuc3ViXCIgOiA4ODM2XG4sIFwic3ViZVwiIDogODgzOFxuLCBcInN1cGVcIiA6IDg4MzlcbiwgXCJvcGx1c1wiIDogODg1M1xuLCBcIm90aW1lc1wiIDogODg1NVxuLCBcInBlcnBcIiA6IDg4NjlcbiwgXCJzZG90XCIgOiA4OTAxXG4sIFwibGNlaWxcIiA6IDg5NjhcbiwgXCJyY2VpbFwiIDogODk2OVxuLCBcImxmbG9vclwiIDogODk3MFxuLCBcInJmbG9vclwiIDogODk3MVxuLCBcImxhbmdcIiA6IDkwMDFcbiwgXCJyYW5nXCIgOiA5MDAyXG4sIFwibG96XCIgOiA5Njc0XG4sIFwic3BhZGVzXCIgOiA5ODI0XG4sIFwiY2x1YnNcIiA6IDk4MjdcbiwgXCJoZWFydHNcIiA6IDk4MjlcbiwgXCJkaWFtc1wiIDogOTgzMFxufVxuXG5PYmplY3Qua2V5cyhzYXguRU5USVRJRVMpLmZvckVhY2goZnVuY3Rpb24gKGtleSkge1xuICAgIHZhciBlID0gc2F4LkVOVElUSUVTW2tleV1cbiAgICB2YXIgcyA9IHR5cGVvZiBlID09PSAnbnVtYmVyJyA/IFN0cmluZy5mcm9tQ2hhckNvZGUoZSkgOiBlXG4gICAgc2F4LkVOVElUSUVTW2tleV0gPSBzXG59KVxuXG5mb3IgKHZhciBTIGluIHNheC5TVEFURSkgc2F4LlNUQVRFW3NheC5TVEFURVtTXV0gPSBTXG5cbi8vIHNob3J0aGFuZFxuUyA9IHNheC5TVEFURVxuXG5mdW5jdGlvbiBlbWl0IChwYXJzZXIsIGV2ZW50LCBkYXRhKSB7XG4gIHBhcnNlcltldmVudF0gJiYgcGFyc2VyW2V2ZW50XShkYXRhKVxufVxuXG5mdW5jdGlvbiBlbWl0Tm9kZSAocGFyc2VyLCBub2RlVHlwZSwgZGF0YSkge1xuICBpZiAocGFyc2VyLnRleHROb2RlKSBjbG9zZVRleHQocGFyc2VyKVxuICBlbWl0KHBhcnNlciwgbm9kZVR5cGUsIGRhdGEpXG59XG5cbmZ1bmN0aW9uIGNsb3NlVGV4dCAocGFyc2VyKSB7XG4gIHBhcnNlci50ZXh0Tm9kZSA9IHRleHRvcHRzKHBhcnNlci5vcHQsIHBhcnNlci50ZXh0Tm9kZSlcbiAgaWYgKHBhcnNlci50ZXh0Tm9kZSkgZW1pdChwYXJzZXIsIFwib250ZXh0XCIsIHBhcnNlci50ZXh0Tm9kZSlcbiAgcGFyc2VyLnRleHROb2RlID0gXCJcIlxufVxuXG5mdW5jdGlvbiB0ZXh0b3B0cyAob3B0LCB0ZXh0KSB7XG4gIGlmIChvcHQudHJpbSkgdGV4dCA9IHRleHQudHJpbSgpXG4gIGlmIChvcHQubm9ybWFsaXplKSB0ZXh0ID0gdGV4dC5yZXBsYWNlKC9cXHMrL2csIFwiIFwiKVxuICByZXR1cm4gdGV4dFxufVxuXG5mdW5jdGlvbiBlcnJvciAocGFyc2VyLCBlcikge1xuICBjbG9zZVRleHQocGFyc2VyKVxuICBpZiAocGFyc2VyLnRyYWNrUG9zaXRpb24pIHtcbiAgICBlciArPSBcIlxcbkxpbmU6IFwiK3BhcnNlci5saW5lK1xuICAgICAgICAgIFwiXFxuQ29sdW1uOiBcIitwYXJzZXIuY29sdW1uK1xuICAgICAgICAgIFwiXFxuQ2hhcjogXCIrcGFyc2VyLmNcbiAgfVxuICBlciA9IG5ldyBFcnJvcihlcilcbiAgcGFyc2VyLmVycm9yID0gZXJcbiAgZW1pdChwYXJzZXIsIFwib25lcnJvclwiLCBlcilcbiAgcmV0dXJuIHBhcnNlclxufVxuXG5mdW5jdGlvbiBlbmQgKHBhcnNlcikge1xuICBpZiAoIXBhcnNlci5jbG9zZWRSb290KSBzdHJpY3RGYWlsKHBhcnNlciwgXCJVbmNsb3NlZCByb290IHRhZ1wiKVxuICBpZiAoKHBhcnNlci5zdGF0ZSAhPT0gUy5CRUdJTikgJiYgKHBhcnNlci5zdGF0ZSAhPT0gUy5URVhUKSkgZXJyb3IocGFyc2VyLCBcIlVuZXhwZWN0ZWQgZW5kXCIpXG4gIGNsb3NlVGV4dChwYXJzZXIpXG4gIHBhcnNlci5jID0gXCJcIlxuICBwYXJzZXIuY2xvc2VkID0gdHJ1ZVxuICBlbWl0KHBhcnNlciwgXCJvbmVuZFwiKVxuICBTQVhQYXJzZXIuY2FsbChwYXJzZXIsIHBhcnNlci5zdHJpY3QsIHBhcnNlci5vcHQpXG4gIHJldHVybiBwYXJzZXJcbn1cblxuZnVuY3Rpb24gc3RyaWN0RmFpbCAocGFyc2VyLCBtZXNzYWdlKSB7XG4gIGlmICh0eXBlb2YgcGFyc2VyICE9PSAnb2JqZWN0JyB8fCAhKHBhcnNlciBpbnN0YW5jZW9mIFNBWFBhcnNlcikpXG4gICAgdGhyb3cgbmV3IEVycm9yKCdiYWQgY2FsbCB0byBzdHJpY3RGYWlsJyk7XG4gIGlmIChwYXJzZXIuc3RyaWN0KSBlcnJvcihwYXJzZXIsIG1lc3NhZ2UpXG59XG5cbmZ1bmN0aW9uIG5ld1RhZyAocGFyc2VyKSB7XG4gIGlmICghcGFyc2VyLnN0cmljdCkgcGFyc2VyLnRhZ05hbWUgPSBwYXJzZXIudGFnTmFtZVtwYXJzZXIubG9vc2VDYXNlXSgpXG4gIHZhciBwYXJlbnQgPSBwYXJzZXIudGFnc1twYXJzZXIudGFncy5sZW5ndGggLSAxXSB8fCBwYXJzZXJcbiAgICAsIHRhZyA9IHBhcnNlci50YWcgPSB7IG5hbWUgOiBwYXJzZXIudGFnTmFtZSwgYXR0cmlidXRlcyA6IHt9IH1cblxuICAvLyB3aWxsIGJlIG92ZXJyaWRkZW4gaWYgdGFnIGNvbnRhaWxzIGFuIHhtbG5zPVwiZm9vXCIgb3IgeG1sbnM6Zm9vPVwiYmFyXCJcbiAgaWYgKHBhcnNlci5vcHQueG1sbnMpIHRhZy5ucyA9IHBhcmVudC5uc1xuICBwYXJzZXIuYXR0cmliTGlzdC5sZW5ndGggPSAwXG59XG5cbmZ1bmN0aW9uIHFuYW1lIChuYW1lLCBhdHRyaWJ1dGUpIHtcbiAgdmFyIGkgPSBuYW1lLmluZGV4T2YoXCI6XCIpXG4gICAgLCBxdWFsTmFtZSA9IGkgPCAwID8gWyBcIlwiLCBuYW1lIF0gOiBuYW1lLnNwbGl0KFwiOlwiKVxuICAgICwgcHJlZml4ID0gcXVhbE5hbWVbMF1cbiAgICAsIGxvY2FsID0gcXVhbE5hbWVbMV1cblxuICAvLyA8eCBcInhtbG5zXCI9XCJodHRwOi8vZm9vXCI+XG4gIGlmIChhdHRyaWJ1dGUgJiYgbmFtZSA9PT0gXCJ4bWxuc1wiKSB7XG4gICAgcHJlZml4ID0gXCJ4bWxuc1wiXG4gICAgbG9jYWwgPSBcIlwiXG4gIH1cblxuICByZXR1cm4geyBwcmVmaXg6IHByZWZpeCwgbG9jYWw6IGxvY2FsIH1cbn1cblxuZnVuY3Rpb24gYXR0cmliIChwYXJzZXIpIHtcbiAgaWYgKCFwYXJzZXIuc3RyaWN0KSBwYXJzZXIuYXR0cmliTmFtZSA9IHBhcnNlci5hdHRyaWJOYW1lW3BhcnNlci5sb29zZUNhc2VdKClcblxuICBpZiAocGFyc2VyLmF0dHJpYkxpc3QuaW5kZXhPZihwYXJzZXIuYXR0cmliTmFtZSkgIT09IC0xIHx8XG4gICAgICBwYXJzZXIudGFnLmF0dHJpYnV0ZXMuaGFzT3duUHJvcGVydHkocGFyc2VyLmF0dHJpYk5hbWUpKSB7XG4gICAgcmV0dXJuIHBhcnNlci5hdHRyaWJOYW1lID0gcGFyc2VyLmF0dHJpYlZhbHVlID0gXCJcIlxuICB9XG5cbiAgaWYgKHBhcnNlci5vcHQueG1sbnMpIHtcbiAgICB2YXIgcW4gPSBxbmFtZShwYXJzZXIuYXR0cmliTmFtZSwgdHJ1ZSlcbiAgICAgICwgcHJlZml4ID0gcW4ucHJlZml4XG4gICAgICAsIGxvY2FsID0gcW4ubG9jYWxcblxuICAgIGlmIChwcmVmaXggPT09IFwieG1sbnNcIikge1xuICAgICAgLy8gbmFtZXNwYWNlIGJpbmRpbmcgYXR0cmlidXRlOyBwdXNoIHRoZSBiaW5kaW5nIGludG8gc2NvcGVcbiAgICAgIGlmIChsb2NhbCA9PT0gXCJ4bWxcIiAmJiBwYXJzZXIuYXR0cmliVmFsdWUgIT09IFhNTF9OQU1FU1BBQ0UpIHtcbiAgICAgICAgc3RyaWN0RmFpbCggcGFyc2VyXG4gICAgICAgICAgICAgICAgICAsIFwieG1sOiBwcmVmaXggbXVzdCBiZSBib3VuZCB0byBcIiArIFhNTF9OQU1FU1BBQ0UgKyBcIlxcblwiXG4gICAgICAgICAgICAgICAgICArIFwiQWN0dWFsOiBcIiArIHBhcnNlci5hdHRyaWJWYWx1ZSApXG4gICAgICB9IGVsc2UgaWYgKGxvY2FsID09PSBcInhtbG5zXCIgJiYgcGFyc2VyLmF0dHJpYlZhbHVlICE9PSBYTUxOU19OQU1FU1BBQ0UpIHtcbiAgICAgICAgc3RyaWN0RmFpbCggcGFyc2VyXG4gICAgICAgICAgICAgICAgICAsIFwieG1sbnM6IHByZWZpeCBtdXN0IGJlIGJvdW5kIHRvIFwiICsgWE1MTlNfTkFNRVNQQUNFICsgXCJcXG5cIlxuICAgICAgICAgICAgICAgICAgKyBcIkFjdHVhbDogXCIgKyBwYXJzZXIuYXR0cmliVmFsdWUgKVxuICAgICAgfSBlbHNlIHtcbiAgICAgICAgdmFyIHRhZyA9IHBhcnNlci50YWdcbiAgICAgICAgICAsIHBhcmVudCA9IHBhcnNlci50YWdzW3BhcnNlci50YWdzLmxlbmd0aCAtIDFdIHx8IHBhcnNlclxuICAgICAgICBpZiAodGFnLm5zID09PSBwYXJlbnQubnMpIHtcbiAgICAgICAgICB0YWcubnMgPSBPYmplY3QuY3JlYXRlKHBhcmVudC5ucylcbiAgICAgICAgfVxuICAgICAgICB0YWcubnNbbG9jYWxdID0gcGFyc2VyLmF0dHJpYlZhbHVlXG4gICAgICB9XG4gICAgfVxuXG4gICAgLy8gZGVmZXIgb25hdHRyaWJ1dGUgZXZlbnRzIHVudGlsIGFsbCBhdHRyaWJ1dGVzIGhhdmUgYmVlbiBzZWVuXG4gICAgLy8gc28gYW55IG5ldyBiaW5kaW5ncyBjYW4gdGFrZSBlZmZlY3Q7IHByZXNlcnZlIGF0dHJpYnV0ZSBvcmRlclxuICAgIC8vIHNvIGRlZmVycmVkIGV2ZW50cyBjYW4gYmUgZW1pdHRlZCBpbiBkb2N1bWVudCBvcmRlclxuICAgIHBhcnNlci5hdHRyaWJMaXN0LnB1c2goW3BhcnNlci5hdHRyaWJOYW1lLCBwYXJzZXIuYXR0cmliVmFsdWVdKVxuICB9IGVsc2Uge1xuICAgIC8vIGluIG5vbi14bWxucyBtb2RlLCB3ZSBjYW4gZW1pdCB0aGUgZXZlbnQgcmlnaHQgYXdheVxuICAgIHBhcnNlci50YWcuYXR0cmlidXRlc1twYXJzZXIuYXR0cmliTmFtZV0gPSBwYXJzZXIuYXR0cmliVmFsdWVcbiAgICBlbWl0Tm9kZSggcGFyc2VyXG4gICAgICAgICAgICAsIFwib25hdHRyaWJ1dGVcIlxuICAgICAgICAgICAgLCB7IG5hbWU6IHBhcnNlci5hdHRyaWJOYW1lXG4gICAgICAgICAgICAgICwgdmFsdWU6IHBhcnNlci5hdHRyaWJWYWx1ZSB9IClcbiAgfVxuXG4gIHBhcnNlci5hdHRyaWJOYW1lID0gcGFyc2VyLmF0dHJpYlZhbHVlID0gXCJcIlxufVxuXG5mdW5jdGlvbiBvcGVuVGFnIChwYXJzZXIsIHNlbGZDbG9zaW5nKSB7XG4gIGlmIChwYXJzZXIub3B0LnhtbG5zKSB7XG4gICAgLy8gZW1pdCBuYW1lc3BhY2UgYmluZGluZyBldmVudHNcbiAgICB2YXIgdGFnID0gcGFyc2VyLnRhZ1xuXG4gICAgLy8gYWRkIG5hbWVzcGFjZSBpbmZvIHRvIHRhZ1xuICAgIHZhciBxbiA9IHFuYW1lKHBhcnNlci50YWdOYW1lKVxuICAgIHRhZy5wcmVmaXggPSBxbi5wcmVmaXhcbiAgICB0YWcubG9jYWwgPSBxbi5sb2NhbFxuICAgIHRhZy51cmkgPSB0YWcubnNbcW4ucHJlZml4XSB8fCBcIlwiXG5cbiAgICBpZiAodGFnLnByZWZpeCAmJiAhdGFnLnVyaSkge1xuICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiVW5ib3VuZCBuYW1lc3BhY2UgcHJlZml4OiBcIlxuICAgICAgICAgICAgICAgICAgICAgICArIEpTT04uc3RyaW5naWZ5KHBhcnNlci50YWdOYW1lKSlcbiAgICAgIHRhZy51cmkgPSBxbi5wcmVmaXhcbiAgICB9XG5cbiAgICB2YXIgcGFyZW50ID0gcGFyc2VyLnRhZ3NbcGFyc2VyLnRhZ3MubGVuZ3RoIC0gMV0gfHwgcGFyc2VyXG4gICAgaWYgKHRhZy5ucyAmJiBwYXJlbnQubnMgIT09IHRhZy5ucykge1xuICAgICAgT2JqZWN0LmtleXModGFnLm5zKS5mb3JFYWNoKGZ1bmN0aW9uIChwKSB7XG4gICAgICAgIGVtaXROb2RlKCBwYXJzZXJcbiAgICAgICAgICAgICAgICAsIFwib25vcGVubmFtZXNwYWNlXCJcbiAgICAgICAgICAgICAgICAsIHsgcHJlZml4OiBwICwgdXJpOiB0YWcubnNbcF0gfSApXG4gICAgICB9KVxuICAgIH1cblxuICAgIC8vIGhhbmRsZSBkZWZlcnJlZCBvbmF0dHJpYnV0ZSBldmVudHNcbiAgICAvLyBOb3RlOiBkbyBub3QgYXBwbHkgZGVmYXVsdCBucyB0byBhdHRyaWJ1dGVzOlxuICAgIC8vICAgaHR0cDovL3d3dy53My5vcmcvVFIvUkVDLXhtbC1uYW1lcy8jZGVmYXVsdGluZ1xuICAgIGZvciAodmFyIGkgPSAwLCBsID0gcGFyc2VyLmF0dHJpYkxpc3QubGVuZ3RoOyBpIDwgbDsgaSArKykge1xuICAgICAgdmFyIG52ID0gcGFyc2VyLmF0dHJpYkxpc3RbaV1cbiAgICAgIHZhciBuYW1lID0gbnZbMF1cbiAgICAgICAgLCB2YWx1ZSA9IG52WzFdXG4gICAgICAgICwgcXVhbE5hbWUgPSBxbmFtZShuYW1lLCB0cnVlKVxuICAgICAgICAsIHByZWZpeCA9IHF1YWxOYW1lLnByZWZpeFxuICAgICAgICAsIGxvY2FsID0gcXVhbE5hbWUubG9jYWxcbiAgICAgICAgLCB1cmkgPSBwcmVmaXggPT0gXCJcIiA/IFwiXCIgOiAodGFnLm5zW3ByZWZpeF0gfHwgXCJcIilcbiAgICAgICAgLCBhID0geyBuYW1lOiBuYW1lXG4gICAgICAgICAgICAgICwgdmFsdWU6IHZhbHVlXG4gICAgICAgICAgICAgICwgcHJlZml4OiBwcmVmaXhcbiAgICAgICAgICAgICAgLCBsb2NhbDogbG9jYWxcbiAgICAgICAgICAgICAgLCB1cmk6IHVyaVxuICAgICAgICAgICAgICB9XG5cbiAgICAgIC8vIGlmIHRoZXJlJ3MgYW55IGF0dHJpYnV0ZXMgd2l0aCBhbiB1bmRlZmluZWQgbmFtZXNwYWNlLFxuICAgICAgLy8gdGhlbiBmYWlsIG9uIHRoZW0gbm93LlxuICAgICAgaWYgKHByZWZpeCAmJiBwcmVmaXggIT0gXCJ4bWxuc1wiICYmICF1cmkpIHtcbiAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiVW5ib3VuZCBuYW1lc3BhY2UgcHJlZml4OiBcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICsgSlNPTi5zdHJpbmdpZnkocHJlZml4KSlcbiAgICAgICAgYS51cmkgPSBwcmVmaXhcbiAgICAgIH1cbiAgICAgIHBhcnNlci50YWcuYXR0cmlidXRlc1tuYW1lXSA9IGFcbiAgICAgIGVtaXROb2RlKHBhcnNlciwgXCJvbmF0dHJpYnV0ZVwiLCBhKVxuICAgIH1cbiAgICBwYXJzZXIuYXR0cmliTGlzdC5sZW5ndGggPSAwXG4gIH1cblxuICBwYXJzZXIudGFnLmlzU2VsZkNsb3NpbmcgPSAhIXNlbGZDbG9zaW5nXG5cbiAgLy8gcHJvY2VzcyB0aGUgdGFnXG4gIHBhcnNlci5zYXdSb290ID0gdHJ1ZVxuICBwYXJzZXIudGFncy5wdXNoKHBhcnNlci50YWcpXG4gIGVtaXROb2RlKHBhcnNlciwgXCJvbm9wZW50YWdcIiwgcGFyc2VyLnRhZylcbiAgaWYgKCFzZWxmQ2xvc2luZykge1xuICAgIC8vIHNwZWNpYWwgY2FzZSBmb3IgPHNjcmlwdD4gaW4gbm9uLXN0cmljdCBtb2RlLlxuICAgIGlmICghcGFyc2VyLm5vc2NyaXB0ICYmIHBhcnNlci50YWdOYW1lLnRvTG93ZXJDYXNlKCkgPT09IFwic2NyaXB0XCIpIHtcbiAgICAgIHBhcnNlci5zdGF0ZSA9IFMuU0NSSVBUXG4gICAgfSBlbHNlIHtcbiAgICAgIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgIH1cbiAgICBwYXJzZXIudGFnID0gbnVsbFxuICAgIHBhcnNlci50YWdOYW1lID0gXCJcIlxuICB9XG4gIHBhcnNlci5hdHRyaWJOYW1lID0gcGFyc2VyLmF0dHJpYlZhbHVlID0gXCJcIlxuICBwYXJzZXIuYXR0cmliTGlzdC5sZW5ndGggPSAwXG59XG5cbmZ1bmN0aW9uIGNsb3NlVGFnIChwYXJzZXIpIHtcbiAgaWYgKCFwYXJzZXIudGFnTmFtZSkge1xuICAgIHN0cmljdEZhaWwocGFyc2VyLCBcIldlaXJkIGVtcHR5IGNsb3NlIHRhZy5cIilcbiAgICBwYXJzZXIudGV4dE5vZGUgKz0gXCI8Lz5cIlxuICAgIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgIHJldHVyblxuICB9XG5cbiAgaWYgKHBhcnNlci5zY3JpcHQpIHtcbiAgICBpZiAocGFyc2VyLnRhZ05hbWUgIT09IFwic2NyaXB0XCIpIHtcbiAgICAgIHBhcnNlci5zY3JpcHQgKz0gXCI8L1wiICsgcGFyc2VyLnRhZ05hbWUgKyBcIj5cIlxuICAgICAgcGFyc2VyLnRhZ05hbWUgPSBcIlwiXG4gICAgICBwYXJzZXIuc3RhdGUgPSBTLlNDUklQVFxuICAgICAgcmV0dXJuXG4gICAgfVxuICAgIGVtaXROb2RlKHBhcnNlciwgXCJvbnNjcmlwdFwiLCBwYXJzZXIuc2NyaXB0KVxuICAgIHBhcnNlci5zY3JpcHQgPSBcIlwiXG4gIH1cblxuICAvLyBmaXJzdCBtYWtlIHN1cmUgdGhhdCB0aGUgY2xvc2luZyB0YWcgYWN0dWFsbHkgZXhpc3RzLlxuICAvLyA8YT48Yj48L2M+PC9iPjwvYT4gd2lsbCBjbG9zZSBldmVyeXRoaW5nLCBvdGhlcndpc2UuXG4gIHZhciB0ID0gcGFyc2VyLnRhZ3MubGVuZ3RoXG4gIHZhciB0YWdOYW1lID0gcGFyc2VyLnRhZ05hbWVcbiAgaWYgKCFwYXJzZXIuc3RyaWN0KSB0YWdOYW1lID0gdGFnTmFtZVtwYXJzZXIubG9vc2VDYXNlXSgpXG4gIHZhciBjbG9zZVRvID0gdGFnTmFtZVxuICB3aGlsZSAodCAtLSkge1xuICAgIHZhciBjbG9zZSA9IHBhcnNlci50YWdzW3RdXG4gICAgaWYgKGNsb3NlLm5hbWUgIT09IGNsb3NlVG8pIHtcbiAgICAgIC8vIGZhaWwgdGhlIGZpcnN0IHRpbWUgaW4gc3RyaWN0IG1vZGVcbiAgICAgIHN0cmljdEZhaWwocGFyc2VyLCBcIlVuZXhwZWN0ZWQgY2xvc2UgdGFnXCIpXG4gICAgfSBlbHNlIGJyZWFrXG4gIH1cblxuICAvLyBkaWRuJ3QgZmluZCBpdC4gIHdlIGFscmVhZHkgZmFpbGVkIGZvciBzdHJpY3QsIHNvIGp1c3QgYWJvcnQuXG4gIGlmICh0IDwgMCkge1xuICAgIHN0cmljdEZhaWwocGFyc2VyLCBcIlVubWF0Y2hlZCBjbG9zaW5nIHRhZzogXCIrcGFyc2VyLnRhZ05hbWUpXG4gICAgcGFyc2VyLnRleHROb2RlICs9IFwiPC9cIiArIHBhcnNlci50YWdOYW1lICsgXCI+XCJcbiAgICBwYXJzZXIuc3RhdGUgPSBTLlRFWFRcbiAgICByZXR1cm5cbiAgfVxuICBwYXJzZXIudGFnTmFtZSA9IHRhZ05hbWVcbiAgdmFyIHMgPSBwYXJzZXIudGFncy5sZW5ndGhcbiAgd2hpbGUgKHMgLS0+IHQpIHtcbiAgICB2YXIgdGFnID0gcGFyc2VyLnRhZyA9IHBhcnNlci50YWdzLnBvcCgpXG4gICAgcGFyc2VyLnRhZ05hbWUgPSBwYXJzZXIudGFnLm5hbWVcbiAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25jbG9zZXRhZ1wiLCBwYXJzZXIudGFnTmFtZSlcblxuICAgIHZhciB4ID0ge31cbiAgICBmb3IgKHZhciBpIGluIHRhZy5ucykgeFtpXSA9IHRhZy5uc1tpXVxuXG4gICAgdmFyIHBhcmVudCA9IHBhcnNlci50YWdzW3BhcnNlci50YWdzLmxlbmd0aCAtIDFdIHx8IHBhcnNlclxuICAgIGlmIChwYXJzZXIub3B0LnhtbG5zICYmIHRhZy5ucyAhPT0gcGFyZW50Lm5zKSB7XG4gICAgICAvLyByZW1vdmUgbmFtZXNwYWNlIGJpbmRpbmdzIGludHJvZHVjZWQgYnkgdGFnXG4gICAgICBPYmplY3Qua2V5cyh0YWcubnMpLmZvckVhY2goZnVuY3Rpb24gKHApIHtcbiAgICAgICAgdmFyIG4gPSB0YWcubnNbcF1cbiAgICAgICAgZW1pdE5vZGUocGFyc2VyLCBcIm9uY2xvc2VuYW1lc3BhY2VcIiwgeyBwcmVmaXg6IHAsIHVyaTogbiB9KVxuICAgICAgfSlcbiAgICB9XG4gIH1cbiAgaWYgKHQgPT09IDApIHBhcnNlci5jbG9zZWRSb290ID0gdHJ1ZVxuICBwYXJzZXIudGFnTmFtZSA9IHBhcnNlci5hdHRyaWJWYWx1ZSA9IHBhcnNlci5hdHRyaWJOYW1lID0gXCJcIlxuICBwYXJzZXIuYXR0cmliTGlzdC5sZW5ndGggPSAwXG4gIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxufVxuXG5mdW5jdGlvbiBwYXJzZUVudGl0eSAocGFyc2VyKSB7XG4gIHZhciBlbnRpdHkgPSBwYXJzZXIuZW50aXR5XG4gICAgLCBlbnRpdHlMQyA9IGVudGl0eS50b0xvd2VyQ2FzZSgpXG4gICAgLCBudW1cbiAgICAsIG51bVN0ciA9IFwiXCJcbiAgaWYgKHBhcnNlci5FTlRJVElFU1tlbnRpdHldKVxuICAgIHJldHVybiBwYXJzZXIuRU5USVRJRVNbZW50aXR5XVxuICBpZiAocGFyc2VyLkVOVElUSUVTW2VudGl0eUxDXSlcbiAgICByZXR1cm4gcGFyc2VyLkVOVElUSUVTW2VudGl0eUxDXVxuICBlbnRpdHkgPSBlbnRpdHlMQ1xuICBpZiAoZW50aXR5LmNoYXJBdCgwKSA9PT0gXCIjXCIpIHtcbiAgICBpZiAoZW50aXR5LmNoYXJBdCgxKSA9PT0gXCJ4XCIpIHtcbiAgICAgIGVudGl0eSA9IGVudGl0eS5zbGljZSgyKVxuICAgICAgbnVtID0gcGFyc2VJbnQoZW50aXR5LCAxNilcbiAgICAgIG51bVN0ciA9IG51bS50b1N0cmluZygxNilcbiAgICB9IGVsc2Uge1xuICAgICAgZW50aXR5ID0gZW50aXR5LnNsaWNlKDEpXG4gICAgICBudW0gPSBwYXJzZUludChlbnRpdHksIDEwKVxuICAgICAgbnVtU3RyID0gbnVtLnRvU3RyaW5nKDEwKVxuICAgIH1cbiAgfVxuICBlbnRpdHkgPSBlbnRpdHkucmVwbGFjZSgvXjArLywgXCJcIilcbiAgaWYgKG51bVN0ci50b0xvd2VyQ2FzZSgpICE9PSBlbnRpdHkpIHtcbiAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJJbnZhbGlkIGNoYXJhY3RlciBlbnRpdHlcIilcbiAgICByZXR1cm4gXCImXCIrcGFyc2VyLmVudGl0eSArIFwiO1wiXG4gIH1cblxuICByZXR1cm4gU3RyaW5nLmZyb21Db2RlUG9pbnQobnVtKVxufVxuXG5mdW5jdGlvbiB3cml0ZSAoY2h1bmspIHtcbiAgdmFyIHBhcnNlciA9IHRoaXNcbiAgaWYgKHRoaXMuZXJyb3IpIHRocm93IHRoaXMuZXJyb3JcbiAgaWYgKHBhcnNlci5jbG9zZWQpIHJldHVybiBlcnJvcihwYXJzZXIsXG4gICAgXCJDYW5ub3Qgd3JpdGUgYWZ0ZXIgY2xvc2UuIEFzc2lnbiBhbiBvbnJlYWR5IGhhbmRsZXIuXCIpXG4gIGlmIChjaHVuayA9PT0gbnVsbCkgcmV0dXJuIGVuZChwYXJzZXIpXG4gIHZhciBpID0gMCwgYyA9IFwiXCJcbiAgd2hpbGUgKHBhcnNlci5jID0gYyA9IGNodW5rLmNoYXJBdChpKyspKSB7XG4gICAgaWYgKHBhcnNlci50cmFja1Bvc2l0aW9uKSB7XG4gICAgICBwYXJzZXIucG9zaXRpb24gKytcbiAgICAgIGlmIChjID09PSBcIlxcblwiKSB7XG4gICAgICAgIHBhcnNlci5saW5lICsrXG4gICAgICAgIHBhcnNlci5jb2x1bW4gPSAwXG4gICAgICB9IGVsc2UgcGFyc2VyLmNvbHVtbiArK1xuICAgIH1cbiAgICBzd2l0Y2ggKHBhcnNlci5zdGF0ZSkge1xuXG4gICAgICBjYXNlIFMuQkVHSU46XG4gICAgICAgIGlmIChjID09PSBcIjxcIikge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuT1BFTl9XQUtBXG4gICAgICAgICAgcGFyc2VyLnN0YXJ0VGFnUG9zaXRpb24gPSBwYXJzZXIucG9zaXRpb25cbiAgICAgICAgfSBlbHNlIGlmIChub3Qod2hpdGVzcGFjZSxjKSkge1xuICAgICAgICAgIC8vIGhhdmUgdG8gcHJvY2VzcyB0aGlzIGFzIGEgdGV4dCBub2RlLlxuICAgICAgICAgIC8vIHdlaXJkLCBidXQgaGFwcGVucy5cbiAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJOb24td2hpdGVzcGFjZSBiZWZvcmUgZmlyc3QgdGFnLlwiKVxuICAgICAgICAgIHBhcnNlci50ZXh0Tm9kZSA9IGNcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLlRFWFRcbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLlRFWFQ6XG4gICAgICAgIGlmIChwYXJzZXIuc2F3Um9vdCAmJiAhcGFyc2VyLmNsb3NlZFJvb3QpIHtcbiAgICAgICAgICB2YXIgc3RhcnRpID0gaS0xXG4gICAgICAgICAgd2hpbGUgKGMgJiYgYyE9PVwiPFwiICYmIGMhPT1cIiZcIikge1xuICAgICAgICAgICAgYyA9IGNodW5rLmNoYXJBdChpKyspXG4gICAgICAgICAgICBpZiAoYyAmJiBwYXJzZXIudHJhY2tQb3NpdGlvbikge1xuICAgICAgICAgICAgICBwYXJzZXIucG9zaXRpb24gKytcbiAgICAgICAgICAgICAgaWYgKGMgPT09IFwiXFxuXCIpIHtcbiAgICAgICAgICAgICAgICBwYXJzZXIubGluZSArK1xuICAgICAgICAgICAgICAgIHBhcnNlci5jb2x1bW4gPSAwXG4gICAgICAgICAgICAgIH0gZWxzZSBwYXJzZXIuY29sdW1uICsrXG4gICAgICAgICAgICB9XG4gICAgICAgICAgfVxuICAgICAgICAgIHBhcnNlci50ZXh0Tm9kZSArPSBjaHVuay5zdWJzdHJpbmcoc3RhcnRpLCBpLTEpXG4gICAgICAgIH1cbiAgICAgICAgaWYgKGMgPT09IFwiPFwiKSB7XG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5PUEVOX1dBS0FcbiAgICAgICAgICBwYXJzZXIuc3RhcnRUYWdQb3NpdGlvbiA9IHBhcnNlci5wb3NpdGlvblxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIGlmIChub3Qod2hpdGVzcGFjZSwgYykgJiYgKCFwYXJzZXIuc2F3Um9vdCB8fCBwYXJzZXIuY2xvc2VkUm9vdCkpXG4gICAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJUZXh0IGRhdGEgb3V0c2lkZSBvZiByb290IG5vZGUuXCIpXG4gICAgICAgICAgaWYgKGMgPT09IFwiJlwiKSBwYXJzZXIuc3RhdGUgPSBTLlRFWFRfRU5USVRZXG4gICAgICAgICAgZWxzZSBwYXJzZXIudGV4dE5vZGUgKz0gY1xuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuU0NSSVBUOlxuICAgICAgICAvLyBvbmx5IG5vbi1zdHJpY3RcbiAgICAgICAgaWYgKGMgPT09IFwiPFwiKSB7XG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5TQ1JJUFRfRU5ESU5HXG4gICAgICAgIH0gZWxzZSBwYXJzZXIuc2NyaXB0ICs9IGNcbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5TQ1JJUFRfRU5ESU5HOlxuICAgICAgICBpZiAoYyA9PT0gXCIvXCIpIHtcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkNMT1NFX1RBR1xuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIHBhcnNlci5zY3JpcHQgKz0gXCI8XCIgKyBjXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5TQ1JJUFRcbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLk9QRU5fV0FLQTpcbiAgICAgICAgLy8gZWl0aGVyIGEgLywgPywgISwgb3IgdGV4dCBpcyBjb21pbmcgbmV4dC5cbiAgICAgICAgaWYgKGMgPT09IFwiIVwiKSB7XG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5TR01MX0RFQ0xcbiAgICAgICAgICBwYXJzZXIuc2dtbERlY2wgPSBcIlwiXG4gICAgICAgIH0gZWxzZSBpZiAoaXMod2hpdGVzcGFjZSwgYykpIHtcbiAgICAgICAgICAvLyB3YWl0IGZvciBpdC4uLlxuICAgICAgICB9IGVsc2UgaWYgKGlzKG5hbWVTdGFydCxjKSkge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuT1BFTl9UQUdcbiAgICAgICAgICBwYXJzZXIudGFnTmFtZSA9IGNcbiAgICAgICAgfSBlbHNlIGlmIChjID09PSBcIi9cIikge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQ0xPU0VfVEFHXG4gICAgICAgICAgcGFyc2VyLnRhZ05hbWUgPSBcIlwiXG4gICAgICAgIH0gZWxzZSBpZiAoYyA9PT0gXCI/XCIpIHtcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLlBST0NfSU5TVFxuICAgICAgICAgIHBhcnNlci5wcm9jSW5zdE5hbWUgPSBwYXJzZXIucHJvY0luc3RCb2R5ID0gXCJcIlxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIHN0cmljdEZhaWwocGFyc2VyLCBcIlVuZW5jb2RlZCA8XCIpXG4gICAgICAgICAgLy8gaWYgdGhlcmUgd2FzIHNvbWUgd2hpdGVzcGFjZSwgdGhlbiBhZGQgdGhhdCBpbi5cbiAgICAgICAgICBpZiAocGFyc2VyLnN0YXJ0VGFnUG9zaXRpb24gKyAxIDwgcGFyc2VyLnBvc2l0aW9uKSB7XG4gICAgICAgICAgICB2YXIgcGFkID0gcGFyc2VyLnBvc2l0aW9uIC0gcGFyc2VyLnN0YXJ0VGFnUG9zaXRpb25cbiAgICAgICAgICAgIGMgPSBuZXcgQXJyYXkocGFkKS5qb2luKFwiIFwiKSArIGNcbiAgICAgICAgICB9XG4gICAgICAgICAgcGFyc2VyLnRleHROb2RlICs9IFwiPFwiICsgY1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuU0dNTF9ERUNMOlxuICAgICAgICBpZiAoKHBhcnNlci5zZ21sRGVjbCtjKS50b1VwcGVyQ2FzZSgpID09PSBDREFUQSkge1xuICAgICAgICAgIGVtaXROb2RlKHBhcnNlciwgXCJvbm9wZW5jZGF0YVwiKVxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQ0RBVEFcbiAgICAgICAgICBwYXJzZXIuc2dtbERlY2wgPSBcIlwiXG4gICAgICAgICAgcGFyc2VyLmNkYXRhID0gXCJcIlxuICAgICAgICB9IGVsc2UgaWYgKHBhcnNlci5zZ21sRGVjbCtjID09PSBcIi0tXCIpIHtcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkNPTU1FTlRcbiAgICAgICAgICBwYXJzZXIuY29tbWVudCA9IFwiXCJcbiAgICAgICAgICBwYXJzZXIuc2dtbERlY2wgPSBcIlwiXG4gICAgICAgIH0gZWxzZSBpZiAoKHBhcnNlci5zZ21sRGVjbCtjKS50b1VwcGVyQ2FzZSgpID09PSBET0NUWVBFKSB7XG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5ET0NUWVBFXG4gICAgICAgICAgaWYgKHBhcnNlci5kb2N0eXBlIHx8IHBhcnNlci5zYXdSb290KSBzdHJpY3RGYWlsKHBhcnNlcixcbiAgICAgICAgICAgIFwiSW5hcHByb3ByaWF0ZWx5IGxvY2F0ZWQgZG9jdHlwZSBkZWNsYXJhdGlvblwiKVxuICAgICAgICAgIHBhcnNlci5kb2N0eXBlID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5zZ21sRGVjbCA9IFwiXCJcbiAgICAgICAgfSBlbHNlIGlmIChjID09PSBcIj5cIikge1xuICAgICAgICAgIGVtaXROb2RlKHBhcnNlciwgXCJvbnNnbWxkZWNsYXJhdGlvblwiLCBwYXJzZXIuc2dtbERlY2wpXG4gICAgICAgICAgcGFyc2VyLnNnbWxEZWNsID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgICAgICB9IGVsc2UgaWYgKGlzKHF1b3RlLCBjKSkge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuU0dNTF9ERUNMX1FVT1RFRFxuICAgICAgICAgIHBhcnNlci5zZ21sRGVjbCArPSBjXG4gICAgICAgIH0gZWxzZSBwYXJzZXIuc2dtbERlY2wgKz0gY1xuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLlNHTUxfREVDTF9RVU9URUQ6XG4gICAgICAgIGlmIChjID09PSBwYXJzZXIucSkge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuU0dNTF9ERUNMXG4gICAgICAgICAgcGFyc2VyLnEgPSBcIlwiXG4gICAgICAgIH1cbiAgICAgICAgcGFyc2VyLnNnbWxEZWNsICs9IGNcbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5ET0NUWVBFOlxuICAgICAgICBpZiAoYyA9PT0gXCI+XCIpIHtcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLlRFWFRcbiAgICAgICAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25kb2N0eXBlXCIsIHBhcnNlci5kb2N0eXBlKVxuICAgICAgICAgIHBhcnNlci5kb2N0eXBlID0gdHJ1ZSAvLyBqdXN0IHJlbWVtYmVyIHRoYXQgd2Ugc2F3IGl0LlxuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgIHBhcnNlci5kb2N0eXBlICs9IGNcbiAgICAgICAgICBpZiAoYyA9PT0gXCJbXCIpIHBhcnNlci5zdGF0ZSA9IFMuRE9DVFlQRV9EVERcbiAgICAgICAgICBlbHNlIGlmIChpcyhxdW90ZSwgYykpIHtcbiAgICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuRE9DVFlQRV9RVU9URURcbiAgICAgICAgICAgIHBhcnNlci5xID0gY1xuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkRPQ1RZUEVfUVVPVEVEOlxuICAgICAgICBwYXJzZXIuZG9jdHlwZSArPSBjXG4gICAgICAgIGlmIChjID09PSBwYXJzZXIucSkge1xuICAgICAgICAgIHBhcnNlci5xID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuRE9DVFlQRVxuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuRE9DVFlQRV9EVEQ6XG4gICAgICAgIHBhcnNlci5kb2N0eXBlICs9IGNcbiAgICAgICAgaWYgKGMgPT09IFwiXVwiKSBwYXJzZXIuc3RhdGUgPSBTLkRPQ1RZUEVcbiAgICAgICAgZWxzZSBpZiAoaXMocXVvdGUsYykpIHtcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkRPQ1RZUEVfRFREX1FVT1RFRFxuICAgICAgICAgIHBhcnNlci5xID0gY1xuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuRE9DVFlQRV9EVERfUVVPVEVEOlxuICAgICAgICBwYXJzZXIuZG9jdHlwZSArPSBjXG4gICAgICAgIGlmIChjID09PSBwYXJzZXIucSkge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuRE9DVFlQRV9EVERcbiAgICAgICAgICBwYXJzZXIucSA9IFwiXCJcbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkNPTU1FTlQ6XG4gICAgICAgIGlmIChjID09PSBcIi1cIikgcGFyc2VyLnN0YXRlID0gUy5DT01NRU5UX0VORElOR1xuICAgICAgICBlbHNlIHBhcnNlci5jb21tZW50ICs9IGNcbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5DT01NRU5UX0VORElORzpcbiAgICAgICAgaWYgKGMgPT09IFwiLVwiKSB7XG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5DT01NRU5UX0VOREVEXG4gICAgICAgICAgcGFyc2VyLmNvbW1lbnQgPSB0ZXh0b3B0cyhwYXJzZXIub3B0LCBwYXJzZXIuY29tbWVudClcbiAgICAgICAgICBpZiAocGFyc2VyLmNvbW1lbnQpIGVtaXROb2RlKHBhcnNlciwgXCJvbmNvbW1lbnRcIiwgcGFyc2VyLmNvbW1lbnQpXG4gICAgICAgICAgcGFyc2VyLmNvbW1lbnQgPSBcIlwiXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgcGFyc2VyLmNvbW1lbnQgKz0gXCItXCIgKyBjXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5DT01NRU5UXG4gICAgICAgIH1cbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5DT01NRU5UX0VOREVEOlxuICAgICAgICBpZiAoYyAhPT0gXCI+XCIpIHtcbiAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJNYWxmb3JtZWQgY29tbWVudFwiKVxuICAgICAgICAgIC8vIGFsbG93IDwhLS0gYmxhaCAtLSBibG9vIC0tPiBpbiBub24tc3RyaWN0IG1vZGUsXG4gICAgICAgICAgLy8gd2hpY2ggaXMgYSBjb21tZW50IG9mIFwiIGJsYWggLS0gYmxvbyBcIlxuICAgICAgICAgIHBhcnNlci5jb21tZW50ICs9IFwiLS1cIiArIGNcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkNPTU1FTlRcbiAgICAgICAgfSBlbHNlIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkNEQVRBOlxuICAgICAgICBpZiAoYyA9PT0gXCJdXCIpIHBhcnNlci5zdGF0ZSA9IFMuQ0RBVEFfRU5ESU5HXG4gICAgICAgIGVsc2UgcGFyc2VyLmNkYXRhICs9IGNcbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5DREFUQV9FTkRJTkc6XG4gICAgICAgIGlmIChjID09PSBcIl1cIikgcGFyc2VyLnN0YXRlID0gUy5DREFUQV9FTkRJTkdfMlxuICAgICAgICBlbHNlIHtcbiAgICAgICAgICBwYXJzZXIuY2RhdGEgKz0gXCJdXCIgKyBjXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5DREFUQVxuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuQ0RBVEFfRU5ESU5HXzI6XG4gICAgICAgIGlmIChjID09PSBcIj5cIikge1xuICAgICAgICAgIGlmIChwYXJzZXIuY2RhdGEpIGVtaXROb2RlKHBhcnNlciwgXCJvbmNkYXRhXCIsIHBhcnNlci5jZGF0YSlcbiAgICAgICAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25jbG9zZWNkYXRhXCIpXG4gICAgICAgICAgcGFyc2VyLmNkYXRhID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuVEVYVFxuICAgICAgICB9IGVsc2UgaWYgKGMgPT09IFwiXVwiKSB7XG4gICAgICAgICAgcGFyc2VyLmNkYXRhICs9IFwiXVwiXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgcGFyc2VyLmNkYXRhICs9IFwiXV1cIiArIGNcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkNEQVRBXG4gICAgICAgIH1cbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5QUk9DX0lOU1Q6XG4gICAgICAgIGlmIChjID09PSBcIj9cIikgcGFyc2VyLnN0YXRlID0gUy5QUk9DX0lOU1RfRU5ESU5HXG4gICAgICAgIGVsc2UgaWYgKGlzKHdoaXRlc3BhY2UsIGMpKSBwYXJzZXIuc3RhdGUgPSBTLlBST0NfSU5TVF9CT0RZXG4gICAgICAgIGVsc2UgcGFyc2VyLnByb2NJbnN0TmFtZSArPSBjXG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuUFJPQ19JTlNUX0JPRFk6XG4gICAgICAgIGlmICghcGFyc2VyLnByb2NJbnN0Qm9keSAmJiBpcyh3aGl0ZXNwYWNlLCBjKSkgY29udGludWVcbiAgICAgICAgZWxzZSBpZiAoYyA9PT0gXCI/XCIpIHBhcnNlci5zdGF0ZSA9IFMuUFJPQ19JTlNUX0VORElOR1xuICAgICAgICBlbHNlIHBhcnNlci5wcm9jSW5zdEJvZHkgKz0gY1xuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLlBST0NfSU5TVF9FTkRJTkc6XG4gICAgICAgIGlmIChjID09PSBcIj5cIikge1xuICAgICAgICAgIGVtaXROb2RlKHBhcnNlciwgXCJvbnByb2Nlc3NpbmdpbnN0cnVjdGlvblwiLCB7XG4gICAgICAgICAgICBuYW1lIDogcGFyc2VyLnByb2NJbnN0TmFtZSxcbiAgICAgICAgICAgIGJvZHkgOiBwYXJzZXIucHJvY0luc3RCb2R5XG4gICAgICAgICAgfSlcbiAgICAgICAgICBwYXJzZXIucHJvY0luc3ROYW1lID0gcGFyc2VyLnByb2NJbnN0Qm9keSA9IFwiXCJcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLlRFWFRcbiAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICBwYXJzZXIucHJvY0luc3RCb2R5ICs9IFwiP1wiICsgY1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuUFJPQ19JTlNUX0JPRFlcbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLk9QRU5fVEFHOlxuICAgICAgICBpZiAoaXMobmFtZUJvZHksIGMpKSBwYXJzZXIudGFnTmFtZSArPSBjXG4gICAgICAgIGVsc2Uge1xuICAgICAgICAgIG5ld1RhZyhwYXJzZXIpXG4gICAgICAgICAgaWYgKGMgPT09IFwiPlwiKSBvcGVuVGFnKHBhcnNlcilcbiAgICAgICAgICBlbHNlIGlmIChjID09PSBcIi9cIikgcGFyc2VyLnN0YXRlID0gUy5PUEVOX1RBR19TTEFTSFxuICAgICAgICAgIGVsc2Uge1xuICAgICAgICAgICAgaWYgKG5vdCh3aGl0ZXNwYWNlLCBjKSkgc3RyaWN0RmFpbChcbiAgICAgICAgICAgICAgcGFyc2VyLCBcIkludmFsaWQgY2hhcmFjdGVyIGluIHRhZyBuYW1lXCIpXG4gICAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkFUVFJJQlxuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLk9QRU5fVEFHX1NMQVNIOlxuICAgICAgICBpZiAoYyA9PT0gXCI+XCIpIHtcbiAgICAgICAgICBvcGVuVGFnKHBhcnNlciwgdHJ1ZSlcbiAgICAgICAgICBjbG9zZVRhZyhwYXJzZXIpXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiRm9yd2FyZC1zbGFzaCBpbiBvcGVuaW5nIHRhZyBub3QgZm9sbG93ZWQgYnkgPlwiKVxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCXG4gICAgICAgIH1cbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5BVFRSSUI6XG4gICAgICAgIC8vIGhhdmVuJ3QgcmVhZCB0aGUgYXR0cmlidXRlIG5hbWUgeWV0LlxuICAgICAgICBpZiAoaXMod2hpdGVzcGFjZSwgYykpIGNvbnRpbnVlXG4gICAgICAgIGVsc2UgaWYgKGMgPT09IFwiPlwiKSBvcGVuVGFnKHBhcnNlcilcbiAgICAgICAgZWxzZSBpZiAoYyA9PT0gXCIvXCIpIHBhcnNlci5zdGF0ZSA9IFMuT1BFTl9UQUdfU0xBU0hcbiAgICAgICAgZWxzZSBpZiAoaXMobmFtZVN0YXJ0LCBjKSkge1xuICAgICAgICAgIHBhcnNlci5hdHRyaWJOYW1lID0gY1xuICAgICAgICAgIHBhcnNlci5hdHRyaWJWYWx1ZSA9IFwiXCJcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSBTLkFUVFJJQl9OQU1FXG4gICAgICAgIH0gZWxzZSBzdHJpY3RGYWlsKHBhcnNlciwgXCJJbnZhbGlkIGF0dHJpYnV0ZSBuYW1lXCIpXG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuQVRUUklCX05BTUU6XG4gICAgICAgIGlmIChjID09PSBcIj1cIikgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJfVkFMVUVcbiAgICAgICAgZWxzZSBpZiAoYyA9PT0gXCI+XCIpIHtcbiAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJBdHRyaWJ1dGUgd2l0aG91dCB2YWx1ZVwiKVxuICAgICAgICAgIHBhcnNlci5hdHRyaWJWYWx1ZSA9IHBhcnNlci5hdHRyaWJOYW1lXG4gICAgICAgICAgYXR0cmliKHBhcnNlcilcbiAgICAgICAgICBvcGVuVGFnKHBhcnNlcilcbiAgICAgICAgfVxuICAgICAgICBlbHNlIGlmIChpcyh3aGl0ZXNwYWNlLCBjKSkgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJfTkFNRV9TQVdfV0hJVEVcbiAgICAgICAgZWxzZSBpZiAoaXMobmFtZUJvZHksIGMpKSBwYXJzZXIuYXR0cmliTmFtZSArPSBjXG4gICAgICAgIGVsc2Ugc3RyaWN0RmFpbChwYXJzZXIsIFwiSW52YWxpZCBhdHRyaWJ1dGUgbmFtZVwiKVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkFUVFJJQl9OQU1FX1NBV19XSElURTpcbiAgICAgICAgaWYgKGMgPT09IFwiPVwiKSBwYXJzZXIuc3RhdGUgPSBTLkFUVFJJQl9WQUxVRVxuICAgICAgICBlbHNlIGlmIChpcyh3aGl0ZXNwYWNlLCBjKSkgY29udGludWVcbiAgICAgICAgZWxzZSB7XG4gICAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiQXR0cmlidXRlIHdpdGhvdXQgdmFsdWVcIilcbiAgICAgICAgICBwYXJzZXIudGFnLmF0dHJpYnV0ZXNbcGFyc2VyLmF0dHJpYk5hbWVdID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5hdHRyaWJWYWx1ZSA9IFwiXCJcbiAgICAgICAgICBlbWl0Tm9kZShwYXJzZXIsIFwib25hdHRyaWJ1dGVcIixcbiAgICAgICAgICAgICAgICAgICB7IG5hbWUgOiBwYXJzZXIuYXR0cmliTmFtZSwgdmFsdWUgOiBcIlwiIH0pXG4gICAgICAgICAgcGFyc2VyLmF0dHJpYk5hbWUgPSBcIlwiXG4gICAgICAgICAgaWYgKGMgPT09IFwiPlwiKSBvcGVuVGFnKHBhcnNlcilcbiAgICAgICAgICBlbHNlIGlmIChpcyhuYW1lU3RhcnQsIGMpKSB7XG4gICAgICAgICAgICBwYXJzZXIuYXR0cmliTmFtZSA9IGNcbiAgICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCX05BTUVcbiAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiSW52YWxpZCBhdHRyaWJ1dGUgbmFtZVwiKVxuICAgICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5BVFRSSUJfVkFMVUU6XG4gICAgICAgIGlmIChpcyh3aGl0ZXNwYWNlLCBjKSkgY29udGludWVcbiAgICAgICAgZWxzZSBpZiAoaXMocXVvdGUsIGMpKSB7XG4gICAgICAgICAgcGFyc2VyLnEgPSBjXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJfVkFMVUVfUVVPVEVEXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiVW5xdW90ZWQgYXR0cmlidXRlIHZhbHVlXCIpXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJfVkFMVUVfVU5RVU9URURcbiAgICAgICAgICBwYXJzZXIuYXR0cmliVmFsdWUgPSBjXG4gICAgICAgIH1cbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5BVFRSSUJfVkFMVUVfUVVPVEVEOlxuICAgICAgICBpZiAoYyAhPT0gcGFyc2VyLnEpIHtcbiAgICAgICAgICBpZiAoYyA9PT0gXCImXCIpIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCX1ZBTFVFX0VOVElUWV9RXG4gICAgICAgICAgZWxzZSBwYXJzZXIuYXR0cmliVmFsdWUgKz0gY1xuICAgICAgICAgIGNvbnRpbnVlXG4gICAgICAgIH1cbiAgICAgICAgYXR0cmliKHBhcnNlcilcbiAgICAgICAgcGFyc2VyLnEgPSBcIlwiXG4gICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCX1ZBTFVFX0NMT1NFRFxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkFUVFJJQl9WQUxVRV9DTE9TRUQ6XG4gICAgICAgIGlmIChpcyh3aGl0ZXNwYWNlLCBjKSkge1xuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCXG4gICAgICAgIH0gZWxzZSBpZiAoYyA9PT0gXCI+XCIpIG9wZW5UYWcocGFyc2VyKVxuICAgICAgICBlbHNlIGlmIChjID09PSBcIi9cIikgcGFyc2VyLnN0YXRlID0gUy5PUEVOX1RBR19TTEFTSFxuICAgICAgICBlbHNlIGlmIChpcyhuYW1lU3RhcnQsIGMpKSB7XG4gICAgICAgICAgc3RyaWN0RmFpbChwYXJzZXIsIFwiTm8gd2hpdGVzcGFjZSBiZXR3ZWVuIGF0dHJpYnV0ZXNcIilcbiAgICAgICAgICBwYXJzZXIuYXR0cmliTmFtZSA9IGNcbiAgICAgICAgICBwYXJzZXIuYXR0cmliVmFsdWUgPSBcIlwiXG4gICAgICAgICAgcGFyc2VyLnN0YXRlID0gUy5BVFRSSUJfTkFNRVxuICAgICAgICB9IGVsc2Ugc3RyaWN0RmFpbChwYXJzZXIsIFwiSW52YWxpZCBhdHRyaWJ1dGUgbmFtZVwiKVxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkFUVFJJQl9WQUxVRV9VTlFVT1RFRDpcbiAgICAgICAgaWYgKG5vdChhdHRyaWJFbmQsYykpIHtcbiAgICAgICAgICBpZiAoYyA9PT0gXCImXCIpIHBhcnNlci5zdGF0ZSA9IFMuQVRUUklCX1ZBTFVFX0VOVElUWV9VXG4gICAgICAgICAgZWxzZSBwYXJzZXIuYXR0cmliVmFsdWUgKz0gY1xuICAgICAgICAgIGNvbnRpbnVlXG4gICAgICAgIH1cbiAgICAgICAgYXR0cmliKHBhcnNlcilcbiAgICAgICAgaWYgKGMgPT09IFwiPlwiKSBvcGVuVGFnKHBhcnNlcilcbiAgICAgICAgZWxzZSBwYXJzZXIuc3RhdGUgPSBTLkFUVFJJQlxuICAgICAgY29udGludWVcblxuICAgICAgY2FzZSBTLkNMT1NFX1RBRzpcbiAgICAgICAgaWYgKCFwYXJzZXIudGFnTmFtZSkge1xuICAgICAgICAgIGlmIChpcyh3aGl0ZXNwYWNlLCBjKSkgY29udGludWVcbiAgICAgICAgICBlbHNlIGlmIChub3QobmFtZVN0YXJ0LCBjKSkge1xuICAgICAgICAgICAgaWYgKHBhcnNlci5zY3JpcHQpIHtcbiAgICAgICAgICAgICAgcGFyc2VyLnNjcmlwdCArPSBcIjwvXCIgKyBjXG4gICAgICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuU0NSSVBUXG4gICAgICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJJbnZhbGlkIHRhZ25hbWUgaW4gY2xvc2luZyB0YWcuXCIpXG4gICAgICAgICAgICB9XG4gICAgICAgICAgfSBlbHNlIHBhcnNlci50YWdOYW1lID0gY1xuICAgICAgICB9XG4gICAgICAgIGVsc2UgaWYgKGMgPT09IFwiPlwiKSBjbG9zZVRhZyhwYXJzZXIpXG4gICAgICAgIGVsc2UgaWYgKGlzKG5hbWVCb2R5LCBjKSkgcGFyc2VyLnRhZ05hbWUgKz0gY1xuICAgICAgICBlbHNlIGlmIChwYXJzZXIuc2NyaXB0KSB7XG4gICAgICAgICAgcGFyc2VyLnNjcmlwdCArPSBcIjwvXCIgKyBwYXJzZXIudGFnTmFtZVxuICAgICAgICAgIHBhcnNlci50YWdOYW1lID0gXCJcIlxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuU0NSSVBUXG4gICAgICAgIH0gZWxzZSB7XG4gICAgICAgICAgaWYgKG5vdCh3aGl0ZXNwYWNlLCBjKSkgc3RyaWN0RmFpbChwYXJzZXIsXG4gICAgICAgICAgICBcIkludmFsaWQgdGFnbmFtZSBpbiBjbG9zaW5nIHRhZ1wiKVxuICAgICAgICAgIHBhcnNlci5zdGF0ZSA9IFMuQ0xPU0VfVEFHX1NBV19XSElURVxuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBjYXNlIFMuQ0xPU0VfVEFHX1NBV19XSElURTpcbiAgICAgICAgaWYgKGlzKHdoaXRlc3BhY2UsIGMpKSBjb250aW51ZVxuICAgICAgICBpZiAoYyA9PT0gXCI+XCIpIGNsb3NlVGFnKHBhcnNlcilcbiAgICAgICAgZWxzZSBzdHJpY3RGYWlsKHBhcnNlciwgXCJJbnZhbGlkIGNoYXJhY3RlcnMgaW4gY2xvc2luZyB0YWdcIilcbiAgICAgIGNvbnRpbnVlXG5cbiAgICAgIGNhc2UgUy5URVhUX0VOVElUWTpcbiAgICAgIGNhc2UgUy5BVFRSSUJfVkFMVUVfRU5USVRZX1E6XG4gICAgICBjYXNlIFMuQVRUUklCX1ZBTFVFX0VOVElUWV9VOlxuICAgICAgICBzd2l0Y2gocGFyc2VyLnN0YXRlKSB7XG4gICAgICAgICAgY2FzZSBTLlRFWFRfRU5USVRZOlxuICAgICAgICAgICAgdmFyIHJldHVyblN0YXRlID0gUy5URVhULCBidWZmZXIgPSBcInRleHROb2RlXCJcbiAgICAgICAgICBicmVha1xuXG4gICAgICAgICAgY2FzZSBTLkFUVFJJQl9WQUxVRV9FTlRJVFlfUTpcbiAgICAgICAgICAgIHZhciByZXR1cm5TdGF0ZSA9IFMuQVRUUklCX1ZBTFVFX1FVT1RFRCwgYnVmZmVyID0gXCJhdHRyaWJWYWx1ZVwiXG4gICAgICAgICAgYnJlYWtcblxuICAgICAgICAgIGNhc2UgUy5BVFRSSUJfVkFMVUVfRU5USVRZX1U6XG4gICAgICAgICAgICB2YXIgcmV0dXJuU3RhdGUgPSBTLkFUVFJJQl9WQUxVRV9VTlFVT1RFRCwgYnVmZmVyID0gXCJhdHRyaWJWYWx1ZVwiXG4gICAgICAgICAgYnJlYWtcbiAgICAgICAgfVxuICAgICAgICBpZiAoYyA9PT0gXCI7XCIpIHtcbiAgICAgICAgICBwYXJzZXJbYnVmZmVyXSArPSBwYXJzZUVudGl0eShwYXJzZXIpXG4gICAgICAgICAgcGFyc2VyLmVudGl0eSA9IFwiXCJcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSByZXR1cm5TdGF0ZVxuICAgICAgICB9XG4gICAgICAgIGVsc2UgaWYgKGlzKGVudGl0eSwgYykpIHBhcnNlci5lbnRpdHkgKz0gY1xuICAgICAgICBlbHNlIHtcbiAgICAgICAgICBzdHJpY3RGYWlsKHBhcnNlciwgXCJJbnZhbGlkIGNoYXJhY3RlciBlbnRpdHlcIilcbiAgICAgICAgICBwYXJzZXJbYnVmZmVyXSArPSBcIiZcIiArIHBhcnNlci5lbnRpdHkgKyBjXG4gICAgICAgICAgcGFyc2VyLmVudGl0eSA9IFwiXCJcbiAgICAgICAgICBwYXJzZXIuc3RhdGUgPSByZXR1cm5TdGF0ZVxuICAgICAgICB9XG4gICAgICBjb250aW51ZVxuXG4gICAgICBkZWZhdWx0OlxuICAgICAgICB0aHJvdyBuZXcgRXJyb3IocGFyc2VyLCBcIlVua25vd24gc3RhdGU6IFwiICsgcGFyc2VyLnN0YXRlKVxuICAgIH1cbiAgfSAvLyB3aGlsZVxuICAvLyBjZGF0YSBibG9ja3MgY2FuIGdldCB2ZXJ5IGJpZyB1bmRlciBub3JtYWwgY29uZGl0aW9ucy4gZW1pdCBhbmQgbW92ZSBvbi5cbiAgLy8gaWYgKHBhcnNlci5zdGF0ZSA9PT0gUy5DREFUQSAmJiBwYXJzZXIuY2RhdGEpIHtcbiAgLy8gICBlbWl0Tm9kZShwYXJzZXIsIFwib25jZGF0YVwiLCBwYXJzZXIuY2RhdGEpXG4gIC8vICAgcGFyc2VyLmNkYXRhID0gXCJcIlxuICAvLyB9XG4gIGlmIChwYXJzZXIucG9zaXRpb24gPj0gcGFyc2VyLmJ1ZmZlckNoZWNrUG9zaXRpb24pIGNoZWNrQnVmZmVyTGVuZ3RoKHBhcnNlcilcbiAgcmV0dXJuIHBhcnNlclxufVxuXG4vKiEgaHR0cDovL210aHMuYmUvZnJvbWNvZGVwb2ludCB2MC4xLjAgYnkgQG1hdGhpYXMgKi9cbmlmICghU3RyaW5nLmZyb21Db2RlUG9pbnQpIHtcbiAgICAgICAgKGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgICAgIHZhciBzdHJpbmdGcm9tQ2hhckNvZGUgPSBTdHJpbmcuZnJvbUNoYXJDb2RlO1xuICAgICAgICAgICAgICAgIHZhciBmbG9vciA9IE1hdGguZmxvb3I7XG4gICAgICAgICAgICAgICAgdmFyIGZyb21Db2RlUG9pbnQgPSBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBNQVhfU0laRSA9IDB4NDAwMDtcbiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBjb2RlVW5pdHMgPSBbXTtcbiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBoaWdoU3Vycm9nYXRlO1xuICAgICAgICAgICAgICAgICAgICAgICAgdmFyIGxvd1N1cnJvZ2F0ZTtcbiAgICAgICAgICAgICAgICAgICAgICAgIHZhciBpbmRleCA9IC0xO1xuICAgICAgICAgICAgICAgICAgICAgICAgdmFyIGxlbmd0aCA9IGFyZ3VtZW50cy5sZW5ndGg7XG4gICAgICAgICAgICAgICAgICAgICAgICBpZiAoIWxlbmd0aCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gJyc7XG4gICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB2YXIgcmVzdWx0ID0gJyc7XG4gICAgICAgICAgICAgICAgICAgICAgICB3aGlsZSAoKytpbmRleCA8IGxlbmd0aCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YXIgY29kZVBvaW50ID0gTnVtYmVyKGFyZ3VtZW50c1tpbmRleF0pO1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIWlzRmluaXRlKGNvZGVQb2ludCkgfHwgLy8gYE5hTmAsIGArSW5maW5pdHlgLCBvciBgLUluZmluaXR5YFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvZGVQb2ludCA8IDAgfHwgLy8gbm90IGEgdmFsaWQgVW5pY29kZSBjb2RlIHBvaW50XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29kZVBvaW50ID4gMHgxMEZGRkYgfHwgLy8gbm90IGEgdmFsaWQgVW5pY29kZSBjb2RlIHBvaW50XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmxvb3IoY29kZVBvaW50KSAhPSBjb2RlUG9pbnQgLy8gbm90IGFuIGludGVnZXJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhyb3cgUmFuZ2VFcnJvcignSW52YWxpZCBjb2RlIHBvaW50OiAnICsgY29kZVBvaW50KTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoY29kZVBvaW50IDw9IDB4RkZGRikgeyAvLyBCTVAgY29kZSBwb2ludFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvZGVVbml0cy5wdXNoKGNvZGVQb2ludCk7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7IC8vIEFzdHJhbCBjb2RlIHBvaW50OyBzcGxpdCBpbiBzdXJyb2dhdGUgaGFsdmVzXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gaHR0cDovL21hdGhpYXNieW5lbnMuYmUvbm90ZXMvamF2YXNjcmlwdC1lbmNvZGluZyNzdXJyb2dhdGUtZm9ybXVsYWVcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2RlUG9pbnQgLT0gMHgxMDAwMDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoaWdoU3Vycm9nYXRlID0gKGNvZGVQb2ludCA+PiAxMCkgKyAweEQ4MDA7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbG93U3Vycm9nYXRlID0gKGNvZGVQb2ludCAlIDB4NDAwKSArIDB4REMwMDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2RlVW5pdHMucHVzaChoaWdoU3Vycm9nYXRlLCBsb3dTdXJyb2dhdGUpO1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChpbmRleCArIDEgPT0gbGVuZ3RoIHx8IGNvZGVVbml0cy5sZW5ndGggPiBNQVhfU0laRSkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc3VsdCArPSBzdHJpbmdGcm9tQ2hhckNvZGUuYXBwbHkobnVsbCwgY29kZVVuaXRzKTtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2RlVW5pdHMubGVuZ3RoID0gMDtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJlc3VsdDtcbiAgICAgICAgICAgICAgICB9O1xuICAgICAgICAgICAgICAgIGlmIChPYmplY3QuZGVmaW5lUHJvcGVydHkpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIE9iamVjdC5kZWZpbmVQcm9wZXJ0eShTdHJpbmcsICdmcm9tQ29kZVBvaW50Jywge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAndmFsdWUnOiBmcm9tQ29kZVBvaW50LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAnY29uZmlndXJhYmxlJzogdHJ1ZSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ3dyaXRhYmxlJzogdHJ1ZVxuICAgICAgICAgICAgICAgICAgICAgICAgfSk7XG4gICAgICAgICAgICAgICAgfSBlbHNlIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIFN0cmluZy5mcm9tQ29kZVBvaW50ID0gZnJvbUNvZGVQb2ludDtcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgIH0oKSk7XG59XG5cbn0pKHR5cGVvZiBleHBvcnRzID09PSBcInVuZGVmaW5lZFwiID8gc2F4ID0ge30gOiBleHBvcnRzKTtcbiJdfQ==
+},{"undefined":undefined}],22:[function(_dereq_,module,exports){
 /**
  * Tiny stack for browser or server
  *
@@ -6159,9 +6296,9 @@ else {
 }
 } )( this );
 
-},{}],22:[function(_dereq_,module,exports){
-module.exports = _dereq_(26);
-},{"26":26}],23:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
+module.exports = _dereq_(27);
+},{"27":27}],24:[function(_dereq_,module,exports){
 'use strict';
 
 function Base() { }
@@ -6176,14 +6313,14 @@ Base.prototype.set = function(name, value) {
 
 
 module.exports = Base;
-},{}],24:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 'use strict';
 
-var pick = _dereq_(167),
-    assign = _dereq_(162),
-    forEach = _dereq_(80);
+var pick = _dereq_(183),
+    assign = _dereq_(177),
+    forEach = _dereq_(86);
 
-var parseNameNs = _dereq_(27).parseName;
+var parseNameNs = _dereq_(28).parseName;
 
 
 function DescriptorBuilder(nameNs) {
@@ -6362,12 +6499,12 @@ DescriptorBuilder.prototype.addTrait = function(t) {
   allTypes.push(t);
 };
 
-},{"162":162,"167":167,"27":27,"80":80}],25:[function(_dereq_,module,exports){
+},{"177":177,"183":183,"28":28,"86":86}],26:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(80);
+var forEach = _dereq_(86);
 
-var Base = _dereq_(23);
+var Base = _dereq_(24);
 
 
 function Factory(model, properties) {
@@ -6420,20 +6557,20 @@ Factory.prototype.createType = function(descriptor) {
 
   return ModdleElement;
 };
-},{"23":23,"80":80}],26:[function(_dereq_,module,exports){
+},{"24":24,"86":86}],27:[function(_dereq_,module,exports){
 'use strict';
 
-var isString = _dereq_(159),
-    isObject = _dereq_(157),
-    forEach = _dereq_(80),
-    find = _dereq_(79);
+var isString = _dereq_(174),
+    isObject = _dereq_(172),
+    forEach = _dereq_(86),
+    find = _dereq_(85);
 
 
-var Factory = _dereq_(25),
-    Registry = _dereq_(29),
-    Properties = _dereq_(28);
+var Factory = _dereq_(26),
+    Registry = _dereq_(30),
+    Properties = _dereq_(29);
 
-var parseNameNs = _dereq_(27).parseName;
+var parseNameNs = _dereq_(28).parseName;
 
 
 //// Moddle implementation /////////////////////////////////////////////////
@@ -6642,7 +6779,7 @@ Moddle.prototype.getPropertyDescriptor = function(element, property) {
   return this.getElementDescriptor(element).propertiesByName[property];
 };
 
-},{"157":157,"159":159,"25":25,"27":27,"28":28,"29":29,"79":79,"80":80}],27:[function(_dereq_,module,exports){
+},{"172":172,"174":174,"26":26,"28":28,"29":29,"30":30,"85":85,"86":86}],28:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -6679,7 +6816,7 @@ module.exports.parseName = function(name, defaultPrefix) {
     localName: localName
   };
 };
-},{}],28:[function(_dereq_,module,exports){
+},{}],29:[function(_dereq_,module,exports){
 'use strict';
 
 
@@ -6773,16 +6910,16 @@ Properties.prototype.defineDescriptor = function(target, descriptor) {
 Properties.prototype.defineModel = function(target, model) {
   this.define(target, '$model', { value: model });
 };
-},{}],29:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162),
-    forEach = _dereq_(80);
+var assign = _dereq_(177),
+    forEach = _dereq_(86);
 
-var Types = _dereq_(30),
-    DescriptorBuilder = _dereq_(24);
+var Types = _dereq_(31),
+    DescriptorBuilder = _dereq_(25);
 
-var parseNameNs = _dereq_(27).parseName,
+var parseNameNs = _dereq_(28).parseName,
     isBuiltInType = Types.isBuiltIn;
 
 
@@ -6949,7 +7086,7 @@ Registry.prototype.getEffectiveDescriptor = function(name) {
 Registry.prototype.definePackage = function(target, pkg) {
   this.properties.define(target, '$pkg', { value: pkg });
 };
-},{"162":162,"24":24,"27":27,"30":30,"80":80}],30:[function(_dereq_,module,exports){
+},{"177":177,"25":25,"28":28,"31":31,"86":86}],31:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -7000,7 +7137,7 @@ module.exports.isBuiltIn = function(type) {
 module.exports.isSimple = function(type) {
   return !!TYPE_CONVERTERS[type];
 };
-},{}],31:[function(_dereq_,module,exports){
+},{}],32:[function(_dereq_,module,exports){
 module.exports={
   "name": "BPMN20",
   "uri": "http://www.omg.org/spec/BPMN/20100524/MODEL",
@@ -7133,6 +7270,21 @@ module.exports={
           "isMany": true
         },
         {
+          "name": "artifacts",
+          "type": "Artifact",
+          "isMany": true
+        },
+        {
+          "name": "resources",
+          "type": "ResourceRole",
+          "isMany": true
+        },
+        {
+          "name": "correlationSubscriptions",
+          "type": "CorrelationSubscription",
+          "isMany": true
+        },
+        {
           "name": "supports",
           "type": "Process",
           "isMany": true,
@@ -7148,21 +7300,6 @@ module.exports={
           "name": "isExecutable",
           "isAttr": true,
           "type": "Boolean"
-        },
-        {
-          "name": "resources",
-          "type": "ResourceRole",
-          "isMany": true
-        },
-        {
-          "name": "artifacts",
-          "type": "Artifact",
-          "isMany": true
-        },
-        {
-          "name": "correlationSubscriptions",
-          "type": "CorrelationSubscription",
-          "isMany": true
         }
       ]
     },
@@ -7198,7 +7335,9 @@ module.exports={
         {
           "name": "childLaneSet",
           "type": "LaneSet",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "partitionElementRef",
@@ -7328,7 +7467,9 @@ module.exports={
         {
           "name": "activationCondition",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "default",
@@ -7396,13 +7537,13 @@ module.exports={
           "isAttr": true
         },
         {
-          "name": "sources",
+          "name": "source",
           "isMany": true,
           "isReference": true,
           "type": "Element"
         },
         {
-          "name": "targets",
+          "name": "target",
           "isMany": true,
           "isReference": true,
           "type": "Element"
@@ -7419,6 +7560,11 @@ module.exports={
           "type": "String"
         },
         {
+          "name": "documentation",
+          "type": "Documentation",
+          "isMany": true
+        },
+        {
           "name": "extensionDefinitions",
           "type": "ExtensionDefinition",
           "isMany": true,
@@ -7427,11 +7573,6 @@ module.exports={
         {
           "name": "extensionElements",
           "type": "ExtensionElements"
-        },
-        {
-          "name": "documentation",
-          "type": "Documentation",
-          "isMany": true
         }
       ]
     },
@@ -7773,17 +7914,23 @@ module.exports={
         {
           "name": "timeDate",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "timeCycle",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "timeDuration",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -7841,7 +7988,9 @@ module.exports={
         {
           "name": "condition",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -8129,16 +8278,6 @@ module.exports={
       ],
       "properties": [
         {
-          "name": "inputSets",
-          "type": "InputSet",
-          "isMany": true
-        },
-        {
-          "name": "outputSets",
-          "type": "OutputSet",
-          "isMany": true
-        },
-        {
           "name": "dataInputs",
           "type": "DataInput",
           "isMany": true
@@ -8146,6 +8285,16 @@ module.exports={
         {
           "name": "dataOutputs",
           "type": "DataOutput",
+          "isMany": true
+        },
+        {
+          "name": "inputSets",
+          "type": "InputSet",
+          "isMany": true
+        },
+        {
+          "name": "outputSets",
+          "type": "OutputSet",
           "isMany": true
         }
       ]
@@ -8197,12 +8346,16 @@ module.exports={
         {
           "name": "from",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "to",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -8609,7 +8762,9 @@ module.exports={
         {
           "name": "conditionExpression",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "sourceRef",
@@ -8658,7 +8813,10 @@ module.exports={
         },
         {
           "name": "ioSpecification",
-          "type": "InputOutputSpecification"
+          "type": "InputOutputSpecification",
+          "xml": {
+            "serialize": "property"
+          }
         },
         {
           "name": "supportedInterfaceRefs",
@@ -8669,7 +8827,10 @@ module.exports={
         {
           "name": "ioBinding",
           "type": "InputOutputBinding",
-          "isMany": true
+          "isMany": true,
+          "xml": {
+            "serialize": "property"
+          }
         }
       ]
     },
@@ -9226,34 +9387,28 @@ module.exports={
           "type": "Boolean"
         },
         {
-          "name": "loopCharacteristics",
-          "type": "LoopCharacteristics"
-        },
-        {
-          "name": "resources",
-          "type": "ResourceRole",
-          "isMany": true
-        },
-        {
           "name": "default",
           "type": "SequenceFlow",
           "isAttr": true,
           "isReference": true
         },
         {
-          "name": "properties",
-          "type": "Property",
-          "isMany": true
-        },
-        {
           "name": "ioSpecification",
-          "type": "InputOutputSpecification"
+          "type": "InputOutputSpecification",
+          "xml": {
+            "serialize": "property"
+          }
         },
         {
           "name": "boundaryEventRefs",
           "type": "BoundaryEvent",
           "isMany": true,
           "isReference": true
+        },
+        {
+          "name": "properties",
+          "type": "Property",
+          "isMany": true
         },
         {
           "name": "dataInputAssociations",
@@ -9272,10 +9427,19 @@ module.exports={
           "type": "Integer"
         },
         {
+          "name": "resources",
+          "type": "ResourceRole",
+          "isMany": true
+        },
+        {
           "name": "completionQuantity",
           "default": 1,
           "isAttr": true,
           "type": "Integer"
+        },
+        {
+          "name": "loopCharacteristics",
+          "type": "LoopCharacteristics"
         }
       ]
     },
@@ -9302,7 +9466,8 @@ module.exports={
       "name": "SubProcess",
       "superClass": [
         "Activity",
-        "FlowElementsContainer"
+        "FlowElementsContainer",
+        "InteractionNode"
       ],
       "properties": [
         {
@@ -9346,7 +9511,9 @@ module.exports={
         {
           "name": "loopCardinality",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "loopDataInputRef",
@@ -9371,7 +9538,9 @@ module.exports={
         {
           "name": "completionCondition",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "complexBehaviorDefinition",
@@ -9407,12 +9576,16 @@ module.exports={
         {
           "name": "loopCondition",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "loopMaximum",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -9531,7 +9704,9 @@ module.exports={
         {
           "name": "completionCondition",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "ordering",
@@ -9620,7 +9795,6 @@ module.exports={
         {
           "name": "resourceRef",
           "type": "Resource",
-          "isAttr": true,
           "isReference": true
         },
         {
@@ -9645,7 +9819,9 @@ module.exports={
         {
           "name": "expression",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         },
         {
           "name": "parameterRef",
@@ -9661,7 +9837,9 @@ module.exports={
         {
           "name": "expression",
           "type": "Expression",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -9724,11 +9902,6 @@ module.exports={
           "isMany": true
         },
         {
-          "name": "relationships",
-          "type": "Relationship",
-          "isMany": true
-        },
-        {
           "name": "rootElements",
           "type": "RootElement",
           "isMany": true
@@ -9742,6 +9915,11 @@ module.exports={
           "name": "exporter",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "relationships",
+          "type": "Relationship",
+          "isMany": true
         },
         {
           "name": "exporterVersion",
@@ -9888,7 +10066,7 @@ module.exports={
     "typePrefix": "t"
   }
 }
-},{}],32:[function(_dereq_,module,exports){
+},{}],33:[function(_dereq_,module,exports){
 module.exports={
   "name": "BPMNDI",
   "uri": "http://www.omg.org/spec/BPMN/20100524/DI",
@@ -10082,7 +10260,7 @@ module.exports={
   "associations": [],
   "prefix": "bpmndi"
 }
-},{}],33:[function(_dereq_,module,exports){
+},{}],34:[function(_dereq_,module,exports){
 module.exports={
   "name": "DC",
   "uri": "http://www.omg.org/spec/DD/20100524/DC",
@@ -10182,7 +10360,7 @@ module.exports={
   "prefix": "dc",
   "associations": []
 }
-},{}],34:[function(_dereq_,module,exports){
+},{}],35:[function(_dereq_,module,exports){
 module.exports={
   "name": "DI",
   "uri": "http://www.omg.org/spec/DD/20100524/DI",
@@ -10265,7 +10443,9 @@ module.exports={
           "isUnique": false,
           "isMany": true,
           "type": "dc:Point",
-          "serialize": "xsi:type"
+          "xml": {
+            "serialize": "xsi:type"
+          }
         }
       ]
     },
@@ -10399,12 +10579,12 @@ module.exports={
     "tagAlias": "lowerCase"
   }
 }
-},{}],35:[function(_dereq_,module,exports){
-module.exports = _dereq_(36);
-},{"36":36}],36:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
+module.exports = _dereq_(37);
+},{"37":37}],37:[function(_dereq_,module,exports){
 'use strict';
 
-var di = _dereq_(73);
+var di = _dereq_(78);
 
 
 /**
@@ -10481,7 +10661,7 @@ function createInjector(options) {
     'config': ['value', options]
   };
 
-  var coreModule = _dereq_(42);
+  var coreModule = _dereq_(43);
 
   var modules = [ configModule, coreModule ].concat(options.modules || []);
 
@@ -10595,16 +10775,17 @@ module.exports = Diagram;
 Diagram.prototype.destroy = function() {
   this.get('eventBus').fire('diagram.destroy');
 };
-},{"42":42,"73":73}],37:[function(_dereq_,module,exports){
+},{"43":43,"78":78}],38:[function(_dereq_,module,exports){
 'use strict';
 
-var isNumber = _dereq_(156),
-    assign = _dereq_(162),
-    forEach = _dereq_(80);
+var isNumber = _dereq_(171),
+    assign = _dereq_(177),
+    forEach = _dereq_(86),
+    every = _dereq_(83);
 
-var Collections = _dereq_(62);
+var Collections = _dereq_(64);
 
-var Snap = _dereq_(71);
+var Snap = _dereq_(76);
 
 function round(number, resolution) {
   return Math.round(number * resolution) / resolution;
@@ -10651,6 +10832,11 @@ function createGroup(parent, cls) {
 
 var BASE_LAYER = 'base';
 
+
+var REQUIRED_MODEL_ATTRS = {
+  shape: [ 'x', 'y', 'width', 'height' ],
+  connection: [ 'waypoints' ]
+};
 
 /**
  * The main drawing canvas.
@@ -10786,20 +10972,25 @@ Canvas.prototype.getContainer = function() {
 /////////////// markers ///////////////////////////////////
 
 Canvas.prototype._updateMarker = function(element, marker, add) {
-  var gfx;
+  var container;
 
   if (!element.id) {
     element = this._elementRegistry.get(element);
   }
 
-  gfx = this.getGraphics(element);
+  // we need to access all
+  container = this._elementRegistry._elements[element.id];
 
-  if (!gfx) {
+  if (!container) {
     return;
   }
 
-  // invoke either addClass or removeClass based on mode
-  gfx[add ? 'addClass' : 'removeClass'](marker);
+  forEach([ container.gfx, container.secondaryGfx ], function(gfx) {
+    if (gfx) {
+      // invoke either addClass or removeClass based on mode
+      gfx[add ? 'addClass' : 'removeClass'](marker);
+    }
+  });
 
   /**
    * An event indicating that a marker has been updated for an element
@@ -10811,7 +11002,7 @@ Canvas.prototype._updateMarker = function(element, marker, add) {
    * @property {String} marker
    * @property {Boolean} add true if the marker was added, false if it got removed
    */
-  this._eventBus.fire('element.marker.update', { element: element, gfx: gfx, marker: marker, add: !!add });
+  this._eventBus.fire('element.marker.update', { element: element, gfx: container.gfx, marker: marker, add: !!add });
 };
 
 
@@ -10896,25 +11087,41 @@ Canvas.prototype.getRootElement = function() {
 
 /**
  * Sets a given element as the new root element for the canvas
- * and returns it.
+ * and returns the new root element.
  *
  * @param {Object|djs.model.Root} element
  * @param {Boolean} [override] whether to override the current root element, if any
+ *
+ * @return {Object|djs.model.Root} new root element
  */
 Canvas.prototype.setRootElement = function(element, override) {
 
-  var rootElement = this._rootElement,
-      elementRegistry = this._elementRegistry;
+  this._ensureValid('root', element);
 
-  if (rootElement) {
+  var oldRoot = this._rootElement,
+      elementRegistry = this._elementRegistry,
+      eventBus = this._eventBus;
+
+  if (oldRoot) {
     if (!override) {
-      throw new Error('rootElement already defined');
+      throw new Error('rootElement already set, need to specify override');
     }
 
-    elementRegistry.remove(rootElement);
+    // simulate element remove event sequence
+    eventBus.fire('root.remove', { element: oldRoot });
+    eventBus.fire('root.removed', { element: oldRoot });
+
+    elementRegistry.remove(oldRoot);
   }
 
-  elementRegistry.add(element, this.getDefaultLayer(), this._svg);
+  var gfx = this.getDefaultLayer();
+
+  // resemble element add event sequence
+  eventBus.fire('root.add', { element: element });
+
+  elementRegistry.add(element, gfx, this._svg);
+
+  eventBus.fire('root.added', { element: element, gfx: gfx });
 
   this._rootElement = element;
 
@@ -10925,7 +11132,7 @@ Canvas.prototype.setRootElement = function(element, override) {
 
 ///////////// add functionality ///////////////////////////////
 
-Canvas.prototype._ensureValidId = function(element) {
+Canvas.prototype._ensureValid = function(type, element) {
   if (!element.id) {
     throw new Error('element must have an id');
   }
@@ -10933,10 +11140,21 @@ Canvas.prototype._ensureValidId = function(element) {
   if (this._elementRegistry.get(element.id)) {
     throw new Error('element with id ' + element.id + ' already exists');
   }
+
+  var requiredAttrs = REQUIRED_MODEL_ATTRS[type];
+
+  var valid = every(requiredAttrs, function(attr) {
+    return typeof element[attr] !== 'undefined';
+  });
+
+  if (!valid) {
+    throw new Error(
+      'must supply { ' + requiredAttrs.join(', ') + ' } with ' + type);
+  }
 };
 
-Canvas.prototype._setParent = function(element, parent) {
-  Collections.add(parent.children, element);
+Canvas.prototype._setParent = function(element, parent, idx) {
+  Collections.add(parent.children, element, idx);
   element.parent = parent;
 };
 
@@ -10964,13 +11182,14 @@ Canvas.prototype._addElement = function(type, element, parent) {
   parent = parent || this.getRootElement();
 
   var eventBus = this._eventBus,
-      graphicsFactory = this._graphicsFactory;
+      graphicsFactory = this._graphicsFactory,
+      idx;
 
-  this._ensureValidId(element);
+  this._ensureValid(type, element);
 
   eventBus.fire(type + '.add', { element: element, parent: parent });
 
-  this._setParent(element, parent);
+  this._setParent(element, parent, idx);
 
   // create graphics
   var gfx = graphicsFactory.create(type, element);
@@ -11144,9 +11363,12 @@ Canvas.prototype.sendToFront = function(shape, bubble) {
  * Return the graphical object underlaying a certain diagram element
  *
  * @param {String|djs.model.Base} element descriptor of the element
+ * @param {Boolean} [secondary=false] whether to return the secondary connected element
+ *
+ * @return {SVGElement}
  */
-Canvas.prototype.getGraphics = function(element) {
-  return this._elementRegistry.getGraphics(element);
+Canvas.prototype.getGraphics = function(element, secondary) {
+  return this._elementRegistry.getGraphics(element, secondary);
 };
 
 
@@ -11269,22 +11491,24 @@ Canvas.prototype.zoom = function(newScale, center) {
     return this._fitViewport(center);
   }
 
-  var vbox = this.viewbox();
+  var vbox = this.viewbox(),
+      outer,
+      matrix;
 
   if (newScale === undefined) {
     return vbox.scale;
   }
 
-  var outer = vbox.outer;
+  if (typeof center !== 'object') {
+    outer = vbox.outer;
 
-  if (center === 'auto') {
     center = {
       x: outer.width / 2,
       y: outer.height / 2
     };
   }
 
-  var matrix = this._setZoom(newScale, center);
+  matrix = this._setZoom(newScale, center);
 
   this._fireViewboxChange();
 
@@ -11443,10 +11667,10 @@ Canvas.prototype.getAbsoluteBBox = function(element) {
   };
 };
 
-},{"156":156,"162":162,"62":62,"71":71,"80":80}],38:[function(_dereq_,module,exports){
+},{"171":171,"177":177,"64":64,"76":76,"83":83,"86":86}],39:[function(_dereq_,module,exports){
 'use strict';
 
-var Model = _dereq_(56);
+var Model = _dereq_(57);
 
 
 /**
@@ -11493,7 +11717,7 @@ ElementFactory.prototype.create = function(type, attrs) {
 
   return Model.create(type, attrs);
 };
-},{"56":56}],39:[function(_dereq_,module,exports){
+},{"57":57}],40:[function(_dereq_,module,exports){
 'use strict';
 
 var ELEMENT_ID = 'data-element-id';
@@ -11521,13 +11745,7 @@ ElementRegistry.prototype.add = function(element, gfx, secondaryGfx) {
 
   var id = element.id;
 
-  if (!id) {
-    throw new Error('element must have an id');
-  }
-
-  if (this._elements[id]) {
-    throw new Error('element with id ' + id + ' already added');
-  }
+  this._validateId(id);
 
   // associate dom node with element
   gfx.attr(ELEMENT_ID, id);
@@ -11538,7 +11756,6 @@ ElementRegistry.prototype.add = function(element, gfx, secondaryGfx) {
 
   this._elements[id] = { element: element, gfx: gfx, secondaryGfx: secondaryGfx };
 };
-
 
 /**
  * Removes an element from the registry.
@@ -11563,6 +11780,29 @@ ElementRegistry.prototype.remove = function(element) {
   }
 };
 
+/**
+ * Update the id of an element
+ *
+ * @param {djs.model.Base} element
+ * @param {String} newId
+ */
+ElementRegistry.prototype.updateId = function(element, newId) {
+
+  this._validateId(newId);
+
+  if (typeof element === 'string') {
+    element = this.get(element);
+  }
+
+  var gfx = this.getGraphics(element),
+      secondaryGfx = this.getGraphics(element, true);
+
+  this.remove(element);
+
+  element.id = newId;
+
+  this.add(element, gfx, secondaryGfx);
+};
 
 /**
  * Return the model element for a given id or graphics.
@@ -11599,15 +11839,10 @@ ElementRegistry.prototype.get = function(filter) {
  */
 ElementRegistry.prototype.filter = function(fn) {
 
-  var map = this._elements,
-      filtered = [];
+  var filtered = [];
 
-  Object.keys(map).forEach(function(id) {
-    var container = map[id],
-        element = container.element,
-        gfx = container.gfx;
-
-    if (fn(element, gfx)) {
+  this.forEach(function(element, gfx) {
+    if(fn(element, gfx)) {
       filtered.push(element);
     }
   });
@@ -11616,54 +11851,158 @@ ElementRegistry.prototype.filter = function(fn) {
 };
 
 /**
- * Return the graphics for a given id or element.
+ * Return all rendered model elements.
+ *
+ * @return {Array<djs.model.Base>}
+ */
+ElementRegistry.prototype.getAll = function() {
+  return this.filter(function(e) { return e; });
+};
+
+/**
+ * Iterate over all diagram elements.
+ *
+ * @param {Function} fn
+ */
+ElementRegistry.prototype.forEach = function(fn) {
+
+  var map = this._elements;
+
+  Object.keys(map).forEach(function(id) {
+    var container = map[id],
+        element = container.element,
+        gfx = container.gfx;
+
+    return fn(element, gfx);
+  });
+};
+
+/**
+ * Return the graphical representation of an element or its id.
  *
  * @example
- *
  * elementRegistry.getGraphics('SomeElementId_1');
- * elementRegistry.getGraphics(rootElement);
+ * elementRegistry.getGraphics(rootElement); // <g ...>
+ *
+ * elementRegistry.getGraphics(rootElement, true); // <svg ...>
  *
  *
  * @param {String|djs.model.Base} filter
+ * @param {Boolean} [secondary=false] whether to return the secondary connected element
  *
  * @return {SVGElement}
  */
-ElementRegistry.prototype.getGraphics = function(filter) {
+ElementRegistry.prototype.getGraphics = function(filter, secondary) {
   var id = filter.id || filter;
 
   var container = this._elements[id];
-  return container && container.gfx;
+  return container && (secondary ? container.secondaryGfx : container.gfx);
 };
 
-},{}],40:[function(_dereq_,module,exports){
+/**
+ * Validate the suitability of the given id and signals a problem
+ * with an exception.
+ *
+ * @param {String} id
+ *
+ * @throws {Error} if id is empty or already assigned
+ */
+ElementRegistry.prototype._validateId = function(id) {
+  if (!id) {
+    throw new Error('element must have an id');
+  }
+
+  if (this._elements[id]) {
+    throw new Error('element with id ' + id + ' already added');
+  }
+};
+},{}],41:[function(_dereq_,module,exports){
 'use strict';
 
-var isFunction = _dereq_(154),
-    isArray = _dereq_(153),
-    isNumber = _dereq_(156),
-    assign = _dereq_(162);
+var isFunction = _dereq_(169),
+    isArray = _dereq_(168),
+    isNumber = _dereq_(171),
+    assign = _dereq_(177);
 
 var DEFAULT_PRIORITY = 1000;
 
-function Event() { }
-
-Event.prototype = {
-  stopPropagation: function() {
-    this.propagationStopped = true;
-  },
-  preventDefault: function() {
-    this.defaultPrevented = true;
-  },
-  init: function(data) {
-    assign(this, data || {});
-  }
-};
-
 
 /**
- * A general purpose event bus
+ * A general purpose event bus.
  *
- * @class
+ * This component is used to communicate across a diagram instance.
+ * Other parts of a diagram can use it to listen to and broadcast events.
+ *
+ *
+ * ## Registering for Events
+ *
+ * The event bus provides the {@link EventBus#on} and {@link EventBus#once}
+ * methods to register for events. {@link EventBus#off} can be used to
+ * remove event registrations. Listeners receive an instance of {@link Event}
+ * as the first argument. It allows them to hook into the event execution.
+ *
+ * ```javascript
+ *
+ * // listen for event
+ * eventBus.on('foo', function(event) {
+ *
+ *   // access event type
+ *   event.type; // 'foo'
+ *
+ *   // stop propagation to other listeners
+ *   event.stopPropagation();
+ *
+ *   // prevent event default
+ *   event.preventDefault();
+ * });
+ *
+ * // listen for event with custom payload
+ * eventBus.on('bar', function(event, payload) {
+ *   console.log(payload);
+ * });
+ *
+ * // listen for event returning value
+ * eventBus.on('foobar', function(event) {
+ *
+ *   // stop event propagation + prevent default
+ *   return false;
+ *
+ *   // stop event propagation + return custom result
+ *   return {
+ *     complex: 'listening result'
+ *   };
+ * });
+ *
+ *
+ * // listen with custom priority (default=1000, higher is better)
+ * eventBus.on('priorityfoo', 1500, function(event) {
+ *   console.log('invoked first!');
+ * });
+ * ```
+ *
+ *
+ * ## Emitting Events
+ *
+ * Events can be emitted via the event bus using {@link EventBus#fire}.
+ *
+ * ```javascript
+ *
+ * // false indicates that the default action
+ * // was prevented by listeners
+ * if (eventBus.fire('foo') === false) {
+ *   console.log('default has been prevented!');
+ * };
+ *
+ *
+ * // custom args + return value listener
+ * eventBus.on('sum', function(event, a, b) {
+ *   return a + b;
+ * });
+ *
+ * // you can pass custom arguments + retrieve result values.
+ * var sum = eventBus.fire('sum', 1, 2);
+ * console.log(sum); // 3
+ * ```
  */
 function EventBus() {
   this._listeners = {};
@@ -11681,8 +12020,6 @@ function EventBus() {
 
 module.exports = EventBus;
 
-module.exports.Event = Event;
-
 
 /**
  * Register an event listener for events with the given name.
@@ -11693,6 +12030,8 @@ module.exports.Event = Event;
  * Returning false from a listener will prevent the events default action
  * (if any is specified). To stop an event from being processed further in
  * other listeners execute {@link Event#stopPropagation}.
+ *
+ * Returning anything but `undefined` from a listener will stop the listener propagation.
  *
  * @param {String|Array<String>} events
  * @param {Number} [priority=1000] the priority in which this listener is called, larger is higher
@@ -11749,15 +12088,15 @@ EventBus.prototype.once = function(event, callback) {
  */
 EventBus.prototype.off = function(event, callback) {
   var listeners = this._getListeners(event),
-      l, i;
+      listener, idx;
 
   if (callback) {
 
     // move through listeners from back to front
     // and remove matching listeners
-    for (i = listeners.length - 1; !!(l = listeners[i]); i--) {
-      if (l.callback === callback) {
-        listeners.splice(i, 1);
+    for (idx = listeners.length - 1; !!(listener = listeners[idx]); idx--) {
+      if (listener.callback === callback) {
+        listeners.splice(idx, 1);
       }
     }
   } else {
@@ -11794,21 +12133,20 @@ EventBus.prototype.off = function(event, callback) {
  * @param {Object} [event] the event object
  * @param {...Object} additional arguments to be passed to the callback functions
  *
- * @return {Boolean} false if default was prevented, null if the propagation got stopped and true otherwise
+ * @return {Boolean} the events return value, if specified or false if the
+ *                   default action was prevented by listeners
  */
 EventBus.prototype.fire = function(type, data) {
 
   var event,
       originalType,
-      listeners, i, l,
+      listeners, idx, listener,
+      returnValue,
       args;
 
   args = Array.prototype.slice.call(arguments);
 
-  if (typeof type === 'string') {
-    // remove name parameter
-    args.shift();
-  } else {
+  if (typeof type === 'object') {
     event = type;
     type = event.type;
   }
@@ -11820,7 +12158,7 @@ EventBus.prototype.fire = function(type, data) {
   listeners = this._listeners[type];
 
   if (!listeners) {
-    return true;
+    return;
   }
 
   // we make sure we fire instances of our home made
@@ -11829,7 +12167,7 @@ EventBus.prototype.fire = function(type, data) {
     // we are fine, we alread have an event
     event = data;
   } else {
-    event = Object.create(Event.prototype);
+    event = new Event();
     event.init(data);
   }
 
@@ -11846,16 +12184,24 @@ EventBus.prototype.fire = function(type, data) {
       event.type = type;
     }
 
-    for (i = 0, l; !!(l = listeners[i]); i++) {
+    for (idx = 0; !!(listener = listeners[idx]); idx++) {
 
       // handle stopped propagation
-      if (event.propagationStopped) {
+      if (event.cancelBubble) {
         break;
       }
 
       try {
-        // handle listener returning false
-        if (l.callback.apply(null, args) === false) {
+        // returning false prevents the default action
+        returnValue = event.returnValue = listener.callback.apply(null, args);
+
+        // stop propagation on return value
+        if (returnValue !== undefined) {
+          event.stopPropagation();
+        }
+
+        // prevent default on return false
+        if (returnValue === false) {
           event.preventDefault();
         }
       } catch (e) {
@@ -11874,32 +12220,55 @@ EventBus.prototype.fire = function(type, data) {
     }
   }
 
-  // distinguish between default prevented (false)
-  // and propagation stopped (null) as a return value
-  return event.defaultPrevented ? false : (event.propagationStopped ? null : true);
+  // set the return value to false if the event default
+  // got prevented and no other return value exists
+  if (returnValue === undefined && event.defaultPrevented) {
+    returnValue = false;
+  }
+
+  return returnValue;
 };
 
 
 EventBus.prototype.handleError = function(error) {
-  return !this.fire('error', { error: error });
+  return this.fire('error', { error: error }) === false;
 };
 
 
-EventBus.prototype._addListener = function(event, listener) {
+/*
+ * Add new listener with a certain priority to the list
+ * of listeners (for the given event).
+ *
+ * The semantics of listener registration / listener execution are
+ * first register, first serve: New listeners will always be inserted
+ * after existing listeners with the same priority.
+ *
+ * Example: Inserting two listeners with priority 1000 and 1300
+ *
+ *    * before: [ 1500, 1500, 1000, 1000 ]
+ *    * after: [ 1500, 1500, (new=1300), 1000, 1000, (new=1000) ]
+ *
+ * @param {String} event
+ * @param {Object} listener { priority, callback }
+ */
+EventBus.prototype._addListener = function(event, newListener) {
 
   var listeners = this._getListeners(event),
-      i, l;
+      existingListener,
+      idx;
 
   // ensure we order listeners by priority from
   // 0 (high) to n > 0 (low)
-  for (i = 0; !!(l = listeners[i]); i++) {
-    if (l.priority < listener.priority) {
-      listeners.splice(i, 0, listener);
+  for (idx = 0; !!(existingListener = listeners[idx]); idx++) {
+    if (existingListener.priority < newListener.priority) {
+
+      // prepend newListener at before existingListener
+      listeners.splice(idx, 0, newListener);
       return;
     }
   }
 
-  listeners.push(listener);
+  listeners.push(newListener);
 };
 
 
@@ -11913,14 +12282,34 @@ EventBus.prototype._getListeners = function(name) {
   return listeners;
 };
 
-},{"153":153,"154":154,"156":156,"162":162}],41:[function(_dereq_,module,exports){
+
+/**
+ * A event that is emitted via the event bus.
+ */
+function Event() { }
+
+module.exports.Event = Event;
+
+Event.prototype.stopPropagation = function() {
+  this.cancelBubble = true;
+};
+
+Event.prototype.preventDefault = function() {
+  this.defaultPrevented = true;
+};
+
+Event.prototype.init = function(data) {
+  assign(this, data || {});
+};
+
+},{"168":168,"169":169,"171":171,"177":177}],42:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(80),
-    reduce = _dereq_(84);
+var forEach = _dereq_(86),
+    reduce = _dereq_(90);
 
-var GraphicsUtil = _dereq_(66),
-    domClear = _dereq_(174);
+var GraphicsUtil = _dereq_(68),
+    domClear = _dereq_(188);
 
 /**
  * A factory that creates graphical elements
@@ -12044,6 +12433,11 @@ GraphicsFactory.prototype.updateContainments = function(elements) {
 
 GraphicsFactory.prototype.update = function(type, element, gfx) {
 
+  // Do not update root element
+  if (!element.parent) {
+    return;
+  }
+
   var visual = this._clear(gfx);
 
   // redraw
@@ -12069,20 +12463,21 @@ GraphicsFactory.prototype.remove = function(element) {
   // remove
   gfx.parent().remove();
 };
-},{"174":174,"66":66,"80":80,"84":84}],42:[function(_dereq_,module,exports){
+
+},{"188":188,"68":68,"86":86,"90":90}],43:[function(_dereq_,module,exports){
 module.exports = {
-  __depends__: [ _dereq_(45) ],
+  __depends__: [ _dereq_(46) ],
   __init__: [ 'canvas' ],
-  canvas: [ 'type', _dereq_(37) ],
-  elementRegistry: [ 'type', _dereq_(39) ],
-  elementFactory: [ 'type', _dereq_(38) ],
-  eventBus: [ 'type', _dereq_(40) ],
-  graphicsFactory: [ 'type', _dereq_(41) ]
+  canvas: [ 'type', _dereq_(38) ],
+  elementRegistry: [ 'type', _dereq_(40) ],
+  elementFactory: [ 'type', _dereq_(39) ],
+  eventBus: [ 'type', _dereq_(41) ],
+  graphicsFactory: [ 'type', _dereq_(42) ]
 };
-},{"37":37,"38":38,"39":39,"40":40,"41":41,"45":45}],43:[function(_dereq_,module,exports){
+},{"38":38,"39":39,"40":40,"41":41,"42":42,"46":46}],44:[function(_dereq_,module,exports){
 'use strict';
 
-var Snap = _dereq_(71);
+var Snap = _dereq_(76);
 
 
 /**
@@ -12101,11 +12496,62 @@ Renderer.$inject = ['styles'];
 
 
 Renderer.prototype.drawShape = function drawShape(gfxGroup, data) {
-  return gfxGroup.rect(0, 0, data.width || 0, data.height || 0, 10, 10).attr(this.SHAPE_STYLE);
+  return gfxGroup.rect(0, 0, data.width || 0, data.height || 0).attr(this.SHAPE_STYLE);
 };
 
 Renderer.prototype.drawConnection = function drawConnection(gfxGroup, data) {
   return createLine(data.waypoints, this.CONNECTION_STYLE).appendTo(gfxGroup);
+};
+
+function componentsToPath(components) {
+  return components.join(',').replace(/,?([A-z]),?/g, '$1');
+}
+
+/**
+ * Gets the default SVG path of a shape that represents it's visual bounds.
+ *
+ * @param {djs.model.Shape} shape
+ * @return {string} svg path
+ */
+Renderer.prototype.getShapePath = function getShapePath(shape) {
+
+  var x = shape.x,
+      y = shape.y,
+      width = shape.width,
+      height = shape.height;
+
+  var shapePath = [
+    ['M', x, y],
+    ['l', width, 0],
+    ['l', 0, height],
+    ['l', -width, 0],
+    ['z']
+  ];
+
+  return componentsToPath(shapePath);
+};
+
+/**
+ * Gets the default SVG path of a connection that represents it's visual bounds.
+ *
+ * @param {djs.model.Connection} connection
+ * @return {string} svg path
+ */
+Renderer.prototype.getConnectionPath = function getConnectionPath(connection) {
+  var waypoints = connection.waypoints;
+
+  var idx, point, connectionPath = [];
+
+  for (idx = 0; !!(point = waypoints[idx]); idx++) {
+
+    // take invisible docking into account
+    // when creating the path
+    point = point.original || point;
+
+    connectionPath.push([ idx === 0 ? 'M' : 'L', point.x, point.y ]);
+  }
+
+  return componentsToPath(connectionPath);
 };
 
 
@@ -12129,12 +12575,12 @@ function updateLine(gfx, points) {
 
 module.exports.createLine = createLine;
 module.exports.updateLine = updateLine;
-},{"71":71}],44:[function(_dereq_,module,exports){
+},{"76":76}],45:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(153),
-    assign = _dereq_(162),
-    reduce = _dereq_(84);
+var isArray = _dereq_(168),
+    assign = _dereq_(177),
+    reduce = _dereq_(90);
 
 
 /**
@@ -12194,21 +12640,24 @@ function Styles() {
 }
 
 module.exports = Styles;
-},{"153":153,"162":162,"84":84}],45:[function(_dereq_,module,exports){
+},{"168":168,"177":177,"90":90}],46:[function(_dereq_,module,exports){
 module.exports = {
-  renderer: [ 'type', _dereq_(43) ],
-  styles: [ 'type', _dereq_(44) ]
+  renderer: [ 'type', _dereq_(44) ],
+  styles: [ 'type', _dereq_(45) ]
 };
-},{"43":43,"44":44}],46:[function(_dereq_,module,exports){
+},{"44":44,"45":45}],47:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(80),
-    domDelegate = _dereq_(175),
-    Renderer = _dereq_(43),
+var forEach = _dereq_(86),
+    domDelegate = _dereq_(189),
+    Renderer = _dereq_(44),
     createLine = Renderer.createLine,
     updateLine = Renderer.updateLine;
 
-var Snap = _dereq_(71);
+
+var isPrimaryButton = _dereq_(71).isPrimaryButton;
+
+var Snap = _dereq_(76);
 
 /**
  * A plugin that provides interaction events for diagram elements.
@@ -12238,15 +12687,16 @@ function InteractionEvents(eventBus, elementRegistry, styles) {
     var target = event.delegateTarget || event.target,
         gfx = target && new Snap(target),
         element = elementRegistry.get(gfx),
-        defaultPrevented;
+        returnValue;
 
     if (!gfx || !element) {
       return;
     }
 
-    defaultPrevented = !eventBus.fire(type, { element: element, gfx: gfx, originalEvent: event });
+    returnValue = eventBus.fire(type, { element: element, gfx: gfx, originalEvent: event });
 
-    if (defaultPrevented) {
+    if (returnValue === false) {
+      event.stopPropagation();
       event.preventDefault();
     }
   }
@@ -12259,8 +12709,8 @@ function InteractionEvents(eventBus, elementRegistry, styles) {
 
     if (!fn) {
       fn = handlers[type] = function(event) {
-        // only indicate left mouse button=0 interactions
-        if (!event.button) {
+        // only indicate left mouse button interactions
+        if (isPrimaryButton(event)) {
           fire(type, event);
         }
       };
@@ -12434,16 +12884,15 @@ module.exports = InteractionEvents;
  * @property {Snap<Element>} gfx
  * @property {Event} originalEvent
  */
-},{"175":175,"43":43,"71":71,"80":80}],47:[function(_dereq_,module,exports){
+},{"189":189,"44":44,"71":71,"76":76,"86":86}],48:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'interactionEvents' ],
-  interactionEvents: [ 'type', _dereq_(46) ]
+  interactionEvents: [ 'type', _dereq_(47) ]
 };
-},{"46":46}],48:[function(_dereq_,module,exports){
+},{"47":47}],49:[function(_dereq_,module,exports){
 'use strict';
 
-var Snap = _dereq_(71);
-var getBBox = _dereq_(64).getBBox;
+var getBBox = _dereq_(66).getBBox;
 
 
 /**
@@ -12461,7 +12910,7 @@ function Outline(eventBus, styles, elementRegistry) {
   var OUTLINE_STYLE = styles.cls('djs-outline', [ 'no-fill' ]);
 
   function createOutline(gfx, bounds) {
-    return Snap.create('rect', OUTLINE_STYLE).prependTo(gfx);
+    return gfx.rect(10, 10, 0, 0).attr(OUTLINE_STYLE);
   }
 
   function updateShapeOutline(outline, bounds) {
@@ -12520,32 +12969,32 @@ Outline.$inject = ['eventBus', 'styles', 'elementRegistry'];
 
 module.exports = Outline;
 
-},{"64":64,"71":71}],49:[function(_dereq_,module,exports){
+},{"66":66}],50:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = {
   __init__: [ 'outline' ],
-  outline: [ 'type', _dereq_(48) ]
+  outline: [ 'type', _dereq_(49) ]
 };
-},{"48":48}],50:[function(_dereq_,module,exports){
+},{"49":49}],51:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(153),
-    isString = _dereq_(159),
-    isObject = _dereq_(157),
-    assign = _dereq_(162),
-    forEach = _dereq_(80),
-    filter = _dereq_(78),
-    debounce = _dereq_(87);
+var isArray = _dereq_(168),
+    isString = _dereq_(174),
+    isObject = _dereq_(172),
+    assign = _dereq_(177),
+    forEach = _dereq_(86),
+    filter = _dereq_(84),
+    debounce = _dereq_(93);
 
-var domify = _dereq_(176),
-    domClasses = _dereq_(173),
-    domRemove = _dereq_(179);
+var domify = _dereq_(190),
+    domClasses = _dereq_(187),
+    domRemove = _dereq_(193);
 
-var getBBox = _dereq_(64).getBBox;
+var getBBox = _dereq_(66).getBBox;
 
 // document wide unique overlay ids
-var ids = new (_dereq_(67))('ov');
+var ids = new (_dereq_(69))('ov');
 
 
 function createRoot(parent) {
@@ -12565,11 +13014,9 @@ function setVisible(el, visible) {
 }
 
 /**
- * A plugin that allows users to attach overlays to diagram elements.
+ * A service that allows users to attach overlays to diagram elements.
  *
  * The overlay service will take care of overlay positioning during updates.
- *
- * @class
  *
  * @example
  *
@@ -12578,7 +13025,7 @@ function setVisible(el, visible) {
  *   position: {
  *     top: -5,
  *     left: -5
- *   }
+ *   },
  *   html: '<div style="width: 10px; background: fuchsia; color: white;">0</div>'
  * });
  *
@@ -12622,19 +13069,18 @@ function Overlays(config, eventBus, canvas, elementRegistry) {
 
   this._overlayDefaults = {
     show: {
-      trigger: 'automatic',
       minZoom: 0.7,
       maxZoom: 5.0
     }
   };
 
   /**
-   * Mapping overlay-id > overlay
+   * Mapping overlayId -> overlay
    */
   this._overlays = {};
 
   /**
-   * Mapping element-id > overlay container
+   * Mapping elementId -> overlay container
    */
   this._overlayContainers = {};
 
@@ -12707,16 +13153,15 @@ Overlays.prototype.get = function(search) {
  * @param {String}                  [type]    optional type to assign to the overlay
  * @param {Object}                  overlay   the overlay configuration
  *
- * @param {String|DOMElement}       overlay.html                      html element to use as an overlay
- * @param {Object}                  [overlay.show]                    show configuration
- * @param {Number}                  overlay.show.minZoom              minimal zoom level to show the overlay
- * @param {Number}                  overlay.show.maxZoom              maximum zoom level to show the overlay
- * @param {String}                  [overlay.show.trigger=automatic]  automatic or manual (user triggers show)
- * @param {Object}                  overlay.show.position             where to attach the overlay
- * @param {Number}                  [overlay.show.position.left]      relative to element bbox left attachment
- * @param {Number}                  [overlay.show.position.top]       relative to element bbox top attachment
- * @param {Number}                  [overlay.show.position.bottom]    relative to element bbox bottom attachment
- * @param {Number}                  [overlay.show.position.right]     relative to element bbox right attachment
+ * @param {String|DOMElement}       overlay.html                 html element to use as an overlay
+ * @param {Object}                  [overlay.show]               show configuration
+ * @param {Number}                  [overlay.show.minZoom]       minimal zoom level to show the overlay
+ * @param {Number}                  [overlay.show.maxZoom]       maximum zoom level to show the overlay
+ * @param {Object}                  overlay.position             where to attach the overlay
+ * @param {Number}                  [overlay.position.left]      relative to element bbox left attachment
+ * @param {Number}                  [overlay.position.top]       relative to element bbox top attachment
+ * @param {Number}                  [overlay.position.bottom]    relative to element bbox bottom attachment
+ * @param {Number}                  [overlay.position.right]     relative to element bbox right attachment
  *
  * @return {String}                 id that may be used to reference the overlay for update or removal
  */
@@ -12935,7 +13380,7 @@ Overlays.prototype._addOverlay = function(overlay) {
 
   overlayContainer = this._getOverlayContainer(element);
 
-  htmlContainer = domify('<div id="' + id + '" class="djs-overlay" style="position: absolute">');
+  htmlContainer = domify('<div class="djs-overlay" data-overlay-id="' + id + '" style="position: absolute">');
 
   htmlContainer.appendChild(html);
 
@@ -13037,18 +13482,16 @@ Overlays.prototype._init = function(config) {
   });
 };
 
-},{"153":153,"157":157,"159":159,"162":162,"173":173,"176":176,"179":179,"64":64,"67":67,"78":78,"80":80,"87":87}],51:[function(_dereq_,module,exports){
-'use strict';
-
+},{"168":168,"172":172,"174":174,"177":177,"187":187,"190":190,"193":193,"66":66,"69":69,"84":84,"86":86,"93":93}],52:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'overlays' ],
-  overlays: [ 'type', _dereq_(50) ]
+  overlays: [ 'type', _dereq_(51) ]
 };
-},{"50":50}],52:[function(_dereq_,module,exports){
+},{"51":51}],53:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(153),
-    forEach = _dereq_(80);
+var isArray = _dereq_(168),
+    forEach = _dereq_(86);
 
 
 /**
@@ -13138,28 +13581,42 @@ Selection.prototype.select = function(elements, add) {
   this._eventBus.fire('selection.changed', { oldSelection: oldSelection, newSelection: selectedElements });
 };
 
-},{"153":153,"80":80}],53:[function(_dereq_,module,exports){
+},{"168":168,"86":86}],54:[function(_dereq_,module,exports){
 'use strict';
 
+var hasPrimaryModifier = _dereq_(71).hasPrimaryModifier;
 
-var getOriginalEvent = _dereq_(65).getOriginal;
 
 function SelectionBehavior(eventBus, selection, canvas) {
 
   eventBus.on('create.end', 500, function(e) {
+
+    // select the created shape after a
+    // successful create operation
     if (e.context.canExecute) {
-      selection.select(e.shape);
+      selection.select(e.context.shape);
     }
   });
 
   eventBus.on('connect.end', 500, function(e) {
+
+    // select the connect end target
+    // after a connect operation
     if (e.context.canExecute && e.context.target) {
       selection.select(e.context.target);
     }
   });
 
   eventBus.on('shape.move.end', 500, function(e) {
-    selection.select(e.context.shapes);
+    var previousSelection = e.previousSelection || [];
+
+    var shape = e.context.shape;
+
+    // make sure at least the main moved element is being
+    // selected after a move operation
+    if (previousSelection.indexOf(shape) === -1) {
+      selection.select(shape);
+    }
   });
 
 
@@ -13174,13 +13631,22 @@ function SelectionBehavior(eventBus, selection, canvas) {
       element = null;
     }
 
-    if (!selection.isSelected(element)) {
-      var ev = (getOriginalEvent(event) || event);
-      var add = ev.shiftKey;
+    var isSelected = selection.isSelected(element),
+        isMultiSelect = selection.get().length > 1;
 
-      if (!ev.altKey) {
-        selection.select(element, add);
+    // mouse-event: SELECTION_KEY
+    var add = hasPrimaryModifier(event);
+
+    // select OR deselect element in multi selection
+    if (isSelected && isMultiSelect) {
+      if (add) {
+        return selection.deselect(element);
+      } else {
+        return selection.select(element);
       }
+    } else
+    if (!isSelected) {
+      selection.select(element, add);
     } else {
       selection.deselect(element);
     }
@@ -13191,10 +13657,10 @@ SelectionBehavior.$inject = [ 'eventBus', 'selection', 'canvas' ];
 
 module.exports = SelectionBehavior;
 
-},{"65":65}],54:[function(_dereq_,module,exports){
+},{"71":71}],55:[function(_dereq_,module,exports){
 'use strict';
 
-var forEach = _dereq_(80);
+var forEach = _dereq_(86);
 
 var MARKER_HOVER = 'hover',
     MARKER_SELECTED = 'selected';
@@ -13269,27 +13735,29 @@ SelectionVisuals.$inject = [
 
 module.exports = SelectionVisuals;
 
-},{"80":80}],55:[function(_dereq_,module,exports){
+},{"86":86}],56:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'selectionVisuals', 'selectionBehavior' ],
   __depends__: [
-    _dereq_(47),
-    _dereq_(49)
+    _dereq_(48),
+    _dereq_(50)
   ],
-  selection: [ 'type', _dereq_(52) ],
-  selectionVisuals: [ 'type', _dereq_(54) ],
-  selectionBehavior: [ 'type', _dereq_(53) ]
+  selection: [ 'type', _dereq_(53) ],
+  selectionVisuals: [ 'type', _dereq_(55) ],
+  selectionBehavior: [ 'type', _dereq_(54) ]
 };
 
-},{"47":47,"49":49,"52":52,"53":53,"54":54}],56:[function(_dereq_,module,exports){
+},{"48":48,"50":50,"53":53,"54":54,"55":55}],57:[function(_dereq_,module,exports){
 'use strict';
 
-var assign = _dereq_(162);
+var assign = _dereq_(177),
+    inherits = _dereq_(81);
 
-var Refs = _dereq_(188);
+var Refs = _dereq_(202);
 
 var parentRefs = new Refs({ name: 'children', enumerable: true, collection: true }, { name: 'parent' }),
     labelRefs = new Refs({ name: 'label', enumerable: true }, { name: 'labelTarget' }),
+    attacherRefs = new Refs({ name: 'attachers', collection: true }, { name: 'host' }),
     outgoingRefs = new Refs({ name: 'outgoing', collection: true }, { name: 'source' }),
     incomingRefs = new Refs({ name: 'incoming', collection: true }, { name: 'target' });
 
@@ -13370,9 +13838,21 @@ function Shape() {
    * @type Array<Base>
    */
   parentRefs.bind(this, 'children');
+
+  /**
+   * @name Shape#host
+   * @type Shape
+   */
+  attacherRefs.bind(this, 'host');
+
+  /**
+   * @name Shape#attachers
+   * @type Shape
+   */
+  attacherRefs.bind(this, 'attachers');
 }
 
-Shape.prototype = Object.create(Base.prototype);
+inherits(Shape, Base);
 
 
 /**
@@ -13387,7 +13867,7 @@ function Root() {
   Shape.call(this);
 }
 
-Root.prototype = Object.create(Shape.prototype);
+inherits(Root, Shape);
 
 
 /**
@@ -13410,7 +13890,7 @@ function Label() {
   labelRefs.bind(this, 'labelTarget');
 }
 
-Label.prototype = Object.create(Shape.prototype);
+inherits(Label, Shape);
 
 
 /**
@@ -13441,7 +13921,7 @@ function Connection() {
   incomingRefs.bind(this, 'target');
 }
 
-Connection.prototype = Object.create(Base.prototype);
+inherits(Connection, Base);
 
 
 var types = {
@@ -13482,13 +13962,13 @@ module.exports.Root = Root;
 module.exports.Shape = Shape;
 module.exports.Connection = Connection;
 module.exports.Label = Label;
-},{"162":162,"188":188}],57:[function(_dereq_,module,exports){
+},{"177":177,"202":202,"81":81}],58:[function(_dereq_,module,exports){
 'use strict';
 
-var Cursor = _dereq_(63),
-    ClickTrap = _dereq_(61),
-    domEvent = _dereq_(177),
-    Event = _dereq_(65);
+var Cursor = _dereq_(65),
+    ClickTrap = _dereq_(63),
+    domEvent = _dereq_(191),
+    Event = _dereq_(67);
 
 function substract(p1, p2) {
   return {
@@ -13560,10 +14040,8 @@ function MoveCanvas(eventBus, canvas) {
 
   function handleStart(event) {
 
-    // reject non-left mouse button drags
-    // left = 0
-    // left click + alt pressed is reserved for other use
-    if (event.button ||  event.altKey) {
+    // reject non-left left mouse button or modifier key
+    if (event.button || event.ctrlKey || event.shiftKey || event.altKey) {
       return;
     }
 
@@ -13586,111 +14064,179 @@ MoveCanvas.$inject = [ 'eventBus', 'canvas' ];
 
 module.exports = MoveCanvas;
 
-},{"177":177,"61":61,"63":63,"65":65}],58:[function(_dereq_,module,exports){
+},{"191":191,"63":63,"65":65,"67":67}],59:[function(_dereq_,module,exports){
 module.exports = {
   __init__: [ 'moveCanvas' ],
-  moveCanvas: [ 'type', _dereq_(57) ]
+  moveCanvas: [ 'type', _dereq_(58) ]
 };
-},{"57":57}],59:[function(_dereq_,module,exports){
+},{"58":58}],60:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(177);
+var domEvent = _dereq_(191);
 
-function ZoomScroll(events, canvas) {
+var hasPrimaryModifier = _dereq_(71).hasPrimaryModifier,
+    hasSecondaryModifier = _dereq_(71).hasSecondaryModifier;
 
-  var RANGE = { min: 0.2, max: 4 };
+var isMac = _dereq_(72).isMac;
 
-  var ZOOM_OFFSET = 5;
-  var SCROLL_OFFSET = 50;
+var getStepRange = _dereq_(61).getStepRange,
+    cap = _dereq_(61).cap;
 
-  function cap(scale) {
-    return Math.max(RANGE.min, Math.min(RANGE.max, scale));
-  }
-
-  function reset() {
-    canvas.zoom('fit-viewport');
-  }
-
-  function zoom(direction, position) {
-
-    var currentZoom = canvas.zoom();
-    var factor = Math.pow(1 + Math.abs(direction / ZOOM_OFFSET) , direction > 0 ? 1 : -1);
-
-    canvas.zoom(cap(currentZoom * factor), position);
-  }
+var log10 = _dereq_(70).log10;
 
 
-  function init(element) {
+var RANGE = { min: 0.2, max: 4 },
+    NUM_STEPS = 10;
 
-    domEvent.bind(element, 'wheel', function(event) {
+/**
+ * An implementation of zooming and scrolling within the {@link Canvas}.
+ *
+ * @param {EventBus} eventBus
+ * @param {Canvas} canvas
+ */
+function ZoomScroll(eventBus, canvas) {
 
-      var factor = event.deltaMode === 0 ? 1/40 : 1/2;
+  this._canvas = canvas;
 
-      var shift = event.shiftKey,
-          ctrl = event.ctrlKey;
+  var self = this;
 
-      var x = event.deltaX * factor,
-          y = event.deltaY * factor;
+  eventBus.on('canvas.init', function(e) {
+    self._init(canvas._container);
+  });
+}
 
-      if (shift || ctrl) {
-        var delta = {};
 
-        if (ctrl) {
-          delta.dx = SCROLL_OFFSET * (x || y);
-        } else {
-          delta.dy = SCROLL_OFFSET * (x || y);
-        }
+ZoomScroll.prototype.scroll = function scroll(delta) {
+  this._canvas.scroll(delta);
+};
 
-        canvas.scroll(delta);
+
+ZoomScroll.prototype.reset = function reset() {
+  this._canvas.zoom('fit-viewport');
+};
+
+
+ZoomScroll.prototype.zoom = function zoom(direction, position) {
+  var canvas = this._canvas;
+  var currentZoom = canvas.zoom();
+  var factor = Math.pow(1 + Math.abs(direction) , direction > 0 ? 1 : -1);
+
+  canvas.zoom(cap(RANGE, currentZoom * factor), position);
+};
+
+/**
+ * Zoom along fixed zoom steps
+ *
+ * @param {Integer} direction zoom direction (1 for zooming in, -1 for out)
+ */
+ZoomScroll.prototype.stepZoom = function stepZoom(direction, position) {
+
+  var canvas = this._canvas,
+      stepRange = getStepRange(RANGE, NUM_STEPS);
+
+  direction = direction > 0 ? 1 : -1;
+
+  var currentLinearZoomLevel = log10(canvas.zoom());
+
+  // snap to a proximate zoom step
+  var newLinearZoomLevel = Math.round(currentLinearZoomLevel / stepRange) * stepRange;
+
+  // increase or decrease one zoom step in the given direction
+  newLinearZoomLevel += stepRange * direction;
+
+  // calculate the absolute logarithmic zoom level based on the linear zoom level
+  // (e.g. 2 for an absolute x2 zoom)
+  var newLogZoomLevel = Math.pow(10, newLinearZoomLevel);
+
+  canvas.zoom(cap(RANGE, newLogZoomLevel), position);
+};
+
+
+ZoomScroll.prototype._init = function(element) {
+  var self = this;
+
+  domEvent.bind(element, 'wheel', function(event) {
+
+    event.preventDefault();
+
+    // mouse-event: SELECTION_KEY
+    // mouse-event: AND_KEY
+    var isVerticalScroll = hasPrimaryModifier(event),
+        isHorizontalScroll = hasSecondaryModifier(event);
+
+    var factor;
+
+    if (isVerticalScroll || isHorizontalScroll) {
+
+      if (isMac) {
+        factor = event.deltaMode === 0 ? 1.25 : 50;
       } else {
-        var offset = {};
-
-        // gecko=layer*, other=offset*
-        if (isNaN(event.offsetX)) {
-          offset = {
-            x: event.layerX,
-            y: event.layerY
-          };
-        } else {
-          offset = {
-            x: event.offsetX,
-            y: event.offsetY
-          };
-        }
-
-        // zoom in relative to diagram {x,y} coordinates
-        zoom(y * -1, offset);
+        factor = event.deltaMode === 0 ? 1/40 : 1/2;
       }
 
-      event.preventDefault();
-    });
-  }
+      var delta = {};
 
-  events.on('canvas.init', function(e) {
-    init(e.svg.node);
+      if (isHorizontalScroll) {
+        delta.dx = (factor * (event.deltaX || event.deltaY));
+      } else {
+        delta.dy = (factor * event.deltaY);
+      }
+      self.scroll(delta);
+    } else {
+      factor = (event.deltaMode === 0 ? 1/40 : 1/2);
+
+      var elementRect = element.getBoundingClientRect();
+
+      var offset =  {
+        x: event.clientX - elementRect.left,
+        y: event.clientY - elementRect.top
+      };
+
+      // zoom in relative to diagram {x,y} coordinates
+      self.zoom(event.deltaY * factor / (-5), offset);
+    }
   });
-
-  // API
-  this.zoom = zoom;
-  this.reset = reset;
-}
+};
 
 
 ZoomScroll.$inject = [ 'eventBus', 'canvas' ];
 
 module.exports = ZoomScroll;
 
-
-},{"177":177}],60:[function(_dereq_,module,exports){
-module.exports = {
-  __init__: [ 'zoomScroll' ],
-  zoomScroll: [ 'type', _dereq_(59) ]
-};
-},{"59":59}],61:[function(_dereq_,module,exports){
+},{"191":191,"61":61,"70":70,"71":71,"72":72}],61:[function(_dereq_,module,exports){
 'use strict';
 
-var domEvent = _dereq_(177),
-    stopEvent = _dereq_(65).stopEvent;
+
+var log10 = _dereq_(70).log10;
+
+/**
+ * Get the linear range between two zoom steps based on the
+ * total number of zoom steps (defined as NUM_STEPS)
+ */
+module.exports.getStepRange = function(range, steps) {
+
+  var minLinearRange = log10(range.min),
+      maxLinearRange = log10(range.max);
+
+  var absoluteLinearRange = Math.abs(minLinearRange) + Math.abs(maxLinearRange);
+
+  return absoluteLinearRange / steps;
+};
+
+module.exports.cap = function(range, scale) {
+  return Math.max(range.min, Math.min(range.max, scale));
+};
+
+},{"70":70}],62:[function(_dereq_,module,exports){
+module.exports = {
+  __init__: [ 'zoomScroll' ],
+  zoomScroll: [ 'type', _dereq_(60) ]
+};
+},{"60":60}],63:[function(_dereq_,module,exports){
+'use strict';
+
+var domEvent = _dereq_(191),
+    stopEvent = _dereq_(67).stopEvent;
 
 function trap(event) {
   stopEvent(event);
@@ -13717,7 +14263,7 @@ function install() {
 }
 
 module.exports.install = install;
-},{"177":177,"65":65}],62:[function(_dereq_,module,exports){
+},{"191":191,"67":67}],64:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -13809,10 +14355,10 @@ module.exports.indexOf = function(collection, element) {
   return collection.indexOf(element);
 };
 
-},{}],63:[function(_dereq_,module,exports){
+},{}],65:[function(_dereq_,module,exports){
 'use strict';
 
-var domClasses = _dereq_(173);
+var domClasses = _dereq_(187);
 
 var CURSOR_CLS_PATTERN = /^djs-cursor-.*$/;
 
@@ -13830,13 +14376,13 @@ module.exports.set = function(mode) {
 module.exports.unset = function() {
   this.set(null);
 };
-},{"173":173}],64:[function(_dereq_,module,exports){
+},{"187":187}],66:[function(_dereq_,module,exports){
 'use strict';
 
-var isArray = _dereq_(153),
-    isNumber = _dereq_(156),
-    groupBy = _dereq_(81),
-    forEach = _dereq_(80);
+var isArray = _dereq_(168),
+    isNumber = _dereq_(171),
+    groupBy = _dereq_(87),
+    forEach = _dereq_(86);
 
 /**
  * Adds an element to a collection and returns true if the
@@ -14096,7 +14642,7 @@ module.exports.getEnclosedElements = getEnclosedElements;
 
 module.exports.getClosure = getClosure;
 
-},{"153":153,"156":156,"80":80,"81":81}],65:[function(_dereq_,module,exports){
+},{"168":168,"171":171,"86":86,"87":87}],67:[function(_dereq_,module,exports){
 'use strict';
 
 function __preventDefault(event) {
@@ -14167,7 +14713,7 @@ function toPoint(event) {
 
 module.exports.toPoint = toPoint;
 
-},{}],66:[function(_dereq_,module,exports){
+},{}],68:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -14213,7 +14759,7 @@ function getBBox(gfx) {
 module.exports.getVisual = getVisual;
 module.exports.getChildren = getChildren;
 module.exports.getBBox = getBBox;
-},{}],67:[function(_dereq_,module,exports){
+},{}],69:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -14246,16 +14792,75 @@ IdGenerator.prototype.next = function() {
   return this._prefix + (++this._counter);
 };
 
-},{}],68:[function(_dereq_,module,exports){
+},{}],70:[function(_dereq_,module,exports){
 'use strict';
 
-var isObject = _dereq_(157),
-    assign = _dereq_(162),
-    forEach = _dereq_(80),
-    reduce = _dereq_(84),
-    merge = _dereq_(165);
+/**
+ * Get the logarithm of x with base 10
+ * @param  {Integer} value
+ */
+function log10(x) {
+  return Math.log(x) / Math.log(10);
+}
 
-var Snap = _dereq_(71);
+module.exports.log10 = log10;
+
+},{}],71:[function(_dereq_,module,exports){
+'use strict';
+
+var getOriginalEvent = _dereq_(67).getOriginal;
+
+var isMac = _dereq_(72).isMac;
+
+
+function isPrimaryButton(event) {
+  // button === 0 -> left áka primary mouse button
+  return !(getOriginalEvent(event) || event).button;
+}
+
+module.exports.isPrimaryButton = isPrimaryButton;
+
+module.exports.isMac = isMac;
+
+module.exports.hasPrimaryModifier = function(event) {
+  var originalEvent = getOriginalEvent(event) || event;
+
+  if (!isPrimaryButton(event)) {
+    return false;
+  }
+
+  // Use alt as primary modifier key for mac OS
+  if (isMac()) {
+    return originalEvent.altKey;
+  } else {
+    return originalEvent.ctrlKey;
+  }
+};
+
+
+module.exports.hasSecondaryModifier = function(event) {
+  var originalEvent = getOriginalEvent(event) || event;
+
+  return isPrimaryButton(event) && originalEvent.shiftKey;
+};
+
+},{"67":67,"72":72}],72:[function(_dereq_,module,exports){
+'use strict';
+
+module.exports.isMac = function isMac() {
+  return (/mac/i).test(navigator.platform);
+};
+},{}],73:[function(_dereq_,module,exports){
+'use strict';
+
+var isObject = _dereq_(172),
+    assign = _dereq_(177),
+    pick = _dereq_(183),
+    forEach = _dereq_(86),
+    reduce = _dereq_(90),
+    merge = _dereq_(180);
+
+var Snap = _dereq_(76);
 
 var DEFAULT_BOX_PADDING = 0;
 
@@ -14289,6 +14894,108 @@ function parsePadding(padding) {
   }
 }
 
+function getTextBBox(text, fakeText) {
+  fakeText.textContent = text;
+  return pick(fakeText.getBBox(), [ 'width', 'height' ]);
+}
+
+
+/**
+ * Layout the next line and return the layouted element.
+ *
+ * Alters the lines passed.
+ *
+ * @param  {Array<String>} lines
+ * @return {Object} the line descriptor, an object { width, height, text }
+ */
+function layoutNext(lines, maxWidth, fakeText) {
+
+  var originalLine = lines.shift(),
+      fitLine = originalLine;
+
+  var textBBox;
+
+  while (true) {
+    textBBox = getTextBBox(fitLine, fakeText);
+
+    textBBox.width = fitLine ? textBBox.width : 0;
+
+    // try to fit
+    if (fitLine === ' ' || fitLine === '' || textBBox.width < Math.round(maxWidth) || fitLine.length < 4) {
+      return fit(lines, fitLine, originalLine, textBBox);
+    }
+
+    fitLine = shortenLine(fitLine, textBBox.width, maxWidth);
+  }
+}
+
+function fit(lines, fitLine, originalLine, textBBox) {
+  if (fitLine.length < originalLine.length) {
+    var nextLine = lines[0] || '',
+        remainder = originalLine.slice(fitLine.length).trim();
+
+    if (/-\s*$/.test(remainder)) {
+      nextLine = remainder.replace(/-\s*$/, '') + nextLine.replace(/^\s+/, '');
+    } else {
+      nextLine = remainder + ' ' + nextLine;
+    }
+
+    lines[0] = nextLine;
+  }
+  return { width: textBBox.width, height: textBBox.height, text: fitLine };
+}
+
+
+/**
+ * Shortens a line based on spacing and hyphens.
+ * Returns the shortened result on success.
+ *
+ * @param  {String} line
+ * @param  {Number} maxLength the maximum characters of the string
+ * @return {String} the shortened string
+ */
+function semanticShorten(line, maxLength) {
+  var parts = line.split(/(\s|-)/g),
+      part,
+      shortenedParts = [],
+      length = 0;
+
+  // try to shorten via spaces + hyphens
+  if (parts.length > 1) {
+    while ((part = parts.shift())) {
+      if (part.length + length < maxLength) {
+        shortenedParts.push(part);
+        length += part.length;
+      } else {
+        // remove previous part, too if hyphen does not fit anymore
+        if (part === '-') {
+          shortenedParts.pop();
+        }
+
+        break;
+      }
+    }
+  }
+
+  return shortenedParts.join('');
+}
+
+
+function shortenLine(line, width, maxWidth) {
+  var length = Math.max(line.length * (maxWidth / width), 1);
+
+  // try to shorten semantically (i.e. based on spaces and hyphens)
+  var shortenedLine = semanticShorten(line, length);
+
+  if (!shortenedLine) {
+
+    // force shorten by cutting the long word
+    shortenedLine = line.slice(0, Math.max(Math.round(length - 1), 1));
+  }
+
+  return shortenedLine;
+}
+
 
 /**
  * Creates a new label utility
@@ -14308,6 +15015,7 @@ function Text(config) {
     align: 'center-top'
   }, config || {});
 }
+
 
 /**
  * Create a label in the parent node.
@@ -14335,113 +15043,12 @@ Text.prototype.createText = function(parent, text, options) {
 
   var maxWidth = box.width - padding.left - padding.right;
 
-  var fakeText = parent.text(0, 0, '').attr(style).node;
   // FF regression: ensure text is shown during rendering
   // by attaching it directly to the body
-  fakeText.ownerSVGElement.appendChild(fakeText);
-
-  /**
-   * Layout the next line and return the layouted element.
-   *
-   * Alters the lines passed.
-   *
-   * @param  {Array<String>} lines
-   * @return {Object} the line descriptor, an object { width, height, text }
-   */
-  function layoutNext(lines) {
-
-    var originalLine = lines.shift(),
-        fitLine = originalLine;
-
-    var textBBox;
-
-    function fit() {
-      if (fitLine.length < originalLine.length) {
-        var nextLine = lines[0] || '',
-            remainder = originalLine.slice(fitLine.length);
-
-        if (/-\s*$/.test(remainder)) {
-          nextLine = remainder.replace(/-\s*$/, '') + nextLine.replace(/^\s+/, '');
-        } else {
-          nextLine = remainder + ' ' + nextLine;
-        }
-
-        lines[0] = nextLine;
-      }
-      return { width: textBBox.width, height: textBBox.height, text: fitLine };
-    }
-
-    function getTextBBox(text) {
-      fakeText.textContent = text;
-      return fakeText.getBBox();
-    }
-
-    /**
-     * Shortens a line based on spacing and hyphens.
-     * Returns the shortened result on success.
-     *
-     * @param  {String} line
-     * @param  {Number} maxLength the maximum characters of the string
-     * @return {String} the shortened string
-     */
-    function semanticShorten(line, maxLength) {
-      var parts = line.split(/(\s|-)/g),
-          part,
-          shortenedParts = [],
-          length = 0;
-
-      // try to shorten via spaces + hyphens
-      if (parts.length > 1) {
-        while ((part = parts.shift())) {
-
-          if (part.length + length < maxLength) {
-            shortenedParts.push(part);
-            length += part.length;
-          } else {
-            // remove previous part, too if hyphen does not fit anymore
-            if (part === '-') {
-              shortenedParts.pop();
-            }
-
-            break;
-          }
-        }
-      }
-
-      return shortenedParts.join('');
-    }
-
-    function shortenLine(line, width, maxWidth) {
-      var length = line.length * (maxWidth / width);
-
-      // try to shorten semantically (i.e. based on spaces and hyphens)
-      var shortenedLine = semanticShorten(line, length);
-
-      if (!shortenedLine) {
-
-        // force shorten by cutting the long word
-        shortenedLine = line.slice(0, Math.floor(length - 1));
-      }
-
-      return shortenedLine;
-    }
-
-
-    while (true) {
-
-      textBBox = getTextBBox(fitLine);
-
-      // try to fit
-      if (textBBox.width < maxWidth) {
-        return fit();
-      }
-
-      fitLine = shortenLine(fitLine, textBBox.width, maxWidth);
-    }
-  }
+  var fakeText = parent.paper.text(0, 0, '').attr(style).node;
 
   while (lines.length) {
-    layouted.push(layoutNext(lines));
+    layouted.push(layoutNext(lines, maxWidth, fakeText));
   }
 
   var totalHeight = reduce(layouted, function(sum, line, idx) {
@@ -14476,7 +15083,7 @@ Text.prototype.createText = function(parent, text, options) {
 
       default:
         // aka center
-        x = (maxWidth - line.width) / 2 + padding.left;
+        x = Math.max(((maxWidth - line.width) / 2 + padding.left), 0);
     }
 
 
@@ -14494,7 +15101,8 @@ Text.prototype.createText = function(parent, text, options) {
 
 
 module.exports = Text;
-},{"157":157,"162":162,"165":165,"71":71,"80":80,"84":84}],69:[function(_dereq_,module,exports){
+
+},{"172":172,"177":177,"180":180,"183":183,"76":76,"86":86,"90":90}],74:[function(_dereq_,module,exports){
 // Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14899,7 +15507,7 @@ module.exports = Text;
     (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define === "function" && define.amd ? (define("eve", [], function() { return eve; })) : (glob.eve = eve));
 })(this);
 
-},{}],70:[function(_dereq_,module,exports){
+},{}],75:[function(_dereq_,module,exports){
 // Snap.svg 0.3.0
 // 
 // Copyright (c) 2013 – 2014 Adobe Systems Incorporated. All rights reserved.
@@ -14927,7 +15535,7 @@ module.exports = Text;
         });
     } else if (typeof exports !== 'undefined') {
         // Next for Node.js or CommonJS
-        var eve = _dereq_(69);
+        var eve = _dereq_(74);
         module.exports = factory(glob, eve);
     } else {
         // Browser globals (glob is window)
@@ -21552,10 +22160,10 @@ Snap.plugin(function (Snap, Element, Paper, glob) {
 
 return Snap;
 }));
-},{"69":69}],71:[function(_dereq_,module,exports){
+},{"74":74}],76:[function(_dereq_,module,exports){
 'use strict';
 
-var snapsvg = module.exports = _dereq_(70);
+var snapsvg = module.exports = _dereq_(75);
 
 snapsvg.plugin(function(Snap, Element) {
 
@@ -21761,7 +22369,7 @@ snapsvg.plugin(function(Snap, Element, Paper, global) {
     return new Snap(svg);
   };
 });
-},{"70":70}],72:[function(_dereq_,module,exports){
+},{"75":75}],77:[function(_dereq_,module,exports){
 
 var isArray = function(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -21811,18 +22419,18 @@ exports.annotate = annotate;
 exports.parse = parse;
 exports.isArray = isArray;
 
-},{}],73:[function(_dereq_,module,exports){
+},{}],78:[function(_dereq_,module,exports){
 module.exports = {
-  annotate: _dereq_(72).annotate,
-  Module: _dereq_(75),
-  Injector: _dereq_(74)
+  annotate: _dereq_(77).annotate,
+  Module: _dereq_(80),
+  Injector: _dereq_(79)
 };
 
-},{"72":72,"74":74,"75":75}],74:[function(_dereq_,module,exports){
-var Module = _dereq_(75);
-var autoAnnotate = _dereq_(72).parse;
-var annotate = _dereq_(72).annotate;
-var isArray = _dereq_(72).isArray;
+},{"77":77,"79":79,"80":80}],79:[function(_dereq_,module,exports){
+var Module = _dereq_(80);
+var autoAnnotate = _dereq_(77).parse;
+var annotate = _dereq_(77).annotate;
+var isArray = _dereq_(77).isArray;
 
 
 var Injector = function(modules, parent) {
@@ -22034,7 +22642,7 @@ var Injector = function(modules, parent) {
 
 module.exports = Injector;
 
-},{"72":72,"75":75}],75:[function(_dereq_,module,exports){
+},{"77":77,"80":80}],80:[function(_dereq_,module,exports){
 var Module = function() {
   var providers = [];
 
@@ -22060,7 +22668,7 @@ var Module = function() {
 
 module.exports = Module;
 
-},{}],76:[function(_dereq_,module,exports){
+},{}],81:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -22085,12 +22693,33 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],77:[function(_dereq_,module,exports){
-var arrayEvery = _dereq_(93),
-    baseCallback = _dereq_(99),
-    baseEvery = _dereq_(104),
-    isArray = _dereq_(153),
-    isIterateeCall = _dereq_(143);
+},{}],82:[function(_dereq_,module,exports){
+/**
+ * Gets the last element of `array`.
+ *
+ * @static
+ * @memberOf _
+ * @category Array
+ * @param {Array} array The array to query.
+ * @returns {*} Returns the last element of `array`.
+ * @example
+ *
+ * _.last([1, 2, 3]);
+ * // => 3
+ */
+function last(array) {
+  var length = array ? array.length : 0;
+  return length ? array[length - 1] : undefined;
+}
+
+module.exports = last;
+
+},{}],83:[function(_dereq_,module,exports){
+var arrayEvery = _dereq_(99),
+    baseCallback = _dereq_(107),
+    baseEvery = _dereq_(112),
+    isArray = _dereq_(168),
+    isIterateeCall = _dereq_(157);
 
 /**
  * Checks if `predicate` returns truthy for **all** elements of `collection`.
@@ -22143,9 +22772,9 @@ var arrayEvery = _dereq_(93),
 function every(collection, predicate, thisArg) {
   var func = isArray(collection) ? arrayEvery : baseEvery;
   if (thisArg && isIterateeCall(collection, predicate, thisArg)) {
-    predicate = null;
+    predicate = undefined;
   }
-  if (typeof predicate != 'function' || typeof thisArg != 'undefined') {
+  if (typeof predicate != 'function' || thisArg !== undefined) {
     predicate = baseCallback(predicate, thisArg, 3);
   }
   return func(collection, predicate);
@@ -22153,11 +22782,11 @@ function every(collection, predicate, thisArg) {
 
 module.exports = every;
 
-},{"104":104,"143":143,"153":153,"93":93,"99":99}],78:[function(_dereq_,module,exports){
-var arrayFilter = _dereq_(94),
-    baseCallback = _dereq_(99),
-    baseFilter = _dereq_(105),
-    isArray = _dereq_(153);
+},{"107":107,"112":112,"157":157,"168":168,"99":99}],84:[function(_dereq_,module,exports){
+var arrayFilter = _dereq_(100),
+    baseCallback = _dereq_(107),
+    baseFilter = _dereq_(113),
+    isArray = _dereq_(168);
 
 /**
  * Iterates over elements of `collection`, returning an array of all elements
@@ -22216,9 +22845,9 @@ function filter(collection, predicate, thisArg) {
 
 module.exports = filter;
 
-},{"105":105,"153":153,"94":94,"99":99}],79:[function(_dereq_,module,exports){
-var baseEach = _dereq_(103),
-    createFind = _dereq_(135);
+},{"100":100,"107":107,"113":113,"168":168}],85:[function(_dereq_,module,exports){
+var baseEach = _dereq_(111),
+    createFind = _dereq_(145);
 
 /**
  * Iterates over elements of `collection`, returning the first element
@@ -22274,18 +22903,18 @@ var find = createFind(baseEach);
 
 module.exports = find;
 
-},{"103":103,"135":135}],80:[function(_dereq_,module,exports){
-var arrayEach = _dereq_(92),
-    baseEach = _dereq_(103),
-    createForEach = _dereq_(136);
+},{"111":111,"145":145}],86:[function(_dereq_,module,exports){
+var arrayEach = _dereq_(98),
+    baseEach = _dereq_(111),
+    createForEach = _dereq_(146);
 
 /**
  * Iterates over elements of `collection` invoking `iteratee` for each element.
  * The `iteratee` is bound to `thisArg` and invoked with three arguments:
- * (value, index|key, collection). Iterator functions may exit iteration early
+ * (value, index|key, collection). Iteratee functions may exit iteration early
  * by explicitly returning `false`.
  *
- * **Note:** As with other "Collections" methods, objects with a `length` property
+ * **Note:** As with other "Collections" methods, objects with a "length" property
  * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
  * may be used for object iteration.
  *
@@ -22313,8 +22942,8 @@ var forEach = createForEach(arrayEach, baseEach);
 
 module.exports = forEach;
 
-},{"103":103,"136":136,"92":92}],81:[function(_dereq_,module,exports){
-var createAggregator = _dereq_(130);
+},{"111":111,"146":146,"98":98}],87:[function(_dereq_,module,exports){
+var createAggregator = _dereq_(140);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -22374,25 +23003,23 @@ var groupBy = createAggregator(function(result, value, key) {
 
 module.exports = groupBy;
 
-},{"130":130}],82:[function(_dereq_,module,exports){
-var baseIndexOf = _dereq_(112),
-    isArray = _dereq_(153),
-    isIterateeCall = _dereq_(143),
-    isLength = _dereq_(144),
-    isString = _dereq_(159),
-    values = _dereq_(168);
+},{"140":140}],88:[function(_dereq_,module,exports){
+var baseIndexOf = _dereq_(121),
+    getLength = _dereq_(151),
+    isArray = _dereq_(168),
+    isIterateeCall = _dereq_(157),
+    isLength = _dereq_(159),
+    isString = _dereq_(174),
+    values = _dereq_(184);
 
 /* Native method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
 
 /**
- * Checks if `value` is in `collection` using `SameValueZero` for equality
- * comparisons. If `fromIndex` is negative, it is used as the offset from
- * the end of `collection`.
- *
- * **Note:** [`SameValueZero`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-samevaluezero)
- * comparisons are like strict equality comparisons, e.g. `===`, except that
- * `NaN` matches `NaN`.
+ * Checks if `target` is in `collection` using
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+ * for equality comparisons. If `fromIndex` is negative, it's used as the offset
+ * from the end of `collection`.
  *
  * @static
  * @memberOf _
@@ -22418,13 +23045,10 @@ var nativeMax = Math.max;
  * // => true
  */
 function includes(collection, target, fromIndex, guard) {
-  var length = collection ? collection.length : 0;
+  var length = collection ? getLength(collection) : 0;
   if (!isLength(length)) {
     collection = values(collection);
     length = collection.length;
-  }
-  if (!length) {
-    return false;
   }
   if (typeof fromIndex != 'number' || (guard && isIterateeCall(target, fromIndex, guard))) {
     fromIndex = 0;
@@ -22432,17 +23056,17 @@ function includes(collection, target, fromIndex, guard) {
     fromIndex = fromIndex < 0 ? nativeMax(length + fromIndex, 0) : (fromIndex || 0);
   }
   return (typeof collection == 'string' || !isArray(collection) && isString(collection))
-    ? (fromIndex < length && collection.indexOf(target, fromIndex) > -1)
-    : (baseIndexOf(collection, target, fromIndex) > -1);
+    ? (fromIndex <= length && collection.indexOf(target, fromIndex) > -1)
+    : (!!length && baseIndexOf(collection, target, fromIndex) > -1);
 }
 
 module.exports = includes;
 
-},{"112":112,"143":143,"144":144,"153":153,"159":159,"168":168}],83:[function(_dereq_,module,exports){
-var arrayMap = _dereq_(95),
-    baseCallback = _dereq_(99),
-    baseMap = _dereq_(117),
-    isArray = _dereq_(153);
+},{"121":121,"151":151,"157":157,"159":159,"168":168,"174":174,"184":184}],89:[function(_dereq_,module,exports){
+var arrayMap = _dereq_(101),
+    baseCallback = _dereq_(107),
+    baseMap = _dereq_(125),
+    isArray = _dereq_(168);
 
 /**
  * Creates an array of values by running each element in `collection` through
@@ -22460,14 +23084,15 @@ var arrayMap = _dereq_(95),
  * callback returns `true` for elements that have the properties of the given
  * object, else `false`.
  *
- * Many lodash methods are guarded to work as interatees for methods like
+ * Many lodash methods are guarded to work as iteratees for methods like
  * `_.every`, `_.filter`, `_.map`, `_.mapValues`, `_.reject`, and `_.some`.
  *
  * The guarded methods are:
- * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`, `drop`,
- * `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`, `parseInt`,
- * `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`, `trimLeft`,
- * `trimRight`, `trunc`, `random`, `range`, `sample`, `some`, `uniq`, and `words`
+ * `ary`, `callback`, `chunk`, `clone`, `create`, `curry`, `curryRight`,
+ * `drop`, `dropRight`, `every`, `fill`, `flatten`, `invert`, `max`, `min`,
+ * `parseInt`, `slice`, `sortBy`, `take`, `takeRight`, `template`, `trim`,
+ * `trimLeft`, `trimRight`, `trunc`, `random`, `range`, `sample`, `some`,
+ * `sum`, `uniq`, and `words`
  *
  * @static
  * @memberOf _
@@ -22476,7 +23101,6 @@ var arrayMap = _dereq_(95),
  * @param {Array|Object|string} collection The collection to iterate over.
  * @param {Function|Object|string} [iteratee=_.identity] The function invoked
  *  per iteration.
- *  create a `_.property` or `_.matches` style callback respectively.
  * @param {*} [thisArg] The `this` binding of `iteratee`.
  * @returns {Array} Returns the new mapped array.
  * @example
@@ -22508,10 +23132,10 @@ function map(collection, iteratee, thisArg) {
 
 module.exports = map;
 
-},{"117":117,"153":153,"95":95,"99":99}],84:[function(_dereq_,module,exports){
-var arrayReduce = _dereq_(96),
-    baseEach = _dereq_(103),
-    createReduce = _dereq_(137);
+},{"101":101,"107":107,"125":125,"168":168}],90:[function(_dereq_,module,exports){
+var arrayReduce = _dereq_(103),
+    baseEach = _dereq_(111),
+    createReduce = _dereq_(147);
 
 /**
  * Reduces `collection` to a value which is the accumulated result of running
@@ -22521,11 +23145,12 @@ var arrayReduce = _dereq_(96),
  * value. The `iteratee` is bound to `thisArg` and invoked with four arguments:
  * (accumulator, value, index|key, collection).
  *
- * Many lodash methods are guarded to work as interatees for methods like
+ * Many lodash methods are guarded to work as iteratees for methods like
  * `_.reduce`, `_.reduceRight`, and `_.transform`.
  *
  * The guarded methods are:
- * `assign`, `defaults`, `includes`, `merge`, `sortByAll`, and `sortByOrder`
+ * `assign`, `defaults`, `defaultsDeep`, `includes`, `merge`, `sortByAll`,
+ * and `sortByOrder`
  *
  * @static
  * @memberOf _
@@ -22538,8 +23163,8 @@ var arrayReduce = _dereq_(96),
  * @returns {*} Returns the accumulated value.
  * @example
  *
- * _.reduce([1, 2], function(sum, n) {
- *   return sum + n;
+ * _.reduce([1, 2], function(total, n) {
+ *   return total + n;
  * });
  * // => 3
  *
@@ -22553,12 +23178,12 @@ var reduce = createReduce(arrayReduce, baseEach);
 
 module.exports = reduce;
 
-},{"103":103,"137":137,"96":96}],85:[function(_dereq_,module,exports){
-var arraySome = _dereq_(97),
-    baseCallback = _dereq_(99),
-    baseSome = _dereq_(124),
-    isArray = _dereq_(153),
-    isIterateeCall = _dereq_(143);
+},{"103":103,"111":111,"147":147}],91:[function(_dereq_,module,exports){
+var arraySome = _dereq_(104),
+    baseCallback = _dereq_(107),
+    baseSome = _dereq_(134),
+    isArray = _dereq_(168),
+    isIterateeCall = _dereq_(157);
 
 /**
  * Checks if `predicate` returns truthy for **any** element of `collection`.
@@ -22612,9 +23237,9 @@ var arraySome = _dereq_(97),
 function some(collection, predicate, thisArg) {
   var func = isArray(collection) ? arraySome : baseSome;
   if (thisArg && isIterateeCall(collection, predicate, thisArg)) {
-    predicate = null;
+    predicate = undefined;
   }
-  if (typeof predicate != 'function' || typeof thisArg != 'undefined') {
+  if (typeof predicate != 'function' || thisArg !== undefined) {
     predicate = baseCallback(predicate, thisArg, 3);
   }
   return func(collection, predicate);
@@ -22622,11 +23247,11 @@ function some(collection, predicate, thisArg) {
 
 module.exports = some;
 
-},{"124":124,"143":143,"153":153,"97":97,"99":99}],86:[function(_dereq_,module,exports){
-var isNative = _dereq_(155);
+},{"104":104,"107":107,"134":134,"157":157,"168":168}],92:[function(_dereq_,module,exports){
+var getNative = _dereq_(153);
 
 /* Native method references for those with the same name as other `lodash` methods. */
-var nativeNow = isNative(nativeNow = Date.now) && nativeNow;
+var nativeNow = getNative(Date, 'now');
 
 /**
  * Gets the number of milliseconds that have elapsed since the Unix epoch
@@ -22648,9 +23273,9 @@ var now = nativeNow || function() {
 
 module.exports = now;
 
-},{"155":155}],87:[function(_dereq_,module,exports){
-var isObject = _dereq_(157),
-    now = _dereq_(86);
+},{"153":153}],93:[function(_dereq_,module,exports){
+var isObject = _dereq_(172),
+    now = _dereq_(92);
 
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -22659,12 +23284,13 @@ var FUNC_ERROR_TEXT = 'Expected a function';
 var nativeMax = Math.max;
 
 /**
- * Creates a function that delays invoking `func` until after `wait` milliseconds
- * have elapsed since the last time it was invoked. The created function comes
- * with a `cancel` method to cancel delayed invocations. Provide an options
- * object to indicate that `func` should be invoked on the leading and/or
- * trailing edge of the `wait` timeout. Subsequent calls to the debounced
- * function return the result of the last `func` invocation.
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed invocations. Provide an options object to indicate that `func`
+ * should be invoked on the leading and/or trailing edge of the `wait` timeout.
+ * Subsequent calls to the debounced function return the result of the last
+ * `func` invocation.
  *
  * **Note:** If `leading` and `trailing` options are `true`, `func` is invoked
  * on the trailing edge of the timeout only if the the debounced function is
@@ -22682,7 +23308,7 @@ var nativeMax = Math.max;
  * @param {boolean} [options.leading=false] Specify invoking on the leading
  *  edge of the timeout.
  * @param {number} [options.maxWait] The maximum time `func` is allowed to be
- *  delayed before it is invoked.
+ *  delayed before it's invoked.
  * @param {boolean} [options.trailing=true] Specify invoking on the trailing
  *  edge of the timeout.
  * @returns {Function} Returns the new debounced function.
@@ -22740,9 +23366,9 @@ function debounce(func, wait, options) {
     var leading = true;
     trailing = false;
   } else if (isObject(options)) {
-    leading = options.leading;
+    leading = !!options.leading;
     maxWait = 'maxWait' in options && nativeMax(+options.maxWait || 0, wait);
-    trailing = 'trailing' in options ? options.trailing : trailing;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
   }
 
   function cancel() {
@@ -22752,41 +23378,35 @@ function debounce(func, wait, options) {
     if (maxTimeoutId) {
       clearTimeout(maxTimeoutId);
     }
+    lastCalled = 0;
     maxTimeoutId = timeoutId = trailingCall = undefined;
+  }
+
+  function complete(isCalled, id) {
+    if (id) {
+      clearTimeout(id);
+    }
+    maxTimeoutId = timeoutId = trailingCall = undefined;
+    if (isCalled) {
+      lastCalled = now();
+      result = func.apply(thisArg, args);
+      if (!timeoutId && !maxTimeoutId) {
+        args = thisArg = undefined;
+      }
+    }
   }
 
   function delayed() {
     var remaining = wait - (now() - stamp);
     if (remaining <= 0 || remaining > wait) {
-      if (maxTimeoutId) {
-        clearTimeout(maxTimeoutId);
-      }
-      var isCalled = trailingCall;
-      maxTimeoutId = timeoutId = trailingCall = undefined;
-      if (isCalled) {
-        lastCalled = now();
-        result = func.apply(thisArg, args);
-        if (!timeoutId && !maxTimeoutId) {
-          args = thisArg = null;
-        }
-      }
+      complete(trailingCall, maxTimeoutId);
     } else {
       timeoutId = setTimeout(delayed, remaining);
     }
   }
 
   function maxDelayed() {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    maxTimeoutId = timeoutId = trailingCall = undefined;
-    if (trailing || (maxWait !== wait)) {
-      lastCalled = now();
-      result = func.apply(thisArg, args);
-      if (!timeoutId && !maxTimeoutId) {
-        args = thisArg = null;
-      }
-    }
+    complete(trailing, timeoutId);
   }
 
   function debounced() {
@@ -22826,7 +23446,7 @@ function debounce(func, wait, options) {
       result = func.apply(thisArg, args);
     }
     if (isCalled && !timeoutId && !maxTimeoutId) {
-      args = thisArg = null;
+      args = thisArg = undefined;
     }
     return result;
   }
@@ -22836,13 +23456,13 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"157":157,"86":86}],88:[function(_dereq_,module,exports){
-var baseDelay = _dereq_(101),
-    restParam = _dereq_(89);
+},{"172":172,"92":92}],94:[function(_dereq_,module,exports){
+var baseDelay = _dereq_(109),
+    restParam = _dereq_(95);
 
 /**
  * Defers invoking the `func` until the current call stack has cleared. Any
- * additional arguments are provided to `func` when it is invoked.
+ * additional arguments are provided to `func` when it's invoked.
  *
  * @static
  * @memberOf _
@@ -22863,7 +23483,7 @@ var defer = restParam(function(func, args) {
 
 module.exports = defer;
 
-},{"101":101,"89":89}],89:[function(_dereq_,module,exports){
+},{"109":109,"95":95}],95:[function(_dereq_,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -22874,7 +23494,7 @@ var nativeMax = Math.max;
  * Creates a function that invokes `func` with the `this` binding of the
  * created function and arguments from `start` and beyond provided as an array.
  *
- * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters).
+ * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
  *
  * @static
  * @memberOf _
@@ -22896,7 +23516,7 @@ function restParam(func, start) {
   if (typeof func != 'function') {
     throw new TypeError(FUNC_ERROR_TEXT);
   }
-  start = nativeMax(typeof start == 'undefined' ? (func.length - 1) : (+start || 0), 0);
+  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
   return function() {
     var args = arguments,
         index = -1,
@@ -22923,16 +23543,16 @@ function restParam(func, start) {
 
 module.exports = restParam;
 
-},{}],90:[function(_dereq_,module,exports){
+},{}],96:[function(_dereq_,module,exports){
 (function (global){
-var cachePush = _dereq_(129),
-    isNative = _dereq_(155);
+var cachePush = _dereq_(139),
+    getNative = _dereq_(153);
 
 /** Native method references. */
-var Set = isNative(Set = global.Set) && Set;
+var Set = getNative(global, 'Set');
 
 /* Native method references for those with the same name as other `lodash` methods. */
-var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
+var nativeCreate = getNative(Object, 'create');
 
 /**
  *
@@ -22956,8 +23576,8 @@ SetCache.prototype.push = cachePush;
 module.exports = SetCache;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{"129":129,"155":155}],91:[function(_dereq_,module,exports){
+//# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9sb2Rhc2gvaW50ZXJuYWwvU2V0Q2FjaGUuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGNhY2hlUHVzaCA9IHJlcXVpcmUoJy4vY2FjaGVQdXNoJyksXG4gICAgZ2V0TmF0aXZlID0gcmVxdWlyZSgnLi9nZXROYXRpdmUnKTtcblxuLyoqIE5hdGl2ZSBtZXRob2QgcmVmZXJlbmNlcy4gKi9cbnZhciBTZXQgPSBnZXROYXRpdmUoZ2xvYmFsLCAnU2V0Jyk7XG5cbi8qIE5hdGl2ZSBtZXRob2QgcmVmZXJlbmNlcyBmb3IgdGhvc2Ugd2l0aCB0aGUgc2FtZSBuYW1lIGFzIG90aGVyIGBsb2Rhc2hgIG1ldGhvZHMuICovXG52YXIgbmF0aXZlQ3JlYXRlID0gZ2V0TmF0aXZlKE9iamVjdCwgJ2NyZWF0ZScpO1xuXG4vKipcbiAqXG4gKiBDcmVhdGVzIGEgY2FjaGUgb2JqZWN0IHRvIHN0b3JlIHVuaXF1ZSB2YWx1ZXMuXG4gKlxuICogQHByaXZhdGVcbiAqIEBwYXJhbSB7QXJyYXl9IFt2YWx1ZXNdIFRoZSB2YWx1ZXMgdG8gY2FjaGUuXG4gKi9cbmZ1bmN0aW9uIFNldENhY2hlKHZhbHVlcykge1xuICB2YXIgbGVuZ3RoID0gdmFsdWVzID8gdmFsdWVzLmxlbmd0aCA6IDA7XG5cbiAgdGhpcy5kYXRhID0geyAnaGFzaCc6IG5hdGl2ZUNyZWF0ZShudWxsKSwgJ3NldCc6IG5ldyBTZXQgfTtcbiAgd2hpbGUgKGxlbmd0aC0tKSB7XG4gICAgdGhpcy5wdXNoKHZhbHVlc1tsZW5ndGhdKTtcbiAgfVxufVxuXG4vLyBBZGQgZnVuY3Rpb25zIHRvIHRoZSBgU2V0YCBjYWNoZS5cblNldENhY2hlLnByb3RvdHlwZS5wdXNoID0gY2FjaGVQdXNoO1xuXG5tb2R1bGUuZXhwb3J0cyA9IFNldENhY2hlO1xuIl19
+},{"139":139,"153":153}],97:[function(_dereq_,module,exports){
 /**
  * Copies the values of `source` to `array`.
  *
@@ -22979,7 +23599,7 @@ function arrayCopy(source, array) {
 
 module.exports = arrayCopy;
 
-},{}],92:[function(_dereq_,module,exports){
+},{}],98:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23003,7 +23623,7 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],93:[function(_dereq_,module,exports){
+},{}],99:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.every` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23028,7 +23648,7 @@ function arrayEvery(array, predicate) {
 
 module.exports = arrayEvery;
 
-},{}],94:[function(_dereq_,module,exports){
+},{}],100:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.filter` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23055,7 +23675,7 @@ function arrayFilter(array, predicate) {
 
 module.exports = arrayFilter;
 
-},{}],95:[function(_dereq_,module,exports){
+},{}],101:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.map` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23078,7 +23698,29 @@ function arrayMap(array, iteratee) {
 
 module.exports = arrayMap;
 
-},{}],96:[function(_dereq_,module,exports){
+},{}],102:[function(_dereq_,module,exports){
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+  return array;
+}
+
+module.exports = arrayPush;
+
+},{}],103:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.reduce` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23106,7 +23748,7 @@ function arrayReduce(array, iteratee, accumulator, initFromArray) {
 
 module.exports = arrayReduce;
 
-},{}],97:[function(_dereq_,module,exports){
+},{}],104:[function(_dereq_,module,exports){
 /**
  * A specialized version of `_.some` for arrays without support for callback
  * shorthands and `this` binding.
@@ -23131,26 +23773,23 @@ function arraySome(array, predicate) {
 
 module.exports = arraySome;
 
-},{}],98:[function(_dereq_,module,exports){
-var baseCopy = _dereq_(100),
-    keys = _dereq_(163);
+},{}],105:[function(_dereq_,module,exports){
+var keys = _dereq_(178);
 
 /**
- * The base implementation of `_.assign` without support for argument juggling,
- * multiple sources, and `this` binding `customizer` functions.
+ * A specialized version of `_.assign` for customizing assigned values without
+ * support for argument juggling, multiple sources, and `this` binding `customizer`
+ * functions.
  *
  * @private
  * @param {Object} object The destination object.
  * @param {Object} source The source object.
- * @param {Function} [customizer] The function to customize assigning values.
- * @returns {Object} Returns the destination object.
+ * @param {Function} customizer The function to customize assigned values.
+ * @returns {Object} Returns `object`.
  */
-function baseAssign(object, source, customizer) {
-  var props = keys(source);
-  if (!customizer) {
-    return baseCopy(source, object, props);
-  }
+function assignWith(object, source, customizer) {
   var index = -1,
+      props = keys(source),
       length = props.length;
 
   while (++index < length) {
@@ -23159,21 +23798,42 @@ function baseAssign(object, source, customizer) {
         result = customizer(value, source[key], key, object, source);
 
     if ((result === result ? (result !== value) : (value === value)) ||
-        (typeof value == 'undefined' && !(key in object))) {
+        (value === undefined && !(key in object))) {
       object[key] = result;
     }
   }
   return object;
 }
 
+module.exports = assignWith;
+
+},{"178":178}],106:[function(_dereq_,module,exports){
+var baseCopy = _dereq_(108),
+    keys = _dereq_(178);
+
+/**
+ * The base implementation of `_.assign` without support for argument juggling,
+ * multiple sources, and `customizer` functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @returns {Object} Returns `object`.
+ */
+function baseAssign(object, source) {
+  return source == null
+    ? object
+    : baseCopy(source, keys(source), object);
+}
+
 module.exports = baseAssign;
 
-},{"100":100,"163":163}],99:[function(_dereq_,module,exports){
-var baseMatches = _dereq_(118),
-    baseMatchesProperty = _dereq_(119),
-    baseProperty = _dereq_(122),
-    bindCallback = _dereq_(127),
-    identity = _dereq_(172);
+},{"108":108,"178":178}],107:[function(_dereq_,module,exports){
+var baseMatches = _dereq_(126),
+    baseMatchesProperty = _dereq_(127),
+    bindCallback = _dereq_(137),
+    identity = _dereq_(185),
+    property = _dereq_(186);
 
 /**
  * The base implementation of `_.callback` which supports specifying the
@@ -23188,7 +23848,7 @@ var baseMatches = _dereq_(118),
 function baseCallback(func, thisArg, argCount) {
   var type = typeof func;
   if (type == 'function') {
-    return typeof thisArg == 'undefined'
+    return thisArg === undefined
       ? func
       : bindCallback(func, thisArg, argCount);
   }
@@ -23198,28 +23858,26 @@ function baseCallback(func, thisArg, argCount) {
   if (type == 'object') {
     return baseMatches(func);
   }
-  return typeof thisArg == 'undefined'
-    ? baseProperty(func + '')
-    : baseMatchesProperty(func + '', thisArg);
+  return thisArg === undefined
+    ? property(func)
+    : baseMatchesProperty(func, thisArg);
 }
 
 module.exports = baseCallback;
 
-},{"118":118,"119":119,"122":122,"127":127,"172":172}],100:[function(_dereq_,module,exports){
+},{"126":126,"127":127,"137":137,"185":185,"186":186}],108:[function(_dereq_,module,exports){
 /**
- * Copies the properties of `source` to `object`.
+ * Copies properties of `source` to `object`.
  *
  * @private
  * @param {Object} source The object to copy properties from.
- * @param {Object} [object={}] The object to copy properties to.
  * @param {Array} props The property names to copy.
+ * @param {Object} [object={}] The object to copy properties to.
  * @returns {Object} Returns `object`.
  */
-function baseCopy(source, object, props) {
-  if (!props) {
-    props = object;
-    object = {};
-  }
+function baseCopy(source, props, object) {
+  object || (object = {});
+
   var index = -1,
       length = props.length;
 
@@ -23232,7 +23890,7 @@ function baseCopy(source, object, props) {
 
 module.exports = baseCopy;
 
-},{}],101:[function(_dereq_,module,exports){
+},{}],109:[function(_dereq_,module,exports){
 /** Used as the `TypeError` message for "Functions" methods. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
@@ -23255,10 +23913,13 @@ function baseDelay(func, wait, args) {
 
 module.exports = baseDelay;
 
-},{}],102:[function(_dereq_,module,exports){
-var baseIndexOf = _dereq_(112),
-    cacheIndexOf = _dereq_(128),
-    createCache = _dereq_(134);
+},{}],110:[function(_dereq_,module,exports){
+var baseIndexOf = _dereq_(121),
+    cacheIndexOf = _dereq_(138),
+    createCache = _dereq_(144);
+
+/** Used as the size to enable large array optimizations. */
+var LARGE_ARRAY_SIZE = 200;
 
 /**
  * The base implementation of `_.difference` which accepts a single array
@@ -23279,7 +23940,7 @@ function baseDifference(array, values) {
   var index = -1,
       indexOf = baseIndexOf,
       isCommon = true,
-      cache = (isCommon && values.length >= 200) ? createCache(values) : null,
+      cache = (isCommon && values.length >= LARGE_ARRAY_SIZE) ? createCache(values) : null,
       valuesLength = values.length;
 
   if (cache) {
@@ -23309,9 +23970,9 @@ function baseDifference(array, values) {
 
 module.exports = baseDifference;
 
-},{"112":112,"128":128,"134":134}],103:[function(_dereq_,module,exports){
-var baseForOwn = _dereq_(111),
-    createBaseEach = _dereq_(132);
+},{"121":121,"138":138,"144":144}],111:[function(_dereq_,module,exports){
+var baseForOwn = _dereq_(119),
+    createBaseEach = _dereq_(142);
 
 /**
  * The base implementation of `_.forEach` without support for callback
@@ -23326,8 +23987,8 @@ var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
 
-},{"111":111,"132":132}],104:[function(_dereq_,module,exports){
-var baseEach = _dereq_(103);
+},{"119":119,"142":142}],112:[function(_dereq_,module,exports){
+var baseEach = _dereq_(111);
 
 /**
  * The base implementation of `_.every` without support for callback
@@ -23350,8 +24011,8 @@ function baseEvery(collection, predicate) {
 
 module.exports = baseEvery;
 
-},{"103":103}],105:[function(_dereq_,module,exports){
-var baseEach = _dereq_(103);
+},{"111":111}],113:[function(_dereq_,module,exports){
+var baseEach = _dereq_(111);
 
 /**
  * The base implementation of `_.filter` without support for callback
@@ -23374,7 +24035,7 @@ function baseFilter(collection, predicate) {
 
 module.exports = baseFilter;
 
-},{"103":103}],106:[function(_dereq_,module,exports){
+},{"111":111}],114:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
  * without support for callback shorthands and `this` binding, which iterates
@@ -23401,7 +24062,7 @@ function baseFind(collection, predicate, eachFunc, retKey) {
 
 module.exports = baseFind;
 
-},{}],107:[function(_dereq_,module,exports){
+},{}],115:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.findIndex` and `_.findLastIndex` without
  * support for callback shorthands and `this` binding.
@@ -23426,11 +24087,12 @@ function baseFindIndex(array, predicate, fromRight) {
 
 module.exports = baseFindIndex;
 
-},{}],108:[function(_dereq_,module,exports){
-var isArguments = _dereq_(152),
-    isArray = _dereq_(153),
-    isLength = _dereq_(144),
-    isObjectLike = _dereq_(145);
+},{}],116:[function(_dereq_,module,exports){
+var arrayPush = _dereq_(102),
+    isArguments = _dereq_(167),
+    isArray = _dereq_(168),
+    isArrayLike = _dereq_(155),
+    isObjectLike = _dereq_(160);
 
 /**
  * The base implementation of `_.flatten` with added support for restricting
@@ -23438,33 +24100,29 @@ var isArguments = _dereq_(152),
  *
  * @private
  * @param {Array} array The array to flatten.
- * @param {boolean} isDeep Specify a deep flatten.
- * @param {boolean} isStrict Restrict flattening to arrays and `arguments` objects.
+ * @param {boolean} [isDeep] Specify a deep flatten.
+ * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
+ * @param {Array} [result=[]] The initial result value.
  * @returns {Array} Returns the new flattened array.
  */
-function baseFlatten(array, isDeep, isStrict) {
+function baseFlatten(array, isDeep, isStrict, result) {
+  result || (result = []);
+
   var index = -1,
-      length = array.length,
-      resIndex = -1,
-      result = [];
+      length = array.length;
 
   while (++index < length) {
     var value = array[index];
-
-    if (isObjectLike(value) && isLength(value.length) && (isArray(value) || isArguments(value))) {
+    if (isObjectLike(value) && isArrayLike(value) &&
+        (isStrict || isArray(value) || isArguments(value))) {
       if (isDeep) {
         // Recursively flatten arrays (susceptible to call stack limits).
-        value = baseFlatten(value, isDeep, isStrict);
-      }
-      var valIndex = -1,
-          valLength = value.length;
-
-      result.length += valLength;
-      while (++valIndex < valLength) {
-        result[++resIndex] = value[valIndex];
+        baseFlatten(value, isDeep, isStrict, result);
+      } else {
+        arrayPush(result, value);
       }
     } else if (!isStrict) {
-      result[++resIndex] = value;
+      result[result.length] = value;
     }
   }
   return result;
@@ -23472,13 +24130,13 @@ function baseFlatten(array, isDeep, isStrict) {
 
 module.exports = baseFlatten;
 
-},{"144":144,"145":145,"152":152,"153":153}],109:[function(_dereq_,module,exports){
-var createBaseFor = _dereq_(133);
+},{"102":102,"155":155,"160":160,"167":167,"168":168}],117:[function(_dereq_,module,exports){
+var createBaseFor = _dereq_(143);
 
 /**
  * The base implementation of `baseForIn` and `baseForOwn` which iterates
  * over `object` properties returned by `keysFunc` invoking `iteratee` for
- * each property. Iterator functions may exit iteration early by explicitly
+ * each property. Iteratee functions may exit iteration early by explicitly
  * returning `false`.
  *
  * @private
@@ -23491,9 +24149,9 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"133":133}],110:[function(_dereq_,module,exports){
-var baseFor = _dereq_(109),
-    keysIn = _dereq_(164);
+},{"143":143}],118:[function(_dereq_,module,exports){
+var baseFor = _dereq_(117),
+    keysIn = _dereq_(179);
 
 /**
  * The base implementation of `_.forIn` without support for callback
@@ -23510,9 +24168,9 @@ function baseForIn(object, iteratee) {
 
 module.exports = baseForIn;
 
-},{"109":109,"164":164}],111:[function(_dereq_,module,exports){
-var baseFor = _dereq_(109),
-    keys = _dereq_(163);
+},{"117":117,"179":179}],119:[function(_dereq_,module,exports){
+var baseFor = _dereq_(117),
+    keys = _dereq_(178);
 
 /**
  * The base implementation of `_.forOwn` without support for callback
@@ -23529,8 +24187,39 @@ function baseForOwn(object, iteratee) {
 
 module.exports = baseForOwn;
 
-},{"109":109,"163":163}],112:[function(_dereq_,module,exports){
-var indexOfNaN = _dereq_(141);
+},{"117":117,"178":178}],120:[function(_dereq_,module,exports){
+var toObject = _dereq_(165);
+
+/**
+ * The base implementation of `get` without support for string paths
+ * and default values.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Array} path The path of the property to get.
+ * @param {string} [pathKey] The key representation of path.
+ * @returns {*} Returns the resolved value.
+ */
+function baseGet(object, path, pathKey) {
+  if (object == null) {
+    return;
+  }
+  if (pathKey !== undefined && pathKey in toObject(object)) {
+    path = [pathKey];
+  }
+  var index = 0,
+      length = path.length;
+
+  while (object != null && index < length) {
+    object = object[path[index++]];
+  }
+  return (index && index == length) ? object : undefined;
+}
+
+module.exports = baseGet;
+
+},{"165":165}],121:[function(_dereq_,module,exports){
+var indexOfNaN = _dereq_(154);
 
 /**
  * The base implementation of `_.indexOf` without support for binary searches.
@@ -23558,8 +24247,10 @@ function baseIndexOf(array, value, fromIndex) {
 
 module.exports = baseIndexOf;
 
-},{"141":141}],113:[function(_dereq_,module,exports){
-var baseIsEqualDeep = _dereq_(114);
+},{"154":154}],122:[function(_dereq_,module,exports){
+var baseIsEqualDeep = _dereq_(123),
+    isObject = _dereq_(172),
+    isObjectLike = _dereq_(160);
 
 /**
  * The base implementation of `_.isEqual` without support for `this` binding
@@ -23575,18 +24266,10 @@ var baseIsEqualDeep = _dereq_(114);
  * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
  */
 function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
-  // Exit early for identical values.
   if (value === other) {
-    // Treat `+0` vs. `-0` as not equal.
-    return value !== 0 || (1 / value == 1 / other);
+    return true;
   }
-  var valType = typeof value,
-      othType = typeof other;
-
-  // Exit early for unlike primitive values.
-  if ((valType != 'function' && valType != 'object' && othType != 'function' && othType != 'object') ||
-      value == null || other == null) {
-    // Return `false` unless both values are `NaN`.
+  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
     return value !== value && other !== other;
   }
   return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
@@ -23594,17 +24277,16 @@ function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
 
 module.exports = baseIsEqual;
 
-},{"114":114}],114:[function(_dereq_,module,exports){
-var equalArrays = _dereq_(138),
-    equalByTag = _dereq_(139),
-    equalObjects = _dereq_(140),
-    isArray = _dereq_(153),
-    isTypedArray = _dereq_(160);
+},{"123":123,"160":160,"172":172}],123:[function(_dereq_,module,exports){
+var equalArrays = _dereq_(148),
+    equalByTag = _dereq_(149),
+    equalObjects = _dereq_(150),
+    isArray = _dereq_(168),
+    isTypedArray = _dereq_(175);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
     arrayTag = '[object Array]',
-    funcTag = '[object Function]',
     objectTag = '[object Object]';
 
 /** Used for native method references. */
@@ -23614,7 +24296,7 @@ var objectProto = Object.prototype;
 var hasOwnProperty = objectProto.hasOwnProperty;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
@@ -23656,27 +24338,23 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, 
       othIsArr = isTypedArray(other);
     }
   }
-  var objIsObj = (objTag == objectTag || (isLoose && objTag == funcTag)),
-      othIsObj = (othTag == objectTag || (isLoose && othTag == funcTag)),
+  var objIsObj = objTag == objectTag,
+      othIsObj = othTag == objectTag,
       isSameTag = objTag == othTag;
 
   if (isSameTag && !(objIsArr || objIsObj)) {
     return equalByTag(object, other, objTag);
   }
-  if (isLoose) {
-    if (!isSameTag && !(objIsObj && othIsObj)) {
-      return false;
-    }
-  } else {
-    var valWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-        othWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+  if (!isLoose) {
+    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
 
-    if (valWrapped || othWrapped) {
-      return equalFunc(valWrapped ? object.value() : object, othWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
+    if (objIsWrapped || othIsWrapped) {
+      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
     }
-    if (!isSameTag) {
-      return false;
-    }
+  }
+  if (!isSameTag) {
+    return false;
   }
   // Assume cyclic values are equal.
   // For more information on detecting circular references see https://es5.github.io/#JO.
@@ -23703,25 +24381,9 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, 
 
 module.exports = baseIsEqualDeep;
 
-},{"138":138,"139":139,"140":140,"153":153,"160":160}],115:[function(_dereq_,module,exports){
-/**
- * The base implementation of `_.isFunction` without support for environments
- * with incorrect `typeof` results.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- */
-function baseIsFunction(value) {
-  // Avoid a Chakra JIT bug in compatibility modes of IE 11.
-  // See https://github.com/jashkenas/underscore/issues/1621 for more details.
-  return typeof value == 'function' || false;
-}
-
-module.exports = baseIsFunction;
-
-},{}],116:[function(_dereq_,module,exports){
-var baseIsEqual = _dereq_(113);
+},{"148":148,"149":149,"150":150,"168":168,"175":175}],124:[function(_dereq_,module,exports){
+var baseIsEqual = _dereq_(122),
+    toObject = _dereq_(165);
 
 /**
  * The base implementation of `_.isMatch` without support for callback
@@ -23729,41 +24391,43 @@ var baseIsEqual = _dereq_(113);
  *
  * @private
  * @param {Object} object The object to inspect.
- * @param {Array} props The source property names to match.
- * @param {Array} values The source values to match.
- * @param {Array} strictCompareFlags Strict comparison flags for source values.
+ * @param {Array} matchData The propery names, values, and compare flags to match.
  * @param {Function} [customizer] The function to customize comparing objects.
  * @returns {boolean} Returns `true` if `object` is a match, else `false`.
  */
-function baseIsMatch(object, props, values, strictCompareFlags, customizer) {
-  var index = -1,
-      length = props.length,
+function baseIsMatch(object, matchData, customizer) {
+  var index = matchData.length,
+      length = index,
       noCustomizer = !customizer;
 
-  while (++index < length) {
-    if ((noCustomizer && strictCompareFlags[index])
-          ? values[index] !== object[props[index]]
-          : !(props[index] in object)
+  if (object == null) {
+    return !length;
+  }
+  object = toObject(object);
+  while (index--) {
+    var data = matchData[index];
+    if ((noCustomizer && data[2])
+          ? data[1] !== object[data[0]]
+          : !(data[0] in object)
         ) {
       return false;
     }
   }
-  index = -1;
   while (++index < length) {
-    var key = props[index],
+    data = matchData[index];
+    var key = data[0],
         objValue = object[key],
-        srcValue = values[index];
+        srcValue = data[1];
 
-    if (noCustomizer && strictCompareFlags[index]) {
-      var result = typeof objValue != 'undefined' || (key in object);
-    } else {
-      result = customizer ? customizer(objValue, srcValue, key) : undefined;
-      if (typeof result == 'undefined') {
-        result = baseIsEqual(srcValue, objValue, customizer, true);
+    if (noCustomizer && data[2]) {
+      if (objValue === undefined && !(key in object)) {
+        return false;
       }
-    }
-    if (!result) {
-      return false;
+    } else {
+      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
+      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
+        return false;
+      }
     }
   }
   return true;
@@ -23771,8 +24435,9 @@ function baseIsMatch(object, props, values, strictCompareFlags, customizer) {
 
 module.exports = baseIsMatch;
 
-},{"113":113}],117:[function(_dereq_,module,exports){
-var baseEach = _dereq_(103);
+},{"122":122,"165":165}],125:[function(_dereq_,module,exports){
+var baseEach = _dereq_(111),
+    isArrayLike = _dereq_(155);
 
 /**
  * The base implementation of `_.map` without support for callback shorthands
@@ -23784,21 +24449,21 @@ var baseEach = _dereq_(103);
  * @returns {Array} Returns the new mapped array.
  */
 function baseMap(collection, iteratee) {
-  var result = [];
+  var index = -1,
+      result = isArrayLike(collection) ? Array(collection.length) : [];
+
   baseEach(collection, function(value, key, collection) {
-    result.push(iteratee(value, key, collection));
+    result[++index] = iteratee(value, key, collection);
   });
   return result;
 }
 
 module.exports = baseMap;
 
-},{"103":103}],118:[function(_dereq_,module,exports){
-var baseIsMatch = _dereq_(116),
-    constant = _dereq_(171),
-    isStrictComparable = _dereq_(146),
-    keys = _dereq_(163),
-    toObject = _dereq_(151);
+},{"111":111,"155":155}],126:[function(_dereq_,module,exports){
+var baseIsMatch = _dereq_(124),
+    getMatchData = _dereq_(152),
+    toObject = _dereq_(165);
 
 /**
  * The base implementation of `_.matches` which does not clone `source`.
@@ -23808,75 +24473,81 @@ var baseIsMatch = _dereq_(116),
  * @returns {Function} Returns the new function.
  */
 function baseMatches(source) {
-  var props = keys(source),
-      length = props.length;
+  var matchData = getMatchData(source);
+  if (matchData.length == 1 && matchData[0][2]) {
+    var key = matchData[0][0],
+        value = matchData[0][1];
 
-  if (!length) {
-    return constant(true);
-  }
-  if (length == 1) {
-    var key = props[0],
-        value = source[key];
-
-    if (isStrictComparable(value)) {
-      return function(object) {
-        return object != null && object[key] === value &&
-          (typeof value != 'undefined' || (key in toObject(object)));
-      };
-    }
-  }
-  var values = Array(length),
-      strictCompareFlags = Array(length);
-
-  while (length--) {
-    value = source[props[length]];
-    values[length] = value;
-    strictCompareFlags[length] = isStrictComparable(value);
+    return function(object) {
+      if (object == null) {
+        return false;
+      }
+      return object[key] === value && (value !== undefined || (key in toObject(object)));
+    };
   }
   return function(object) {
-    return object != null && baseIsMatch(toObject(object), props, values, strictCompareFlags);
+    return baseIsMatch(object, matchData);
   };
 }
 
 module.exports = baseMatches;
 
-},{"116":116,"146":146,"151":151,"163":163,"171":171}],119:[function(_dereq_,module,exports){
-var baseIsEqual = _dereq_(113),
-    isStrictComparable = _dereq_(146),
-    toObject = _dereq_(151);
+},{"124":124,"152":152,"165":165}],127:[function(_dereq_,module,exports){
+var baseGet = _dereq_(120),
+    baseIsEqual = _dereq_(122),
+    baseSlice = _dereq_(133),
+    isArray = _dereq_(168),
+    isKey = _dereq_(158),
+    isStrictComparable = _dereq_(161),
+    last = _dereq_(82),
+    toObject = _dereq_(165),
+    toPath = _dereq_(166);
 
 /**
- * The base implementation of `_.matchesProperty` which does not coerce `key`
- * to a string.
+ * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
  *
  * @private
- * @param {string} key The key of the property to get.
- * @param {*} value The value to compare.
+ * @param {string} path The path of the property to get.
+ * @param {*} srcValue The value to compare.
  * @returns {Function} Returns the new function.
  */
-function baseMatchesProperty(key, value) {
-  if (isStrictComparable(value)) {
-    return function(object) {
-      return object != null && object[key] === value &&
-        (typeof value != 'undefined' || (key in toObject(object)));
-    };
-  }
+function baseMatchesProperty(path, srcValue) {
+  var isArr = isArray(path),
+      isCommon = isKey(path) && isStrictComparable(srcValue),
+      pathKey = (path + '');
+
+  path = toPath(path);
   return function(object) {
-    return object != null && baseIsEqual(value, object[key], null, true);
+    if (object == null) {
+      return false;
+    }
+    var key = pathKey;
+    object = toObject(object);
+    if ((isArr || !isCommon) && !(key in object)) {
+      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+      if (object == null) {
+        return false;
+      }
+      key = last(path);
+      object = toObject(object);
+    }
+    return object[key] === srcValue
+      ? (srcValue !== undefined || (key in object))
+      : baseIsEqual(srcValue, object[key], undefined, true);
   };
 }
 
 module.exports = baseMatchesProperty;
 
-},{"113":113,"146":146,"151":151}],120:[function(_dereq_,module,exports){
-var arrayEach = _dereq_(92),
-    baseForOwn = _dereq_(111),
-    baseMergeDeep = _dereq_(121),
-    isArray = _dereq_(153),
-    isLength = _dereq_(144),
-    isObject = _dereq_(157),
-    isObjectLike = _dereq_(145),
-    isTypedArray = _dereq_(160);
+},{"120":120,"122":122,"133":133,"158":158,"161":161,"165":165,"166":166,"168":168,"82":82}],128:[function(_dereq_,module,exports){
+var arrayEach = _dereq_(98),
+    baseMergeDeep = _dereq_(129),
+    isArray = _dereq_(168),
+    isArrayLike = _dereq_(155),
+    isObject = _dereq_(172),
+    isObjectLike = _dereq_(160),
+    isTypedArray = _dereq_(175),
+    keys = _dereq_(178);
 
 /**
  * The base implementation of `_.merge` without support for argument juggling,
@@ -23885,32 +24556,40 @@ var arrayEach = _dereq_(92),
  * @private
  * @param {Object} object The destination object.
  * @param {Object} source The source object.
- * @param {Function} [customizer] The function to customize merging properties.
+ * @param {Function} [customizer] The function to customize merged values.
  * @param {Array} [stackA=[]] Tracks traversed source objects.
  * @param {Array} [stackB=[]] Associates values with source counterparts.
- * @returns {Object} Returns the destination object.
+ * @returns {Object} Returns `object`.
  */
 function baseMerge(object, source, customizer, stackA, stackB) {
   if (!isObject(object)) {
     return object;
   }
-  var isSrcArr = isLength(source.length) && (isArray(source) || isTypedArray(source));
-  (isSrcArr ? arrayEach : baseForOwn)(source, function(srcValue, key, source) {
+  var isSrcArr = isArrayLike(source) && (isArray(source) || isTypedArray(source)),
+      props = isSrcArr ? undefined : keys(source);
+
+  arrayEach(props || source, function(srcValue, key) {
+    if (props) {
+      key = srcValue;
+      srcValue = source[key];
+    }
     if (isObjectLike(srcValue)) {
       stackA || (stackA = []);
       stackB || (stackB = []);
-      return baseMergeDeep(object, source, key, baseMerge, customizer, stackA, stackB);
+      baseMergeDeep(object, source, key, baseMerge, customizer, stackA, stackB);
     }
-    var value = object[key],
-        result = customizer ? customizer(value, srcValue, key, object, source) : undefined,
-        isCommon = typeof result == 'undefined';
+    else {
+      var value = object[key],
+          result = customizer ? customizer(value, srcValue, key, object, source) : undefined,
+          isCommon = result === undefined;
 
-    if (isCommon) {
-      result = srcValue;
-    }
-    if ((isSrcArr || typeof result != 'undefined') &&
-        (isCommon || (result === result ? (result !== value) : (value === value)))) {
-      object[key] = result;
+      if (isCommon) {
+        result = srcValue;
+      }
+      if ((result !== undefined || (isSrcArr && !(key in object))) &&
+          (isCommon || (result === result ? (result !== value) : (value === value)))) {
+        object[key] = result;
+      }
     }
   });
   return object;
@@ -23918,14 +24597,14 @@ function baseMerge(object, source, customizer, stackA, stackB) {
 
 module.exports = baseMerge;
 
-},{"111":111,"121":121,"144":144,"145":145,"153":153,"157":157,"160":160,"92":92}],121:[function(_dereq_,module,exports){
-var arrayCopy = _dereq_(91),
-    isArguments = _dereq_(152),
-    isArray = _dereq_(153),
-    isLength = _dereq_(144),
-    isPlainObject = _dereq_(158),
-    isTypedArray = _dereq_(160),
-    toPlainObject = _dereq_(161);
+},{"129":129,"155":155,"160":160,"168":168,"172":172,"175":175,"178":178,"98":98}],129:[function(_dereq_,module,exports){
+var arrayCopy = _dereq_(97),
+    isArguments = _dereq_(167),
+    isArray = _dereq_(168),
+    isArrayLike = _dereq_(155),
+    isPlainObject = _dereq_(173),
+    isTypedArray = _dereq_(175),
+    toPlainObject = _dereq_(176);
 
 /**
  * A specialized version of `baseMerge` for arrays and objects which performs
@@ -23937,7 +24616,7 @@ var arrayCopy = _dereq_(91),
  * @param {Object} source The source object.
  * @param {string} key The key of the value to merge.
  * @param {Function} mergeFunc The function to merge values.
- * @param {Function} [customizer] The function to customize merging properties.
+ * @param {Function} [customizer] The function to customize merged values.
  * @param {Array} [stackA=[]] Tracks traversed source objects.
  * @param {Array} [stackB=[]] Associates values with source counterparts.
  * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
@@ -23954,14 +24633,14 @@ function baseMergeDeep(object, source, key, mergeFunc, customizer, stackA, stack
   }
   var value = object[key],
       result = customizer ? customizer(value, srcValue, key, object, source) : undefined,
-      isCommon = typeof result == 'undefined';
+      isCommon = result === undefined;
 
   if (isCommon) {
     result = srcValue;
-    if (isLength(srcValue.length) && (isArray(srcValue) || isTypedArray(srcValue))) {
+    if (isArrayLike(srcValue) && (isArray(srcValue) || isTypedArray(srcValue))) {
       result = isArray(value)
         ? value
-        : ((value && value.length) ? arrayCopy(value) : []);
+        : (isArrayLike(value) ? arrayCopy(value) : []);
     }
     else if (isPlainObject(srcValue) || isArguments(srcValue)) {
       result = isArguments(value)
@@ -23987,9 +24666,9 @@ function baseMergeDeep(object, source, key, mergeFunc, customizer, stackA, stack
 
 module.exports = baseMergeDeep;
 
-},{"144":144,"152":152,"153":153,"158":158,"160":160,"161":161,"91":91}],122:[function(_dereq_,module,exports){
+},{"155":155,"167":167,"168":168,"173":173,"175":175,"176":176,"97":97}],130:[function(_dereq_,module,exports){
 /**
- * The base implementation of `_.property` which does not coerce `key` to a string.
+ * The base implementation of `_.property` without support for deep paths.
  *
  * @private
  * @param {string} key The key of the property to get.
@@ -24003,7 +24682,28 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],123:[function(_dereq_,module,exports){
+},{}],131:[function(_dereq_,module,exports){
+var baseGet = _dereq_(120),
+    toPath = _dereq_(166);
+
+/**
+ * A specialized version of `baseProperty` which supports deep paths.
+ *
+ * @private
+ * @param {Array|string} path The path of the property to get.
+ * @returns {Function} Returns the new function.
+ */
+function basePropertyDeep(path) {
+  var pathKey = (path + '');
+  path = toPath(path);
+  return function(object) {
+    return baseGet(object, path, pathKey);
+  };
+}
+
+module.exports = basePropertyDeep;
+
+},{"120":120,"166":166}],132:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.reduce` and `_.reduceRight` without support
  * for callback shorthands and `this` binding, which iterates over `collection`
@@ -24029,8 +24729,42 @@ function baseReduce(collection, iteratee, accumulator, initFromCollection, eachF
 
 module.exports = baseReduce;
 
-},{}],124:[function(_dereq_,module,exports){
-var baseEach = _dereq_(103);
+},{}],133:[function(_dereq_,module,exports){
+/**
+ * The base implementation of `_.slice` without an iteratee call guard.
+ *
+ * @private
+ * @param {Array} array The array to slice.
+ * @param {number} [start=0] The start position.
+ * @param {number} [end=array.length] The end position.
+ * @returns {Array} Returns the slice of `array`.
+ */
+function baseSlice(array, start, end) {
+  var index = -1,
+      length = array.length;
+
+  start = start == null ? 0 : (+start || 0);
+  if (start < 0) {
+    start = -start > length ? 0 : (length + start);
+  }
+  end = (end === undefined || end > length) ? length : (+end || 0);
+  if (end < 0) {
+    end += length;
+  }
+  length = start > end ? 0 : ((end - start) >>> 0);
+  start >>>= 0;
+
+  var result = Array(length);
+  while (++index < length) {
+    result[index] = array[index + start];
+  }
+  return result;
+}
+
+module.exports = baseSlice;
+
+},{}],134:[function(_dereq_,module,exports){
+var baseEach = _dereq_(111);
 
 /**
  * The base implementation of `_.some` without support for callback shorthands
@@ -24054,9 +24788,9 @@ function baseSome(collection, predicate) {
 
 module.exports = baseSome;
 
-},{"103":103}],125:[function(_dereq_,module,exports){
+},{"111":111}],135:[function(_dereq_,module,exports){
 /**
- * Converts `value` to a string if it is not one. An empty string is returned
+ * Converts `value` to a string if it's not one. An empty string is returned
  * for `null` or `undefined` values.
  *
  * @private
@@ -24064,19 +24798,16 @@ module.exports = baseSome;
  * @returns {string} Returns the string.
  */
 function baseToString(value) {
-  if (typeof value == 'string') {
-    return value;
-  }
   return value == null ? '' : (value + '');
 }
 
 module.exports = baseToString;
 
-},{}],126:[function(_dereq_,module,exports){
+},{}],136:[function(_dereq_,module,exports){
 /**
  * The base implementation of `_.values` and `_.valuesIn` which creates an
  * array of `object` property values corresponding to the property names
- * returned by `keysFunc`.
+ * of `props`.
  *
  * @private
  * @param {Object} object The object to query.
@@ -24096,8 +24827,8 @@ function baseValues(object, props) {
 
 module.exports = baseValues;
 
-},{}],127:[function(_dereq_,module,exports){
-var identity = _dereq_(172);
+},{}],137:[function(_dereq_,module,exports){
+var identity = _dereq_(185);
 
 /**
  * A specialized version of `baseCallback` which only supports `this` binding
@@ -24113,7 +24844,7 @@ function bindCallback(func, thisArg, argCount) {
   if (typeof func != 'function') {
     return identity;
   }
-  if (typeof thisArg == 'undefined') {
+  if (thisArg === undefined) {
     return func;
   }
   switch (argCount) {
@@ -24137,8 +24868,8 @@ function bindCallback(func, thisArg, argCount) {
 
 module.exports = bindCallback;
 
-},{"172":172}],128:[function(_dereq_,module,exports){
-var isObject = _dereq_(157);
+},{"185":185}],138:[function(_dereq_,module,exports){
+var isObject = _dereq_(172);
 
 /**
  * Checks if `value` is in `cache` mimicking the return signature of
@@ -24158,8 +24889,8 @@ function cacheIndexOf(cache, value) {
 
 module.exports = cacheIndexOf;
 
-},{"157":157}],129:[function(_dereq_,module,exports){
-var isObject = _dereq_(157);
+},{"172":172}],139:[function(_dereq_,module,exports){
+var isObject = _dereq_(172);
 
 /**
  * Adds `value` to the cache.
@@ -24180,18 +24911,13 @@ function cachePush(value) {
 
 module.exports = cachePush;
 
-},{"157":157}],130:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(99),
-    baseEach = _dereq_(103),
-    isArray = _dereq_(153);
+},{"172":172}],140:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(107),
+    baseEach = _dereq_(111),
+    isArray = _dereq_(168);
 
 /**
- * Creates a function that aggregates a collection, creating an accumulator
- * object composed from the results of running each element in the collection
- * through an iteratee.
- *
- * **Note:** This function is used to create `_.countBy`, `_.groupBy`, `_.indexBy`,
- * and `_.partition`.
+ * Creates a `_.countBy`, `_.groupBy`, `_.indexBy`, or `_.partition` function.
  *
  * @private
  * @param {Function} setter The function to set keys and values of the accumulator object.
@@ -24222,60 +24948,53 @@ function createAggregator(setter, initializer) {
 
 module.exports = createAggregator;
 
-},{"103":103,"153":153,"99":99}],131:[function(_dereq_,module,exports){
-var bindCallback = _dereq_(127),
-    isIterateeCall = _dereq_(143);
+},{"107":107,"111":111,"168":168}],141:[function(_dereq_,module,exports){
+var bindCallback = _dereq_(137),
+    isIterateeCall = _dereq_(157),
+    restParam = _dereq_(95);
 
 /**
- * Creates a function that assigns properties of source object(s) to a given
- * destination object.
- *
- * **Note:** This function is used to create `_.assign`, `_.defaults`, and `_.merge`.
+ * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
  *
  * @private
  * @param {Function} assigner The function to assign values.
  * @returns {Function} Returns the new assigner function.
  */
 function createAssigner(assigner) {
-  return function() {
-    var args = arguments,
-        length = args.length,
-        object = args[0];
+  return restParam(function(object, sources) {
+    var index = -1,
+        length = object == null ? 0 : sources.length,
+        customizer = length > 2 ? sources[length - 2] : undefined,
+        guard = length > 2 ? sources[2] : undefined,
+        thisArg = length > 1 ? sources[length - 1] : undefined;
 
-    if (length < 2 || object == null) {
-      return object;
-    }
-    var customizer = args[length - 2],
-        thisArg = args[length - 1],
-        guard = args[3];
-
-    if (length > 3 && typeof customizer == 'function') {
+    if (typeof customizer == 'function') {
       customizer = bindCallback(customizer, thisArg, 5);
       length -= 2;
     } else {
-      customizer = (length > 2 && typeof thisArg == 'function') ? thisArg : null;
+      customizer = typeof thisArg == 'function' ? thisArg : undefined;
       length -= (customizer ? 1 : 0);
     }
-    if (guard && isIterateeCall(args[1], args[2], guard)) {
-      customizer = length == 3 ? null : customizer;
-      length = 2;
+    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+      customizer = length < 3 ? undefined : customizer;
+      length = 1;
     }
-    var index = 0;
     while (++index < length) {
-      var source = args[index];
+      var source = sources[index];
       if (source) {
         assigner(object, source, customizer);
       }
     }
     return object;
-  };
+  });
 }
 
 module.exports = createAssigner;
 
-},{"127":127,"143":143}],132:[function(_dereq_,module,exports){
-var isLength = _dereq_(144),
-    toObject = _dereq_(151);
+},{"137":137,"157":157,"95":95}],142:[function(_dereq_,module,exports){
+var getLength = _dereq_(151),
+    isLength = _dereq_(159),
+    toObject = _dereq_(165);
 
 /**
  * Creates a `baseEach` or `baseEachRight` function.
@@ -24287,7 +25006,7 @@ var isLength = _dereq_(144),
  */
 function createBaseEach(eachFunc, fromRight) {
   return function(collection, iteratee) {
-    var length = collection ? collection.length : 0;
+    var length = collection ? getLength(collection) : 0;
     if (!isLength(length)) {
       return eachFunc(collection, iteratee);
     }
@@ -24305,8 +25024,8 @@ function createBaseEach(eachFunc, fromRight) {
 
 module.exports = createBaseEach;
 
-},{"144":144,"151":151}],133:[function(_dereq_,module,exports){
-var toObject = _dereq_(151);
+},{"151":151,"159":159,"165":165}],143:[function(_dereq_,module,exports){
+var toObject = _dereq_(165);
 
 /**
  * Creates a base function for `_.forIn` or `_.forInRight`.
@@ -24334,17 +25053,16 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{"151":151}],134:[function(_dereq_,module,exports){
+},{"165":165}],144:[function(_dereq_,module,exports){
 (function (global){
-var SetCache = _dereq_(90),
-    constant = _dereq_(171),
-    isNative = _dereq_(155);
+var SetCache = _dereq_(96),
+    getNative = _dereq_(153);
 
 /** Native method references. */
-var Set = isNative(Set = global.Set) && Set;
+var Set = getNative(global, 'Set');
 
 /* Native method references for those with the same name as other `lodash` methods. */
-var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
+var nativeCreate = getNative(Object, 'create');
 
 /**
  * Creates a `Set` cache object to optimize linear searches of large arrays.
@@ -24353,19 +25071,19 @@ var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate;
  * @param {Array} [values] The values to cache.
  * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
  */
-var createCache = !(nativeCreate && Set) ? constant(null) : function(values) {
-  return new SetCache(values);
-};
+function createCache(values) {
+  return (nativeCreate && Set) ? new SetCache(values) : null;
+}
 
 module.exports = createCache;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{"155":155,"171":171,"90":90}],135:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(99),
-    baseFind = _dereq_(106),
-    baseFindIndex = _dereq_(107),
-    isArray = _dereq_(153);
+//# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9sb2Rhc2gvaW50ZXJuYWwvY3JlYXRlQ2FjaGUuanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6ImdlbmVyYXRlZC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgU2V0Q2FjaGUgPSByZXF1aXJlKCcuL1NldENhY2hlJyksXG4gICAgZ2V0TmF0aXZlID0gcmVxdWlyZSgnLi9nZXROYXRpdmUnKTtcblxuLyoqIE5hdGl2ZSBtZXRob2QgcmVmZXJlbmNlcy4gKi9cbnZhciBTZXQgPSBnZXROYXRpdmUoZ2xvYmFsLCAnU2V0Jyk7XG5cbi8qIE5hdGl2ZSBtZXRob2QgcmVmZXJlbmNlcyBmb3IgdGhvc2Ugd2l0aCB0aGUgc2FtZSBuYW1lIGFzIG90aGVyIGBsb2Rhc2hgIG1ldGhvZHMuICovXG52YXIgbmF0aXZlQ3JlYXRlID0gZ2V0TmF0aXZlKE9iamVjdCwgJ2NyZWF0ZScpO1xuXG4vKipcbiAqIENyZWF0ZXMgYSBgU2V0YCBjYWNoZSBvYmplY3QgdG8gb3B0aW1pemUgbGluZWFyIHNlYXJjaGVzIG9mIGxhcmdlIGFycmF5cy5cbiAqXG4gKiBAcHJpdmF0ZVxuICogQHBhcmFtIHtBcnJheX0gW3ZhbHVlc10gVGhlIHZhbHVlcyB0byBjYWNoZS5cbiAqIEByZXR1cm5zIHtudWxsfE9iamVjdH0gUmV0dXJucyB0aGUgbmV3IGNhY2hlIG9iamVjdCBpZiBgU2V0YCBpcyBzdXBwb3J0ZWQsIGVsc2UgYG51bGxgLlxuICovXG5mdW5jdGlvbiBjcmVhdGVDYWNoZSh2YWx1ZXMpIHtcbiAgcmV0dXJuIChuYXRpdmVDcmVhdGUgJiYgU2V0KSA/IG5ldyBTZXRDYWNoZSh2YWx1ZXMpIDogbnVsbDtcbn1cblxubW9kdWxlLmV4cG9ydHMgPSBjcmVhdGVDYWNoZTtcbiJdfQ==
+},{"153":153,"96":96}],145:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(107),
+    baseFind = _dereq_(114),
+    baseFindIndex = _dereq_(115),
+    isArray = _dereq_(168);
 
 /**
  * Creates a `_.find` or `_.findLast` function.
@@ -24383,14 +25101,14 @@ function createFind(eachFunc, fromRight) {
       return index > -1 ? collection[index] : undefined;
     }
     return baseFind(collection, predicate, eachFunc);
-  }
+  };
 }
 
 module.exports = createFind;
 
-},{"106":106,"107":107,"153":153,"99":99}],136:[function(_dereq_,module,exports){
-var bindCallback = _dereq_(127),
-    isArray = _dereq_(153);
+},{"107":107,"114":114,"115":115,"168":168}],146:[function(_dereq_,module,exports){
+var bindCallback = _dereq_(137),
+    isArray = _dereq_(168);
 
 /**
  * Creates a function for `_.forEach` or `_.forEachRight`.
@@ -24402,7 +25120,7 @@ var bindCallback = _dereq_(127),
  */
 function createForEach(arrayFunc, eachFunc) {
   return function(collection, iteratee, thisArg) {
-    return (typeof iteratee == 'function' && typeof thisArg == 'undefined' && isArray(collection))
+    return (typeof iteratee == 'function' && thisArg === undefined && isArray(collection))
       ? arrayFunc(collection, iteratee)
       : eachFunc(collection, bindCallback(iteratee, thisArg, 3));
   };
@@ -24410,10 +25128,10 @@ function createForEach(arrayFunc, eachFunc) {
 
 module.exports = createForEach;
 
-},{"127":127,"153":153}],137:[function(_dereq_,module,exports){
-var baseCallback = _dereq_(99),
-    baseReduce = _dereq_(123),
-    isArray = _dereq_(153);
+},{"137":137,"168":168}],147:[function(_dereq_,module,exports){
+var baseCallback = _dereq_(107),
+    baseReduce = _dereq_(132),
+    isArray = _dereq_(168);
 
 /**
  * Creates a function for `_.reduce` or `_.reduceRight`.
@@ -24426,7 +25144,7 @@ var baseCallback = _dereq_(99),
 function createReduce(arrayFunc, eachFunc) {
   return function(collection, iteratee, accumulator, thisArg) {
     var initFromArray = arguments.length < 3;
-    return (typeof iteratee == 'function' && typeof thisArg == 'undefined' && isArray(collection))
+    return (typeof iteratee == 'function' && thisArg === undefined && isArray(collection))
       ? arrayFunc(collection, iteratee, accumulator, initFromArray)
       : baseReduce(collection, baseCallback(iteratee, thisArg, 4), accumulator, initFromArray, eachFunc);
   };
@@ -24434,7 +25152,9 @@ function createReduce(arrayFunc, eachFunc) {
 
 module.exports = createReduce;
 
-},{"123":123,"153":153,"99":99}],138:[function(_dereq_,module,exports){
+},{"107":107,"132":132,"168":168}],148:[function(_dereq_,module,exports){
+var arraySome = _dereq_(104);
+
 /**
  * A specialized version of `baseIsEqualDeep` for arrays with support for
  * partial deep comparisons.
@@ -24452,45 +25172,40 @@ module.exports = createReduce;
 function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
   var index = -1,
       arrLength = array.length,
-      othLength = other.length,
-      result = true;
+      othLength = other.length;
 
   if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
     return false;
   }
-  // Deep compare the contents, ignoring non-numeric properties.
-  while (result && ++index < arrLength) {
+  // Ignore non-index properties.
+  while (++index < arrLength) {
     var arrValue = array[index],
-        othValue = other[index];
+        othValue = other[index],
+        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
 
-    result = undefined;
-    if (customizer) {
-      result = isLoose
-        ? customizer(othValue, arrValue, index)
-        : customizer(arrValue, othValue, index);
-    }
-    if (typeof result == 'undefined') {
-      // Recursively compare arrays (susceptible to call stack limits).
-      if (isLoose) {
-        var othIndex = othLength;
-        while (othIndex--) {
-          othValue = other[othIndex];
-          result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
-          if (result) {
-            break;
-          }
-        }
-      } else {
-        result = (arrValue && arrValue === othValue) || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+    if (result !== undefined) {
+      if (result) {
+        continue;
       }
+      return false;
+    }
+    // Recursively compare arrays (susceptible to call stack limits).
+    if (isLoose) {
+      if (!arraySome(other, function(othValue) {
+            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+          })) {
+        return false;
+      }
+    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
+      return false;
     }
   }
-  return !!result;
+  return true;
 }
 
 module.exports = equalArrays;
 
-},{}],139:[function(_dereq_,module,exports){
+},{"104":104}],149:[function(_dereq_,module,exports){
 /** `Object#toString` result references. */
 var boolTag = '[object Boolean]',
     dateTag = '[object Date]',
@@ -24507,7 +25222,7 @@ var boolTag = '[object Boolean]',
  * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
  *
  * @private
- * @param {Object} value The object to compare.
+ * @param {Object} object The object to compare.
  * @param {Object} other The other object to compare.
  * @param {string} tag The `toStringTag` of the objects to compare.
  * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
@@ -24527,8 +25242,7 @@ function equalByTag(object, other, tag) {
       // Treat `NaN` vs. `NaN` as equal.
       return (object != +object)
         ? other != +other
-        // But, treat `-0` vs. `+0` as not equal.
-        : (object == 0 ? ((1 / object) == (1 / other)) : object == +other);
+        : object == +other;
 
     case regexpTag:
     case stringTag:
@@ -24541,8 +25255,8 @@ function equalByTag(object, other, tag) {
 
 module.exports = equalByTag;
 
-},{}],140:[function(_dereq_,module,exports){
-var keys = _dereq_(163);
+},{}],150:[function(_dereq_,module,exports){
+var keys = _dereq_(178);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -24573,29 +25287,22 @@ function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, sta
   if (objLength != othLength && !isLoose) {
     return false;
   }
-  var skipCtor = isLoose,
-      index = -1;
-
-  while (++index < objLength) {
-    var key = objProps[index],
-        result = isLoose ? key in other : hasOwnProperty.call(other, key);
-
-    if (result) {
-      var objValue = object[key],
-          othValue = other[key];
-
-      result = undefined;
-      if (customizer) {
-        result = isLoose
-          ? customizer(othValue, objValue, key)
-          : customizer(objValue, othValue, key);
-      }
-      if (typeof result == 'undefined') {
-        // Recursively compare objects (susceptible to call stack limits).
-        result = (objValue && objValue === othValue) || equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB);
-      }
+  var index = objLength;
+  while (index--) {
+    var key = objProps[index];
+    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
+      return false;
     }
-    if (!result) {
+  }
+  var skipCtor = isLoose;
+  while (++index < objLength) {
+    key = objProps[index];
+    var objValue = object[key],
+        othValue = other[key],
+        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
+
+    // Recursively compare objects (susceptible to call stack limits).
+    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
       return false;
     }
     skipCtor || (skipCtor = key == 'constructor');
@@ -24617,7 +25324,65 @@ function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, sta
 
 module.exports = equalObjects;
 
-},{"163":163}],141:[function(_dereq_,module,exports){
+},{"178":178}],151:[function(_dereq_,module,exports){
+var baseProperty = _dereq_(130);
+
+/**
+ * Gets the "length" property value of `object`.
+ *
+ * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+ * that affects Safari on at least iOS 8.1-8.3 ARM64.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {*} Returns the "length" value.
+ */
+var getLength = baseProperty('length');
+
+module.exports = getLength;
+
+},{"130":130}],152:[function(_dereq_,module,exports){
+var isStrictComparable = _dereq_(161),
+    pairs = _dereq_(182);
+
+/**
+ * Gets the propery names, values, and compare flags of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the match data of `object`.
+ */
+function getMatchData(object) {
+  var result = pairs(object),
+      length = result.length;
+
+  while (length--) {
+    result[length][2] = isStrictComparable(result[length][1]);
+  }
+  return result;
+}
+
+module.exports = getMatchData;
+
+},{"161":161,"182":182}],153:[function(_dereq_,module,exports){
+var isNative = _dereq_(170);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = object == null ? undefined : object[key];
+  return isNative(value) ? value : undefined;
+}
+
+module.exports = getNative;
+
+},{"170":170}],154:[function(_dereq_,module,exports){
 /**
  * Gets the index at which the first occurrence of `NaN` is found in `array`.
  *
@@ -24642,12 +25407,32 @@ function indexOfNaN(array, fromIndex, fromRight) {
 
 module.exports = indexOfNaN;
 
-},{}],142:[function(_dereq_,module,exports){
+},{}],155:[function(_dereq_,module,exports){
+var getLength = _dereq_(151),
+    isLength = _dereq_(159);
+
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Checks if `value` is array-like.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ */
+function isArrayLike(value) {
+  return value != null && isLength(getLength(value));
+}
+
+module.exports = isArrayLike;
+
+},{"151":151,"159":159}],156:[function(_dereq_,module,exports){
+/** Used to detect unsigned integer values. */
+var reIsUint = /^\d+$/;
+
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
-var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+var MAX_SAFE_INTEGER = 9007199254740991;
 
 /**
  * Checks if `value` is a valid array-like index.
@@ -24658,17 +25443,17 @@ var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
  * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
  */
 function isIndex(value, length) {
-  value = +value;
+  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
   length = length == null ? MAX_SAFE_INTEGER : length;
   return value > -1 && value % 1 == 0 && value < length;
 }
 
 module.exports = isIndex;
 
-},{}],143:[function(_dereq_,module,exports){
-var isIndex = _dereq_(142),
-    isLength = _dereq_(144),
-    isObject = _dereq_(157);
+},{}],157:[function(_dereq_,module,exports){
+var isArrayLike = _dereq_(155),
+    isIndex = _dereq_(156),
+    isObject = _dereq_(172);
 
 /**
  * Checks if the provided arguments are from an iteratee call.
@@ -24684,13 +25469,9 @@ function isIterateeCall(value, index, object) {
     return false;
   }
   var type = typeof index;
-  if (type == 'number') {
-    var length = object.length,
-        prereq = isLength(length) && isIndex(index, length);
-  } else {
-    prereq = type == 'string' && index in object;
-  }
-  if (prereq) {
+  if (type == 'number'
+      ? (isArrayLike(object) && isIndex(index, object.length))
+      : (type == 'string' && index in object)) {
     var other = object[index];
     return value === value ? (value === other) : (other !== other);
   }
@@ -24699,17 +25480,47 @@ function isIterateeCall(value, index, object) {
 
 module.exports = isIterateeCall;
 
-},{"142":142,"144":144,"157":157}],144:[function(_dereq_,module,exports){
+},{"155":155,"156":156,"172":172}],158:[function(_dereq_,module,exports){
+var isArray = _dereq_(168),
+    toObject = _dereq_(165);
+
+/** Used to match property names within property paths. */
+var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
+    reIsPlainProp = /^\w*$/;
+
 /**
- * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+ * Checks if `value` is a property name and not a property path.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {Object} [object] The object to query keys on.
+ * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+ */
+function isKey(value, object) {
+  var type = typeof value;
+  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
+    return true;
+  }
+  if (isArray(value)) {
+    return false;
+  }
+  var result = !reIsDeepProp.test(value);
+  return result || (object != null && value in toObject(object));
+}
+
+module.exports = isKey;
+
+},{"165":165,"168":168}],159:[function(_dereq_,module,exports){
+/**
+ * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
  * of an array-like value.
  */
-var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
+var MAX_SAFE_INTEGER = 9007199254740991;
 
 /**
  * Checks if `value` is a valid array-like length.
  *
- * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+ * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
  *
  * @private
  * @param {*} value The value to check.
@@ -24721,7 +25532,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],145:[function(_dereq_,module,exports){
+},{}],160:[function(_dereq_,module,exports){
 /**
  * Checks if `value` is object-like.
  *
@@ -24735,8 +25546,8 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],146:[function(_dereq_,module,exports){
-var isObject = _dereq_(157);
+},{}],161:[function(_dereq_,module,exports){
+var isObject = _dereq_(172);
 
 /**
  * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
@@ -24747,17 +25558,17 @@ var isObject = _dereq_(157);
  *  equality comparisons, else `false`.
  */
 function isStrictComparable(value) {
-  return value === value && (value === 0 ? ((1 / value) > 0) : !isObject(value));
+  return value === value && !isObject(value);
 }
 
 module.exports = isStrictComparable;
 
-},{"157":157}],147:[function(_dereq_,module,exports){
-var toObject = _dereq_(151);
+},{"172":172}],162:[function(_dereq_,module,exports){
+var toObject = _dereq_(165);
 
 /**
- * A specialized version of `_.pick` that picks `object` properties specified
- * by the `props` array.
+ * A specialized version of `_.pick` which picks `object` properties specified
+ * by `props`.
  *
  * @private
  * @param {Object} object The source object.
@@ -24782,11 +25593,11 @@ function pickByArray(object, props) {
 
 module.exports = pickByArray;
 
-},{"151":151}],148:[function(_dereq_,module,exports){
-var baseForIn = _dereq_(110);
+},{"165":165}],163:[function(_dereq_,module,exports){
+var baseForIn = _dereq_(118);
 
 /**
- * A specialized version of `_.pick` that picks `object` properties `predicate`
+ * A specialized version of `_.pick` which picks `object` properties `predicate`
  * returns truthy for.
  *
  * @private
@@ -24806,65 +25617,12 @@ function pickByCallback(object, predicate) {
 
 module.exports = pickByCallback;
 
-},{"110":110}],149:[function(_dereq_,module,exports){
-var baseForIn = _dereq_(110),
-    isObjectLike = _dereq_(145);
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * A fallback implementation of `_.isPlainObject` which checks if `value`
- * is an object created by the `Object` constructor or has a `[[Prototype]]`
- * of `null`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
- */
-function shimIsPlainObject(value) {
-  var Ctor;
-
-  // Exit early for non `Object` objects.
-  if (!(isObjectLike(value) && objToString.call(value) == objectTag) ||
-      (!hasOwnProperty.call(value, 'constructor') &&
-        (Ctor = value.constructor, typeof Ctor == 'function' && !(Ctor instanceof Ctor)))) {
-    return false;
-  }
-  // IE < 9 iterates inherited properties before own properties. If the first
-  // iterated property is an object's own property then there are no inherited
-  // enumerable properties.
-  var result;
-  // In most environments an object's own properties are iterated before
-  // its inherited properties. If the last iterated property is an object's
-  // own property then there are no inherited enumerable properties.
-  baseForIn(value, function(subValue, key) {
-    result = key;
-  });
-  return typeof result == 'undefined' || hasOwnProperty.call(value, result);
-}
-
-module.exports = shimIsPlainObject;
-
-},{"110":110,"145":145}],150:[function(_dereq_,module,exports){
-var isArguments = _dereq_(152),
-    isArray = _dereq_(153),
-    isIndex = _dereq_(142),
-    isLength = _dereq_(144),
-    keysIn = _dereq_(164),
-    support = _dereq_(170);
+},{"118":118}],164:[function(_dereq_,module,exports){
+var isArguments = _dereq_(167),
+    isArray = _dereq_(168),
+    isIndex = _dereq_(156),
+    isLength = _dereq_(159),
+    keysIn = _dereq_(179);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -24877,7 +25635,7 @@ var hasOwnProperty = objectProto.hasOwnProperty;
  * own enumerable property names of `object`.
  *
  * @private
- * @param {Object} object The object to inspect.
+ * @param {Object} object The object to query.
  * @returns {Array} Returns the array of property names.
  */
 function shimKeys(object) {
@@ -24885,8 +25643,8 @@ function shimKeys(object) {
       propsLength = props.length,
       length = propsLength && object.length;
 
-  var allowIndexes = length && isLength(length) &&
-    (isArray(object) || (support.nonEnumArgs && isArguments(object)));
+  var allowIndexes = !!length && isLength(length) &&
+    (isArray(object) || isArguments(object));
 
   var index = -1,
       result = [];
@@ -24902,11 +25660,11 @@ function shimKeys(object) {
 
 module.exports = shimKeys;
 
-},{"142":142,"144":144,"152":152,"153":153,"164":164,"170":170}],151:[function(_dereq_,module,exports){
-var isObject = _dereq_(157);
+},{"156":156,"159":159,"167":167,"168":168,"179":179}],165:[function(_dereq_,module,exports){
+var isObject = _dereq_(172);
 
 /**
- * Converts `value` to an object if it is not one.
+ * Converts `value` to an object if it's not one.
  *
  * @private
  * @param {*} value The value to process.
@@ -24918,21 +25676,48 @@ function toObject(value) {
 
 module.exports = toObject;
 
-},{"157":157}],152:[function(_dereq_,module,exports){
-var isLength = _dereq_(144),
-    isObjectLike = _dereq_(145);
+},{"172":172}],166:[function(_dereq_,module,exports){
+var baseToString = _dereq_(135),
+    isArray = _dereq_(168);
 
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]';
+/** Used to match property names within property paths. */
+var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
+
+/** Used to match backslashes in property paths. */
+var reEscapeChar = /\\(\\)?/g;
+
+/**
+ * Converts `value` to property path array if it's not one.
+ *
+ * @private
+ * @param {*} value The value to process.
+ * @returns {Array} Returns the property path array.
+ */
+function toPath(value) {
+  if (isArray(value)) {
+    return value;
+  }
+  var result = [];
+  baseToString(value).replace(rePropName, function(match, number, quote, string) {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+  });
+  return result;
+}
+
+module.exports = toPath;
+
+},{"135":135,"168":168}],167:[function(_dereq_,module,exports){
+var isArrayLike = _dereq_(155),
+    isObjectLike = _dereq_(160);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
-/**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Native method references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
 /**
  * Checks if `value` is classified as an `arguments` object.
@@ -24951,16 +25736,16 @@ var objToString = objectProto.toString;
  * // => false
  */
 function isArguments(value) {
-  var length = isObjectLike(value) ? value.length : undefined;
-  return isLength(length) && objToString.call(value) == argsTag;
+  return isObjectLike(value) && isArrayLike(value) &&
+    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
 }
 
 module.exports = isArguments;
 
-},{"144":144,"145":145}],153:[function(_dereq_,module,exports){
-var isLength = _dereq_(144),
-    isNative = _dereq_(155),
-    isObjectLike = _dereq_(145);
+},{"155":155,"160":160}],168:[function(_dereq_,module,exports){
+var getNative = _dereq_(153),
+    isLength = _dereq_(159),
+    isObjectLike = _dereq_(160);
 
 /** `Object#toString` result references. */
 var arrayTag = '[object Array]';
@@ -24969,13 +25754,13 @@ var arrayTag = '[object Array]';
 var objectProto = Object.prototype;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
 
 /* Native method references for those with the same name as other `lodash` methods. */
-var nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray;
+var nativeIsArray = getNative(Array, 'isArray');
 
 /**
  * Checks if `value` is classified as an `Array` object.
@@ -24999,10 +25784,8 @@ var isArray = nativeIsArray || function(value) {
 
 module.exports = isArray;
 
-},{"144":144,"145":145,"155":155}],154:[function(_dereq_,module,exports){
-(function (global){
-var baseIsFunction = _dereq_(115),
-    isNative = _dereq_(155);
+},{"153":153,"159":159,"160":160}],169:[function(_dereq_,module,exports){
+var isObject = _dereq_(172);
 
 /** `Object#toString` result references. */
 var funcTag = '[object Function]';
@@ -25011,13 +25794,10 @@ var funcTag = '[object Function]';
 var objectProto = Object.prototype;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
-
-/** Native method references. */
-var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
 
 /**
  * Checks if `value` is classified as a `Function` object.
@@ -25035,26 +25815,21 @@ var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
  * _.isFunction(/abc/);
  * // => false
  */
-var isFunction = !(baseIsFunction(/x/) || (Uint8Array && !baseIsFunction(Uint8Array))) ? baseIsFunction : function(value) {
+function isFunction(value) {
   // The use of `Object#toString` avoids issues with the `typeof` operator
   // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 equivalents which return 'object' for typed array constructors.
-  return objToString.call(value) == funcTag;
-};
+  // and Safari 8 which returns 'object' for typed array constructors.
+  return isObject(value) && objToString.call(value) == funcTag;
+}
 
 module.exports = isFunction;
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{"115":115,"155":155}],155:[function(_dereq_,module,exports){
-var escapeRegExp = _dereq_(169),
-    isObjectLike = _dereq_(145);
-
-/** `Object#toString` result references. */
-var funcTag = '[object Function]';
+},{"172":172}],170:[function(_dereq_,module,exports){
+var isFunction = _dereq_(169),
+    isObjectLike = _dereq_(160);
 
 /** Used to detect host constructors (Safari > 5). */
-var reHostCtor = /^\[object .+?Constructor\]$/;
+var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -25062,16 +25837,13 @@ var objectProto = Object.prototype;
 /** Used to resolve the decompiled source of functions. */
 var fnToString = Function.prototype.toString;
 
-/**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
 
 /** Used to detect if a method is native. */
-var reNative = RegExp('^' +
-  escapeRegExp(objToString)
-  .replace(/toString|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+var reIsNative = RegExp('^' +
+  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 );
 
 /**
@@ -25094,16 +25866,16 @@ function isNative(value) {
   if (value == null) {
     return false;
   }
-  if (objToString.call(value) == funcTag) {
-    return reNative.test(fnToString.call(value));
+  if (isFunction(value)) {
+    return reIsNative.test(fnToString.call(value));
   }
-  return isObjectLike(value) && reHostCtor.test(value);
+  return isObjectLike(value) && reIsHostCtor.test(value);
 }
 
 module.exports = isNative;
 
-},{"145":145,"169":169}],156:[function(_dereq_,module,exports){
-var isObjectLike = _dereq_(145);
+},{"160":160,"169":169}],171:[function(_dereq_,module,exports){
+var isObjectLike = _dereq_(160);
 
 /** `Object#toString` result references. */
 var numberTag = '[object Number]';
@@ -25112,7 +25884,7 @@ var numberTag = '[object Number]';
 var objectProto = Object.prototype;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
@@ -25145,7 +25917,7 @@ function isNumber(value) {
 
 module.exports = isNumber;
 
-},{"145":145}],157:[function(_dereq_,module,exports){
+},{"160":160}],172:[function(_dereq_,module,exports){
 /**
  * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
  * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
@@ -25170,14 +25942,15 @@ function isObject(value) {
   // Avoid a V8 JIT bug in Chrome 19-20.
   // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
   var type = typeof value;
-  return type == 'function' || (!!value && type == 'object');
+  return !!value && (type == 'object' || type == 'function');
 }
 
 module.exports = isObject;
 
-},{}],158:[function(_dereq_,module,exports){
-var isNative = _dereq_(155),
-    shimIsPlainObject = _dereq_(149);
+},{}],173:[function(_dereq_,module,exports){
+var baseForIn = _dereq_(118),
+    isArguments = _dereq_(167),
+    isObjectLike = _dereq_(160);
 
 /** `Object#toString` result references. */
 var objectTag = '[object Object]';
@@ -25185,14 +25958,14 @@ var objectTag = '[object Object]';
 /** Used for native method references. */
 var objectProto = Object.prototype;
 
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
-
-/** Native method references. */
-var getPrototypeOf = isNative(getPrototypeOf = Object.getPrototypeOf) && getPrototypeOf;
 
 /**
  * Checks if `value` is a plain object, that is, an object created by the
@@ -25224,22 +25997,31 @@ var getPrototypeOf = isNative(getPrototypeOf = Object.getPrototypeOf) && getProt
  * _.isPlainObject(Object.create(null));
  * // => true
  */
-var isPlainObject = !getPrototypeOf ? shimIsPlainObject : function(value) {
-  if (!(value && objToString.call(value) == objectTag)) {
+function isPlainObject(value) {
+  var Ctor;
+
+  // Exit early for non `Object` objects.
+  if (!(isObjectLike(value) && objToString.call(value) == objectTag && !isArguments(value)) ||
+      (!hasOwnProperty.call(value, 'constructor') && (Ctor = value.constructor, typeof Ctor == 'function' && !(Ctor instanceof Ctor)))) {
     return false;
   }
-  var valueOf = value.valueOf,
-      objProto = isNative(valueOf) && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
-
-  return objProto
-    ? (value == objProto || getPrototypeOf(value) == objProto)
-    : shimIsPlainObject(value);
-};
+  // IE < 9 iterates inherited properties before own properties. If the first
+  // iterated property is an object's own property then there are no inherited
+  // enumerable properties.
+  var result;
+  // In most environments an object's own properties are iterated before
+  // its inherited properties. If the last iterated property is an object's
+  // own property then there are no inherited enumerable properties.
+  baseForIn(value, function(subValue, key) {
+    result = key;
+  });
+  return result === undefined || hasOwnProperty.call(value, result);
+}
 
 module.exports = isPlainObject;
 
-},{"149":149,"155":155}],159:[function(_dereq_,module,exports){
-var isObjectLike = _dereq_(145);
+},{"118":118,"160":160,"167":167}],174:[function(_dereq_,module,exports){
+var isObjectLike = _dereq_(160);
 
 /** `Object#toString` result references. */
 var stringTag = '[object String]';
@@ -25248,7 +26030,7 @@ var stringTag = '[object String]';
 var objectProto = Object.prototype;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
@@ -25275,9 +26057,9 @@ function isString(value) {
 
 module.exports = isString;
 
-},{"145":145}],160:[function(_dereq_,module,exports){
-var isLength = _dereq_(144),
-    isObjectLike = _dereq_(145);
+},{"160":160}],175:[function(_dereq_,module,exports){
+var isLength = _dereq_(159),
+    isObjectLike = _dereq_(160);
 
 /** `Object#toString` result references. */
 var argsTag = '[object Arguments]',
@@ -25324,7 +26106,7 @@ typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
 var objectProto = Object.prototype;
 
 /**
- * Used to resolve the [`toStringTag`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+ * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
  * of values.
  */
 var objToString = objectProto.toString;
@@ -25351,9 +26133,9 @@ function isTypedArray(value) {
 
 module.exports = isTypedArray;
 
-},{"144":144,"145":145}],161:[function(_dereq_,module,exports){
-var baseCopy = _dereq_(100),
-    keysIn = _dereq_(164);
+},{"159":159,"160":160}],176:[function(_dereq_,module,exports){
+var baseCopy = _dereq_(108),
+    keysIn = _dereq_(179);
 
 /**
  * Converts `value` to a plain object flattening inherited enumerable
@@ -25384,16 +26166,20 @@ function toPlainObject(value) {
 
 module.exports = toPlainObject;
 
-},{"100":100,"164":164}],162:[function(_dereq_,module,exports){
-var baseAssign = _dereq_(98),
-    createAssigner = _dereq_(131);
+},{"108":108,"179":179}],177:[function(_dereq_,module,exports){
+var assignWith = _dereq_(105),
+    baseAssign = _dereq_(106),
+    createAssigner = _dereq_(141);
 
 /**
  * Assigns own enumerable properties of source object(s) to the destination
  * object. Subsequent sources overwrite property assignments of previous sources.
- * If `customizer` is provided it is invoked to produce the assigned values.
+ * If `customizer` is provided it's invoked to produce the assigned values.
  * The `customizer` is bound to `thisArg` and invoked with five arguments:
  * (objectValue, sourceValue, key, object, source).
+ *
+ * **Note:** This method mutates `object` and is based on
+ * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
  *
  * @static
  * @memberOf _
@@ -25401,7 +26187,7 @@ var baseAssign = _dereq_(98),
  * @category Object
  * @param {Object} object The destination object.
  * @param {...Object} [sources] The source objects.
- * @param {Function} [customizer] The function to customize assigning values.
+ * @param {Function} [customizer] The function to customize assigned values.
  * @param {*} [thisArg] The `this` binding of `customizer`.
  * @returns {Object} Returns `object`.
  * @example
@@ -25411,36 +26197,40 @@ var baseAssign = _dereq_(98),
  *
  * // using a customizer callback
  * var defaults = _.partialRight(_.assign, function(value, other) {
- *   return typeof value == 'undefined' ? other : value;
+ *   return _.isUndefined(value) ? other : value;
  * });
  *
  * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
  * // => { 'user': 'barney', 'age': 36 }
  */
-var assign = createAssigner(baseAssign);
+var assign = createAssigner(function(object, source, customizer) {
+  return customizer
+    ? assignWith(object, source, customizer)
+    : baseAssign(object, source);
+});
 
 module.exports = assign;
 
-},{"131":131,"98":98}],163:[function(_dereq_,module,exports){
-var isLength = _dereq_(144),
-    isNative = _dereq_(155),
-    isObject = _dereq_(157),
-    shimKeys = _dereq_(150);
+},{"105":105,"106":106,"141":141}],178:[function(_dereq_,module,exports){
+var getNative = _dereq_(153),
+    isArrayLike = _dereq_(155),
+    isObject = _dereq_(172),
+    shimKeys = _dereq_(164);
 
 /* Native method references for those with the same name as other `lodash` methods. */
-var nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys;
+var nativeKeys = getNative(Object, 'keys');
 
 /**
  * Creates an array of the own enumerable property names of `object`.
  *
  * **Note:** Non-object values are coerced to objects. See the
- * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.keys)
+ * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
  * for more details.
  *
  * @static
  * @memberOf _
  * @category Object
- * @param {Object} object The object to inspect.
+ * @param {Object} object The object to query.
  * @returns {Array} Returns the array of property names.
  * @example
  *
@@ -25458,12 +26248,9 @@ var nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys;
  * // => ['0', '1']
  */
 var keys = !nativeKeys ? shimKeys : function(object) {
-  if (object) {
-    var Ctor = object.constructor,
-        length = object.length;
-  }
+  var Ctor = object == null ? undefined : object.constructor;
   if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-      (typeof object != 'function' && (length && isLength(length)))) {
+      (typeof object != 'function' && isArrayLike(object))) {
     return shimKeys(object);
   }
   return isObject(object) ? nativeKeys(object) : [];
@@ -25471,13 +26258,12 @@ var keys = !nativeKeys ? shimKeys : function(object) {
 
 module.exports = keys;
 
-},{"144":144,"150":150,"155":155,"157":157}],164:[function(_dereq_,module,exports){
-var isArguments = _dereq_(152),
-    isArray = _dereq_(153),
-    isIndex = _dereq_(142),
-    isLength = _dereq_(144),
-    isObject = _dereq_(157),
-    support = _dereq_(170);
+},{"153":153,"155":155,"164":164,"172":172}],179:[function(_dereq_,module,exports){
+var isArguments = _dereq_(167),
+    isArray = _dereq_(168),
+    isIndex = _dereq_(156),
+    isLength = _dereq_(159),
+    isObject = _dereq_(172);
 
 /** Used for native method references. */
 var objectProto = Object.prototype;
@@ -25493,7 +26279,7 @@ var hasOwnProperty = objectProto.hasOwnProperty;
  * @static
  * @memberOf _
  * @category Object
- * @param {Object} object The object to inspect.
+ * @param {Object} object The object to query.
  * @returns {Array} Returns the array of property names.
  * @example
  *
@@ -25516,7 +26302,7 @@ function keysIn(object) {
   }
   var length = object.length;
   length = (length && isLength(length) &&
-    (isArray(object) || (support.nonEnumArgs && isArguments(object))) && length) || 0;
+    (isArray(object) || isArguments(object)) && length) || 0;
 
   var Ctor = object.constructor,
       index = -1,
@@ -25538,15 +26324,15 @@ function keysIn(object) {
 
 module.exports = keysIn;
 
-},{"142":142,"144":144,"152":152,"153":153,"157":157,"170":170}],165:[function(_dereq_,module,exports){
-var baseMerge = _dereq_(120),
-    createAssigner = _dereq_(131);
+},{"156":156,"159":159,"167":167,"168":168,"172":172}],180:[function(_dereq_,module,exports){
+var baseMerge = _dereq_(128),
+    createAssigner = _dereq_(141);
 
 /**
  * Recursively merges own enumerable properties of the source object(s), that
  * don't resolve to `undefined` into the destination object. Subsequent sources
  * overwrite property assignments of previous sources. If `customizer` is
- * provided it is invoked to produce the merged values of the destination and
+ * provided it's invoked to produce the merged values of the destination and
  * source properties. If `customizer` returns `undefined` merging is handled
  * by the method instead. The `customizer` is bound to `thisArg` and invoked
  * with five arguments: (objectValue, sourceValue, key, object, source).
@@ -25556,7 +26342,7 @@ var baseMerge = _dereq_(120),
  * @category Object
  * @param {Object} object The destination object.
  * @param {...Object} [sources] The source objects.
- * @param {Function} [customizer] The function to customize merging properties.
+ * @param {Function} [customizer] The function to customize assigned values.
  * @param {*} [thisArg] The `this` binding of `customizer`.
  * @returns {Object} Returns `object`.
  * @example
@@ -25594,24 +26380,19 @@ var merge = createAssigner(baseMerge);
 
 module.exports = merge;
 
-},{"120":120,"131":131}],166:[function(_dereq_,module,exports){
-var arrayMap = _dereq_(95),
-    baseDifference = _dereq_(102),
-    baseFlatten = _dereq_(108),
-    bindCallback = _dereq_(127),
-    keysIn = _dereq_(164),
-    pickByArray = _dereq_(147),
-    pickByCallback = _dereq_(148),
-    restParam = _dereq_(89);
+},{"128":128,"141":141}],181:[function(_dereq_,module,exports){
+var arrayMap = _dereq_(101),
+    baseDifference = _dereq_(110),
+    baseFlatten = _dereq_(116),
+    bindCallback = _dereq_(137),
+    keysIn = _dereq_(179),
+    pickByArray = _dereq_(162),
+    pickByCallback = _dereq_(163),
+    restParam = _dereq_(95);
 
 /**
  * The opposite of `_.pick`; this method creates an object composed of the
  * own and inherited enumerable properties of `object` that are not omitted.
- * Property names may be specified as individual arguments or as arrays of
- * property names. If `predicate` is provided it is invoked for each property
- * of `object` omitting the properties `predicate` returns truthy for. The
- * predicate is bound to `thisArg` and invoked with three arguments:
- * (value, key, object).
  *
  * @static
  * @memberOf _
@@ -25648,17 +26429,52 @@ var omit = restParam(function(object, props) {
 
 module.exports = omit;
 
-},{"102":102,"108":108,"127":127,"147":147,"148":148,"164":164,"89":89,"95":95}],167:[function(_dereq_,module,exports){
-var baseFlatten = _dereq_(108),
-    bindCallback = _dereq_(127),
-    pickByArray = _dereq_(147),
-    pickByCallback = _dereq_(148),
-    restParam = _dereq_(89);
+},{"101":101,"110":110,"116":116,"137":137,"162":162,"163":163,"179":179,"95":95}],182:[function(_dereq_,module,exports){
+var keys = _dereq_(178),
+    toObject = _dereq_(165);
+
+/**
+ * Creates a two dimensional array of the key-value pairs for `object`,
+ * e.g. `[[key1, value1], [key2, value2]]`.
+ *
+ * @static
+ * @memberOf _
+ * @category Object
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the new array of key-value pairs.
+ * @example
+ *
+ * _.pairs({ 'barney': 36, 'fred': 40 });
+ * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
+ */
+function pairs(object) {
+  object = toObject(object);
+
+  var index = -1,
+      props = keys(object),
+      length = props.length,
+      result = Array(length);
+
+  while (++index < length) {
+    var key = props[index];
+    result[index] = [key, object[key]];
+  }
+  return result;
+}
+
+module.exports = pairs;
+
+},{"165":165,"178":178}],183:[function(_dereq_,module,exports){
+var baseFlatten = _dereq_(116),
+    bindCallback = _dereq_(137),
+    pickByArray = _dereq_(162),
+    pickByCallback = _dereq_(163),
+    restParam = _dereq_(95);
 
 /**
  * Creates an object composed of the picked `object` properties. Property
  * names may be specified as individual arguments or as arrays of property
- * names. If `predicate` is provided it is invoked for each property of `object`
+ * names. If `predicate` is provided it's invoked for each property of `object`
  * picking the properties `predicate` returns truthy for. The predicate is
  * bound to `thisArg` and invoked with three arguments: (value, key, object).
  *
@@ -25692,9 +26508,9 @@ var pick = restParam(function(object, props) {
 
 module.exports = pick;
 
-},{"108":108,"127":127,"147":147,"148":148,"89":89}],168:[function(_dereq_,module,exports){
-var baseValues = _dereq_(126),
-    keys = _dereq_(163);
+},{"116":116,"137":137,"162":162,"163":163,"95":95}],184:[function(_dereq_,module,exports){
+var baseValues = _dereq_(136),
+    keys = _dereq_(178);
 
 /**
  * Creates an array of the own enumerable property values of `object`.
@@ -25727,141 +26543,7 @@ function values(object) {
 
 module.exports = values;
 
-},{"126":126,"163":163}],169:[function(_dereq_,module,exports){
-var baseToString = _dereq_(125);
-
-/**
- * Used to match `RegExp` [special characters](http://www.regular-expressions.info/characters.html#special).
- * In addition to special characters the forward slash is escaped to allow for
- * easier `eval` use and `Function` compilation.
- */
-var reRegExpChars = /[.*+?^${}()|[\]\/\\]/g,
-    reHasRegExpChars = RegExp(reRegExpChars.source);
-
-/**
- * Escapes the `RegExp` special characters "\", "/", "^", "$", ".", "|", "?",
- * "*", "+", "(", ")", "[", "]", "{" and "}" in `string`.
- *
- * @static
- * @memberOf _
- * @category String
- * @param {string} [string=''] The string to escape.
- * @returns {string} Returns the escaped string.
- * @example
- *
- * _.escapeRegExp('[lodash](https://lodash.com/)');
- * // => '\[lodash\]\(https:\/\/lodash\.com\/\)'
- */
-function escapeRegExp(string) {
-  string = baseToString(string);
-  return (string && reHasRegExpChars.test(string))
-    ? string.replace(reRegExpChars, '\\$&')
-    : string;
-}
-
-module.exports = escapeRegExp;
-
-},{"125":125}],170:[function(_dereq_,module,exports){
-(function (global){
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to detect DOM support. */
-var document = (document = global.window) && document.document;
-
-/** Native method references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-/**
- * An object environment feature flags.
- *
- * @static
- * @memberOf _
- * @type Object
- */
-var support = {};
-
-(function(x) {
-
-  /**
-   * Detect if functions can be decompiled by `Function#toString`
-   * (all but Firefox OS certified apps, older Opera mobile browsers, and
-   * the PlayStation 3; forced `false` for Windows 8 apps).
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.funcDecomp = /\bthis\b/.test(function() { return this; });
-
-  /**
-   * Detect if `Function#name` is supported (all but IE).
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  support.funcNames = typeof Function.name == 'string';
-
-  /**
-   * Detect if the DOM is supported.
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  try {
-    support.dom = document.createDocumentFragment().nodeType === 11;
-  } catch(e) {
-    support.dom = false;
-  }
-
-  /**
-   * Detect if `arguments` object indexes are non-enumerable.
-   *
-   * In Firefox < 4, IE < 9, PhantomJS, and Safari < 5.1 `arguments` object
-   * indexes are non-enumerable. Chrome < 25 and Node.js < 0.11.0 treat
-   * `arguments` object indexes as non-enumerable and fail `hasOwnProperty`
-   * checks for indexes that exceed their function's formal parameters with
-   * associated values of `0`.
-   *
-   * @memberOf _.support
-   * @type boolean
-   */
-  try {
-    support.nonEnumArgs = !propertyIsEnumerable.call(arguments, 1);
-  } catch(e) {
-    support.nonEnumArgs = true;
-  }
-}(0, 0));
-
-module.exports = support;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{}],171:[function(_dereq_,module,exports){
-/**
- * Creates a function that returns `value`.
- *
- * @static
- * @memberOf _
- * @category Utility
- * @param {*} value The value to return from the new function.
- * @returns {Function} Returns the new function.
- * @example
- *
- * var object = { 'user': 'fred' };
- * var getter = _.constant(object);
- *
- * getter() === object;
- * // => true
- */
-function constant(value) {
-  return function() {
-    return value;
-  };
-}
-
-module.exports = constant;
-
-},{}],172:[function(_dereq_,module,exports){
+},{"136":136,"178":178}],185:[function(_dereq_,module,exports){
 /**
  * This method returns the first argument provided to it.
  *
@@ -25883,9 +26565,42 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],173:[function(_dereq_,module,exports){
-module.exports = _dereq_(180);
-},{"180":180}],174:[function(_dereq_,module,exports){
+},{}],186:[function(_dereq_,module,exports){
+var baseProperty = _dereq_(130),
+    basePropertyDeep = _dereq_(131),
+    isKey = _dereq_(158);
+
+/**
+ * Creates a function that returns the property value at `path` on a
+ * given object.
+ *
+ * @static
+ * @memberOf _
+ * @category Utility
+ * @param {Array|string} path The path of the property to get.
+ * @returns {Function} Returns the new function.
+ * @example
+ *
+ * var objects = [
+ *   { 'a': { 'b': { 'c': 2 } } },
+ *   { 'a': { 'b': { 'c': 1 } } }
+ * ];
+ *
+ * _.map(objects, _.property('a.b.c'));
+ * // => [2, 1]
+ *
+ * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
+ * // => [1, 2]
+ */
+function property(path) {
+  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
+}
+
+module.exports = property;
+
+},{"130":130,"131":131,"158":158}],187:[function(_dereq_,module,exports){
+module.exports = _dereq_(194);
+},{"194":194}],188:[function(_dereq_,module,exports){
 module.exports = function(el) {
 
   var c;
@@ -25897,24 +26612,24 @@ module.exports = function(el) {
 
   return el;
 };
-},{}],175:[function(_dereq_,module,exports){
-module.exports = _dereq_(183);
-},{"183":183}],176:[function(_dereq_,module,exports){
-module.exports = _dereq_(187);
-},{"187":187}],177:[function(_dereq_,module,exports){
-module.exports = _dereq_(184);
-},{"184":184}],178:[function(_dereq_,module,exports){
-module.exports = _dereq_(186);
-},{"186":186}],179:[function(_dereq_,module,exports){
+},{}],189:[function(_dereq_,module,exports){
+module.exports = _dereq_(197);
+},{"197":197}],190:[function(_dereq_,module,exports){
+module.exports = _dereq_(201);
+},{"201":201}],191:[function(_dereq_,module,exports){
+module.exports = _dereq_(198);
+},{"198":198}],192:[function(_dereq_,module,exports){
+module.exports = _dereq_(200);
+},{"200":200}],193:[function(_dereq_,module,exports){
 module.exports = function(el) {
   el.parentNode && el.parentNode.removeChild(el);
 };
-},{}],180:[function(_dereq_,module,exports){
+},{}],194:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
-var index = _dereq_(181);
+var index = _dereq_(195);
 
 /**
  * Whitespace regexp.
@@ -26098,7 +26813,7 @@ ClassList.prototype.contains = function(name){
     : !! ~index(this.array(), name);
 };
 
-},{"181":181}],181:[function(_dereq_,module,exports){
+},{"195":195}],195:[function(_dereq_,module,exports){
 module.exports = function(arr, obj){
   if (arr.indexOf) return arr.indexOf(obj);
   for (var i = 0; i < arr.length; ++i) {
@@ -26106,8 +26821,8 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],182:[function(_dereq_,module,exports){
-var matches = _dereq_(185)
+},{}],196:[function(_dereq_,module,exports){
+var matches = _dereq_(199)
 
 module.exports = function (element, selector, checkYoSelf, root) {
   element = checkYoSelf ? {parentNode: element} : element
@@ -26127,13 +26842,13 @@ module.exports = function (element, selector, checkYoSelf, root) {
   }
 }
 
-},{"185":185}],183:[function(_dereq_,module,exports){
+},{"199":199}],197:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
-var closest = _dereq_(182)
-  , event = _dereq_(184);
+var closest = _dereq_(196)
+  , event = _dereq_(198);
 
 /**
  * Delegate event `type` to `selector`
@@ -26171,7 +26886,7 @@ exports.unbind = function(el, type, fn, capture){
   event.unbind(el, type, fn, capture);
 };
 
-},{"182":182,"184":184}],184:[function(_dereq_,module,exports){
+},{"196":196,"198":198}],198:[function(_dereq_,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -26207,12 +26922,12 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-},{}],185:[function(_dereq_,module,exports){
+},{}],199:[function(_dereq_,module,exports){
 /**
  * Module dependencies.
  */
 
-var query = _dereq_(186);
+var query = _dereq_(200);
 
 /**
  * Element prototype.
@@ -26255,7 +26970,7 @@ function match(el, selector) {
   return false;
 }
 
-},{"186":186}],186:[function(_dereq_,module,exports){
+},{"200":200}],200:[function(_dereq_,module,exports){
 function one(selector, el) {
   return el.querySelector(selector);
 }
@@ -26278,7 +26993,7 @@ exports.engine = function(obj){
   return exports;
 };
 
-},{}],187:[function(_dereq_,module,exports){
+},{}],201:[function(_dereq_,module,exports){
 
 /**
  * Expose `parse`.
@@ -26388,11 +27103,11 @@ function parse(html, doc) {
   return fragment;
 }
 
-},{}],188:[function(_dereq_,module,exports){
-module.exports = _dereq_(190);
+},{}],202:[function(_dereq_,module,exports){
+module.exports = _dereq_(204);
 
-module.exports.Collection = _dereq_(189);
-},{"189":189,"190":190}],189:[function(_dereq_,module,exports){
+module.exports.Collection = _dereq_(203);
+},{"203":203,"204":204}],203:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -26474,10 +27189,10 @@ function extend(collection, refs, property, target) {
 
 
 module.exports.extend = extend;
-},{}],190:[function(_dereq_,module,exports){
+},{}],204:[function(_dereq_,module,exports){
 'use strict';
 
-var Collection = _dereq_(189);
+var Collection = _dereq_(203);
 
 function hasOwnProperty(e, property) {
   return Object.prototype.hasOwnProperty.call(e, property.name || property);
@@ -26656,6 +27371,6 @@ module.exports = Refs;
  * @property {boolean} [collection=false]
  * @property {boolean} [enumerable=false]
  */
-},{"189":189}]},{},[1])(1)
+},{"203":203}]},{},[1])(1)
 });
 //# sourceMappingURL=bpmn-navigated-viewer.js.map

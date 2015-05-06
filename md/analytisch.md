@@ -200,6 +200,11 @@ Note:
 <div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes4.bpmn" />
 
 ----
+## Choreographie
+
+<img src="img/choreographie.png"></img>
+
+----
 ## Iterationen und Instanzen
 
 ----
