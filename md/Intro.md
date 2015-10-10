@@ -29,6 +29,9 @@ http://cofinpro.github.io/BPMN-Training/
 Download als PDF:<br/>
 https://github.com/Cofinpro/BPMN-Training/releases/
 
+Quellcode, BPMN-Diagramme und Hinweise:<br/>
+https://github.com/Cofinpro/BPMN-Training/
+
 ----
 ## Einführung
 
@@ -41,7 +44,7 @@ https://github.com/Cofinpro/BPMN-Training/releases/
 	* maschinenlesbar und ausführbar
 
 * spezifiziert Mapping zu BPEL4WS
-* Standardisiert als ISO/IEC 19510:2013
+* standardisiert als ISO/IEC 19510:2013
 
 ----
 
@@ -73,12 +76,12 @@ https://github.com/Cofinpro/BPMN-Training/releases/
 	* Ausnahmebehandlung
 
 * Ziel
-	* Dokumentation in Organisationseinheit
+	* Dokumentation in Organisationseinheiten
 	* IT-Spezifikation, Simulation
 
 * Umsetzung BPMN
-	* ergänzend Einsatz von Gateways
-	* Intermediate-/Boundary-Events
+	* ergänzender Einsatz von Gateways
+	* Intermediate- und Boundary-Events
 
 * Detailgrad entspricht etwa EPKs
 

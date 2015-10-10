@@ -19,7 +19,7 @@ deskriptive Prozesse
 
 Note:
 Papier: Label-Matching
-f
+
 +++
 ### Gemeinsam verwendbar
 
@@ -82,7 +82,7 @@ Note:
 
 * Wann beginnt der Prozess?
 * Wann endet er?
-* Was representiert er?
+* Was repräsentiert er?
 * Welche Ergebnisse (Endzustände) gibt es?
 
 +++

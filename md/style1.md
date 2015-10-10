@@ -100,7 +100,7 @@ Semantische Gründe: id vs name
 ### Aktivitäten beschriften
 
 * ${Substantiv} ${Verb}
-* Representiert Aktion
+* repräsentiert Aktion
 * nicht Zustand
 * nicht Funktion
 
