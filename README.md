@@ -18,11 +18,11 @@ Korrekturen und Ergänzungen sind natürlich immer willkommen, gern auch als [Is
 
 ## Modeler
 
-Ein einfacher Web-Modeler befindet sich [hier](http://cofinpro.github.io/BPMN-Training/modeler/). Er basiert auf [bpmn.io](http://bpmn.io), vielen Dank an das Projekt!
+Ein einfacher Web-Modeler befindet sich [hier](http://cofinpro.github.io/BPMN-Training/modeler/). Er basiert auf *bpmn.io*, vielen Dank an das Projekt!
 
 ## BPMS
 
-Eine BPMS-Intallation zum Spielen findet ihr [hier](http://cofinpro-bpm.elasticbeanstalk.com/activiti-explorer/).
+Eine BPMS-Installation zum Spielen findet ihr [hier](http://cofinpro-bpm.elasticbeanstalk.com/activiti-explorer/).
 
 Die Zugangsdaten erhaltet ihr im Training.
 
