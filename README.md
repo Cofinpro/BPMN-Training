@@ -16,6 +16,9 @@ Hier steht immer die aktuellste Fassung. Für jeden Trainingstermin erstelle ich
 
 Korrekturen und Ergänzungen sind natürlich immer willkommen, gern auch als [Issue](https://github.com/Cofinpro/BPMN-Training/issues) oder [Pull-Request](https://github.com/Cofinpro/BPMN-Training/pulls)
 
+## Modeler
+
+Ein einfacher Web-Modeler befindet sich [hier](http://cofinpro.github.io/BPMN-Training/modeler/). Er basiert auf [bpmn.io](http://bpmn.io), vielen Dank an das Projekt!
 ## BPMS
 
 Eine BPMS-Intallation zum Spielen findet ihr [hier](http://cofinpro-bpm.elasticbeanstalk.com/activiti-explorer/)
