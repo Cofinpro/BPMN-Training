@@ -1,0 +1,8 @@
+#logo {
+  position: fixed;
+  right: 0px;
+  top: 30px;
+  content: url(../../img/logo.png);
+  width: 15%;
+  z-index: 100;
+}
