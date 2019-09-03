@@ -56,16 +56,6 @@ section.has-dark-background {
 	}
 }
 
-#logo {
-  position: fixed;
-  right: 30px;
-  top: 30px;
-  content: url(../../img/logo.png);
-  width: 15%;
-
-  z-index: 100;
-}
-
 // hide the huge camunda logo
 a.bjs-powered-by {
   visibility: hidden;
@@ -145,11 +135,7 @@ a.bjs-powered-by {
   section img {
     border: none;
     box-shadow: none;
-    max-height: calc(70vh);
-    max-width: calc(70vw);
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+
   }
 
   .slide-number::before {
