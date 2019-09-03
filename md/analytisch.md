@@ -161,7 +161,7 @@ Note:
 <ul class="fragment">
 	selbe Funktion, aber:
 
-	<li>Zuständigigkeit</li>
+	<li>Zuständigkeit</li>
 	<li>Boundary Event</li>
 	<li>Marker</li>	
 	</ul>
@@ -176,12 +176,7 @@ Note:
 
 <h3 class="fragment">Nein!</h3>
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes.bpmn" />
-
-+++
-### Nachrichten in Pools
-
-* Sequenzfluss impliziert Nachricht
+<p class="fragment">Sequenzfluss impliziert Nachricht</p>
 
 <div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes.bpmn" />
 

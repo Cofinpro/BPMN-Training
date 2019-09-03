@@ -122,14 +122,14 @@ Note: Ausnahmen auf Level 3
 +++
 ### Beschriftung
 
-* Aktivität: `Verb - Substantiv
+* Aktivität: Verb - Substantiv
 * keine Aktivitäten mit identischem Namen in einem Prozess
 	* Ausnahme: Call-Activity
 
 +++
 ### Beschriftung: Events
 * Trigger Start Event: Auslöser als Name
-	* Message Start Event: "`Message empfangen"
+	* Message Start Event: "Message empfangen"
 	* Timer: Zeitpunkt/Plan
 	* Signal: Signal-Name
 	* Conditional: Regel oder Referenz
@@ -168,7 +168,7 @@ Note: Ausnahmen auf Level 3
 +++
 ### Messages
 
-* Beschrifftung Message-Flow: Name der Message
+* Beschriftung Message-Flow: Name der Message
 * Message-Flows einzeichnen für:
 	* Send-Tasks
 	* Receive-Tasks
@@ -181,9 +181,7 @@ Note: Ausnahmen auf Level 3
 ### eCH-0158
 
 * Schweizer Standard der öffentl. Verwaltung
-* Ziel
-	* Vereinheitlichung der Modellierungsoptionen (d.h. Freiheitsgrade) des BPMN-Standards
-
+* Ziel: Vereinheitlichung der Modellierungsoptionen (d.h. Freiheitsgrade) des BPMN-Standards
 * adressiert Prozessverantwortliche, Prozessmanager und Unternehmensarchitekten
 
 [Link](http://www.ech.ch/vechweb/page?p=dossier&documentNumber=eCH-0158&documentVersion=1.1)
