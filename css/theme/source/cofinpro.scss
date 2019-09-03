@@ -11,29 +11,43 @@
 
 
 // Include theme-specific fonts
-// @import url(../../lib/font/source-sans-pro/source-sans-pro.css);
+@import url(../../lib/font/apercu-pro/apercu-pro.css);
+
+// Theme colors
+$primary-brown: rgb(132, 117, 117);
+$primary-orange: rgb(239, 125, 0);
+$primary-blue: rgb(205, 220, 243);
+$primary-yellow: rgb(255, 249, 199);
+$primary-pink: rgb(250, 220, 235);
+
+$secondary-grey: rgb(242, 237, 238);
+$secondary-blue: rgb(148, 188, 229);
+$secondary-pink: rgb(245, 181, 211);
+$secondary-yellow: rgb(255, 244, 130);
 
 
 // Override theme settings (see ../template/settings.scss)
-$backgroundColor: white;
+$backgroundColor: #fff;
 
 $mainColor: #222;
-$headingColor: #222;
+$headingColor: $primary-orange;
 
-$mainFontSize: 32px;
-$mainFont: Verdana , Helvetica, sans-serif;
-$headingFont: Verdana, Helvetica, sans-serif;
+$mainFontSize: 42px;
+$mainFont: 'Apercu Pro', Arial, Helvetica, sans-serif;
+$mainColor: rgb(33, 37, 41);
+$headingFont: 'Apercu Pro', Arial, Helvetica, sans-serif;
 $headingTextShadow: none;
 $headingLetterSpacing: normal;
-$headingTextTransform: uppercase;
-$headingFontWeight: 600;
-$linkColor: #ee7f00;
-$linkColorHover: lighten( $linkColor, 15% );
-$selectionBackgroundColor: lighten( $linkColor, 25% );
+$headingTextTransform: inherit;
+$headingFontWeight: bold;
+$headingMargin: 1rem 0 2rem 0;
+$linkColor: #ec7b1a;
+$linkColorHover: lighten($linkColor, 15%);
+$selectionBackgroundColor: lighten($linkColor, 25%);
 
-$heading1Size: 2.5em;
-$heading2Size: 1.6em;
-$heading3Size: 1.3em;
+$heading1Size: 1.4em;
+$heading2Size: 1.2em;
+$heading3Size: 1.0em;
 $heading4Size: 1.0em;
 
 section.has-dark-background {
@@ -55,12 +69,12 @@ section.has-dark-background {
 // hide the huge camunda logo
 a.bjs-powered-by {
   visibility: hidden;
-  bottom: 0px !important;
-  right: 0px !important;
+  bottom: 0 !important;
+  right: 0 !important;
 
   img {
-    height: 0px;
-    width: 0px;
+    height: 0;
+    width: 0;
   }
 }
 
@@ -70,10 +84,90 @@ a.bjs-powered-by {
 @import "../template/theme";
 // ---------------------------------------------
 
-.reveal ul {
-  list-style-type: square;
-}
+.reveal {
 
-.reveal ul ul {
-  list-style-type: disc;
+  section.has-dark-background,
+  section.cofinpro-white {
+    &, h1, h2, h3, h4, h5, h6 {
+      color: #fff;
+    }
+  }
+
+  em {
+    // Emphasise on words makes them orange instead of italic
+    font-style: normal;
+    color: $primary-orange;
+  }
+
+  .slide-background:not(.overview):not(.stack),
+  .overview.section {
+    // The cofinpro logo gets rendered on every slide, but not on the overview page
+    background-image: url('../../lib/img/Cofinpro_logo.svg');
+    background-size: 10%;
+    background-repeat: no-repeat;
+    background-position: 97% 3%;
+
+    &.cofinpro-white,
+    .has-dark-background {
+      background-image: url('../../lib/img/Cofinpro_logo_white.svg');
+    }
+  }
+
+  h1 {
+    // slide titles appears on top
+    color: $primary-brown;
+  }
+
+  blockquote {
+    padding: 10px;
+    border: thick dashed $primary-blue;
+    border-radius: 3px;
+    box-shadow: none;
+    font-style: normal;
+    font-size: 1.3em;
+
+    :first-child::before {
+      content: "»";
+    }
+
+    :first-child::after {
+      content: "«"
+    }
+  }
+
+  hr {
+    border: dashed $primary-pink;
+  }
+
+  pre code {
+    max-width: 80vw;
+  }
+  section img {
+    border: none;
+    box-shadow: none;
+    max-height: calc(70vh);
+    max-width: calc(70vw);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .slide-number::before {
+    content: 'Cofinpro AG // '
+  }
+
+  .slide-number {
+    position: absolute;
+    display: block;
+    left: 8px;
+    bottom: 8px;
+    z-index: 31;
+    font-size: 12px;
+    line-height: 1;
+    padding: 5px;
+    background-color: transparent;
+    color: $primary-brown;
+  }
+
+
 }

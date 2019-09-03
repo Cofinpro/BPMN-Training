@@ -132,7 +132,7 @@ Note:
 * Beschriftung!
 
 +++
-#### Link-Ereingis
+#### Link-Ereignis
 
 <div>
 	<div class="bpmn" bpmn-src="bpmn/level2/events-link.bpmn" scale="1.2"/>
