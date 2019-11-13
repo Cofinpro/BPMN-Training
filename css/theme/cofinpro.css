@@ -2,20 +2,9 @@
 /**
  * White theme for reveal.js. This is the opposite of the 'black' theme.
  *
- * Copyright (C) 2015 Hakim El Hattab, http://hakim.se
+ * By Hakim El Hattab, http://hakim.se
  */
 @import url(../../lib/font/apercu-pro/apercu-pro.css);
-section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
-  color: #fff; }
-
-a.bjs-powered-by {
-  visibility: hidden;
-  bottom: 0 !important;
-  right: 0 !important; }
-  a.bjs-powered-by img {
-    height: 0;
-    width: 0; }
-
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
@@ -25,7 +14,7 @@ body {
 
 .reveal {
   font-family: "Apercu Pro", Arial, Helvetica, sans-serif;
-  font-size: 36px;
+  font-size: 42px;
   font-weight: normal;
   color: #212529; }
 
@@ -281,6 +270,9 @@ body {
   .backgrounds {
     background-color: #fff; } }
 
+.reveal section {
+  text-align: left; }
+
 .reveal section.has-dark-background, .reveal section.has-dark-background h1, .reveal section.has-dark-background h2, .reveal section.has-dark-background h3, .reveal section.has-dark-background h4, .reveal section.has-dark-background h5, .reveal section.has-dark-background h6,
 .reveal section.cofinpro-white,
 .reveal section.cofinpro-white h1,
@@ -308,7 +300,21 @@ body {
     background-image: url("../../lib/img/Cofinpro_logo_white.svg"); }
 
 .reveal h1 {
-  color: #847575; }
+  text-align: left;
+  color: #847575;
+  max-width: 70%; }
+
+.reveal ul {
+  list-style-type: none !important; }
+  .reveal ul li::before {
+    content: "\2022";
+    /* \2022 is the CSS Code/unicode for a bullet */
+    color: #cddcf3;
+    font-weight: bold;
+    display: inline-block;
+    width: 0.6em;
+    margin-left: -1em;
+    transform: rotate(-1deg); }
 
 .reveal blockquote {
   padding: 10px;
@@ -330,7 +336,12 @@ body {
 
 .reveal section img {
   border: none;
-  box-shadow: none; }
+  box-shadow: none;
+  max-height: calc(70vh);
+  max-width: calc(70vw);
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
 
 .reveal .slide-number::before {
   content: 'Cofinpro AG // '; }
@@ -346,3 +357,11 @@ body {
   padding: 5px;
   background-color: transparent;
   color: #847575; }
+
+a.bjs-powered-by {
+  visibility: hidden;
+  bottom: 0 !important;
+  right: 0 !important; }
+  a.bjs-powered-by img {
+    height: 0;
+    width: 0; }

@@ -1,15 +1,12 @@
 /**
  * White theme for reveal.js. This is the opposite of the 'black' theme.
  *
- * Copyright (C) 2015 Hakim El Hattab, http://hakim.se
+ * By Hakim El Hattab, http://hakim.se
  */
-
 // Default mixins and settings -----------------
 @import "../template/mixins";
 @import "../template/settings";
 // ---------------------------------------------
-
-
 // Include theme-specific fonts
 @import url(../../lib/font/apercu-pro/apercu-pro.css);
 
@@ -25,14 +22,13 @@ $secondary-blue: rgb(148, 188, 229);
 $secondary-pink: rgb(245, 181, 211);
 $secondary-yellow: rgb(255, 244, 130);
 
-
 // Override theme settings (see ../template/settings.scss)
 $backgroundColor: #fff;
 
 $mainColor: #222;
 $headingColor: $primary-orange;
 
-$mainFontSize: 36px;
+$mainFontSize: 42px;
 $mainFont: 'Apercu Pro', Arial, Helvetica, sans-serif;
 $mainColor: rgb(33, 37, 41);
 $headingFont: 'Apercu Pro', Arial, Helvetica, sans-serif;
@@ -50,31 +46,16 @@ $heading2Size: 1.2em;
 $heading3Size: 1.0em;
 $heading4Size: 1.0em;
 
-section.has-dark-background {
-	&, h1, h2, h3, h4, h5, h6 {
-		color: #fff;
-	}
-}
-
-// hide the huge camunda logo
-a.bjs-powered-by {
-  visibility: hidden;
-  bottom: 0 !important;
-  right: 0 !important;
-
-  img {
-    height: 0;
-    width: 0;
-  }
-}
-
-
 
 // Theme template ------------------------------
 @import "../template/theme";
 // ---------------------------------------------
 
 .reveal {
+
+  section {
+    text-align: left;
+  }
 
   section.has-dark-background,
   section.cofinpro-white {
@@ -105,7 +86,24 @@ a.bjs-powered-by {
 
   h1 {
     // slide titles appears on top
+    text-align: left;
     color: $primary-brown;
+    max-width: 70%;
+  }
+
+  ul {
+    // List style uses blue bullet points
+    list-style-type: none !important;
+
+    li::before {
+      content: "\2022"; /* \2022 is the CSS Code/unicode for a bullet */
+      color: $primary-blue;
+      font-weight: bold;
+      display: inline-block;
+      width: 0.6em;
+      margin-left: -1em;
+      transform: rotate(-1deg);
+    }
   }
 
   blockquote {
@@ -132,10 +130,15 @@ a.bjs-powered-by {
   pre code {
     max-width: 80vw;
   }
+
   section img {
     border: none;
     box-shadow: none;
-
+    max-height: calc(70vh);
+    max-width: calc(70vw);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
   }
 
   .slide-number::before {
@@ -155,5 +158,16 @@ a.bjs-powered-by {
     color: $primary-brown;
   }
 
+}
 
+// hide the huge camunda logo
+a.bjs-powered-by {
+  visibility: hidden;
+  bottom: 0 !important;
+  right: 0 !important;
+
+  img {
+    height: 0;
+    width: 0;
+  }
 }

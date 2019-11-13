@@ -24,6 +24,7 @@
   "dependencies": {
     "bpmn-js": "^5.0.4",
     "diagram-js": "^5.0.2",
+    "gulp": "^4.0.2",
     "underscore": "~1.5.1"
   },
   "devDependencies": {

@@ -1,14 +1,17 @@
 // Full list of configuration options available at:
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
-  controls: true,
-  progress: true,
+  backgroundTransition: 'convex',
+  transition: 'convex',
   history: true,
+  height: '100%',
+  width: '92%',
   center: true,
+  slideNumber: 'c',
 
   viewDistance: 5,
 
-  transition: 'concave', // none/fade/slide/convex/concave/zoom
+  //transition: 'concave', // none/fade/slide/convex/concave/zoom
 
   // Optional reveal.js plugins
   dependencies: [
