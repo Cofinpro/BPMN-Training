@@ -94,14 +94,13 @@ $heading4Size: 1.0em;
   ul {
     // List style uses blue bullet points
     list-style-type: none !important;
-
+    margin-left: 0;
     li::before {
       content: "\2022"; /* \2022 is the CSS Code/unicode for a bullet */
       color: $primary-blue;
       font-weight: bold;
       display: inline-block;
       width: 0.6em;
-      margin-left: -1em;
       transform: rotate(-1deg);
     }
   }

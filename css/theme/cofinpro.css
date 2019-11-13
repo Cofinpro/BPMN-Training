@@ -305,7 +305,8 @@ body {
   max-width: 70%; }
 
 .reveal ul {
-  list-style-type: none !important; }
+  list-style-type: none !important;
+  margin-left: 0; }
   .reveal ul li::before {
     content: "\2022";
     /* \2022 is the CSS Code/unicode for a bullet */
@@ -313,7 +314,6 @@ body {
     font-weight: bold;
     display: inline-block;
     width: 0.6em;
-    margin-left: -1em;
     transform: rotate(-1deg); }
 
 .reveal blockquote {

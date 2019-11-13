@@ -11,11 +11,11 @@
     }
 
     // Relayout when slide turns visible - does not help
-    //Reveal.addEventListener('slidechanged', function (event) {
-    //    event.currentSlide.querySelectorAll('div.bpmn').forEach((bpmn) => {
-    //        layout(bpmn, bpmn.bpmnviewer)
-    //    })
-    //});
+    Reveal.addEventListener('slidechanged', function (event) {
+        event.currentSlide.querySelectorAll('div.bpmn').forEach((bpmn) => {
+            layout(bpmn, bpmn.viewer)
+        })
+    });
 
     function loadDiagram(bpmn_node, url) {
         const charset = bpmn_node.getAttribute('charset');
@@ -62,6 +62,7 @@
         }
 
         const viewer = new BpmnViewer({container: bpmn_node, width: width, height: height});
+        bpmn_node.viewer = viewer;
         viewer.importXML(bpmn_xml, function (err) {
             if (!err) {
                 bpmn_node.bpmnviewer = viewer;
@@ -88,7 +89,6 @@
         viewer.get('canvas').zoom('fit-viewport', 'auto');
         // then zoom
         viewer.get('canvas').zoom(scale, center);
-        //Reveal.layout();
     }
 
 })
