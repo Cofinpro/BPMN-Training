@@ -11,8 +11,6 @@ Reveal.initialize({
 
   viewDistance: 5,
 
-  //transition: 'concave', // none/fade/slide/convex/concave/zoom
-
   // Optional reveal.js plugins
   dependencies: [
     { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },

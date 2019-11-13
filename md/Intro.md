@@ -1,7 +1,3 @@
-# Training<br/>BPMN 2.0
-
-----
-
 ## Literatur
 
 ![Praxishandbuch BPMN](img/books/praxishandbuch-bpmn.png)
