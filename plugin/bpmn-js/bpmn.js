@@ -13,6 +13,8 @@
     // Relayout when slide turns visible - does not help
     Reveal.addEventListener('slidechanged', function (event) {
         event.currentSlide.querySelectorAll('div.bpmn').forEach((bpmn) => {
+            // sometimes diagrams seem to get lost - reattaching them fixes that
+            bpmn.viewer.attachTo(bpmn);
             layout(bpmn, bpmn.viewer)
         })
     });
@@ -30,7 +32,7 @@
             if (xhr.readyState === 4) {
                 // file protocol yields status code 0 (useful for local debug, mobile applications etc.)
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 0) {
-                    drawDiagram(bpmn_node, xhr.responseText);
+                    drawDiagram(bpmn_node, xhr.responseText, url);
                 } else {
                     bpmn_node.outerHTML = '<section data-state="alert">' +
                         'ERROR: The attempt to fetch ' + url + ' failed with HTTP status ' + xhr.status + '.' +
@@ -46,11 +48,11 @@
         try {
             xhr.send();
         } catch (e) {
-            alert('Failed to get the BPMN file ' + url + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e);
+            console.error('Failed to get the BPMN file ' + url + '. Make sure that the presentation and the file are served by a HTTP server and the file can be found there. ' + e);
         }
     }
 
-    function drawDiagram(bpmn_node, bpmn_xml) {
+    function drawDiagram(bpmn_node, bpmn_xml, url) {
         let width = bpmn_node.getAttribute('bpmn-width');
         if (width === null) {
             width = '100%';
@@ -63,7 +65,8 @@
 
         const viewer = new BpmnViewer({container: bpmn_node, width: width, height: height});
         bpmn_node.viewer = viewer;
-        viewer.importXML(bpmn_xml, function (err) {
+        viewer.importXML(bpmn_xml, function (err, parseWarnings) {
+            parseWarnings.forEach(warning => console.log(`Diagram ${url} has a problem: ${warning.message}` ));
             if (!err) {
                 bpmn_node.bpmnviewer = viewer;
                 layout(bpmn_node, viewer);

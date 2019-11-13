@@ -51,12 +51,12 @@ Note:
 +++
 ### Top-Level
 
-<div class="bpmn stretch" bpmn-src="bpmn/methodik1/top-level.bpmn" style="height: 300px;"/>
+<div class="bpmn" bpmn-src="bpmn/methodik1/top-level.bpmn" style="height: 300px;"/>
 
 +++
 ### Child-Level
 
-<div class="bpmn stretch" bpmn-src="bpmn/methodik1/child-level.bpmn" style="height: 300px;"/>
+<div class="bpmn" bpmn-src="bpmn/methodik1/child-level.bpmn" style="height: 300px;"/>
 
 +++
 ## Prozessende

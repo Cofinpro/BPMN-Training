@@ -71,7 +71,7 @@ Note:
 +++
 ### Cancel-Event (trow)
 
-<div class="bpmn stretch" bpmn-src="bpmn/level3/transaction-compensate2.bpmn" scale="1.2" />
+<div class="bpmn" bpmn-src="bpmn/level3/transaction-compensate2.bpmn" style="height: 350px" />
 
 Note:
 compensate implizit ausgelöst
@@ -79,7 +79,7 @@ compensate implizit ausgelöst
 +++
 ### Compensate-Event
 
-<div class="bpmn stretch" bpmn-src="bpmn/level3/transaction-compensate3.bpmn" />
+<div class="bpmn" bpmn-src="bpmn/level3/transaction-compensate3.bpmn" style="height: 350px" />
 
 ----
 ## Serialisierung

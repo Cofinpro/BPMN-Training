@@ -10,7 +10,7 @@
       <bpmn2:outgoing>SequenceFlow2</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
     </bpmn2:task>
-    <bpmn2:sequenceFlow id="SequenceFlow2" name="> 10 PT" sourceRef="Task_1" targetRef="Task_2">
+    <bpmn2:sequenceFlow id="SequenceFlow2" name="&gt; 10 PT" sourceRef="Task_1" targetRef="Task_2">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_4" name="&lt;= 10 PT" sourceRef="Task_1" targetRef="Task_3">

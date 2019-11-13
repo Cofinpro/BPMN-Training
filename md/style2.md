@@ -188,7 +188,7 @@ Note: Ausnahmen auf Level 3
 
 +++
 ### eCH-0158
-<div class="stretch">
+<div style="height: 500px">
   <object width="100%" height="100%" type="application/pdf" data="attachments/eCH-0158_V1.1.pdf">
     <p>Insert your error message here, if the PDF cannot be displayed.</p>
   </object>

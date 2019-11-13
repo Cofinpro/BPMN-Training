@@ -110,7 +110,6 @@ Semantische Gründe: id vs name
 * _Antrag bearbeiten_ statt
 	* _Antrag OK_ (Zustand)
 	* _Antragsbearbeitung_ (Funktion)
-
 * _Zeiten erfassen_ statt
 	* _Zeiten erfasst_ (Zustand)
 	* _Zeiterfassung_ (Funktion)

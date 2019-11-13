@@ -106,4 +106,5 @@ Label in/out
 +++
 ### Gruppen
 
-<div class="bpmn stretch" bpmn-src="bpmn/level1/artifacts-group.bpmn"></div>
+<div class="bpmn" bpmn-src="bpmn/level1/artifacts-group.bpmn" style="height: 300px;"></div>
+

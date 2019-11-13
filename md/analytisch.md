@@ -169,30 +169,31 @@ Note:
 +++
 ### Nachrichten zwischen Pools
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-between-processes.bpmn" />
+<div class="bpmn" bpmn-src="bpmn/level2/messages-between-processes.bpmn" style="height: 350px"/>
 
 +++
 ### Nachrichten in Pools
 
 <h3 class="fragment">Nein!</h3>
 
-<p class="fragment">Sequenzfluss impliziert Nachricht</p>
+<div class="fragment">
+<p>Sequenzfluss impliziert Nachricht</p>
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes.bpmn" />
-
+<div class="bpmn" bpmn-src="bpmn/level2/messages-in-processes.bpmn" style="height: 350px"/>
+</div>
 +++
 ### Nachrichten in Pools
 
 * Datenobjekte können Rolle der Nachricht übernehmen
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes3.bpmn" />
+<div class="bpmn" bpmn-src="bpmn/level2/messages-in-processes3.bpmn" style="height: 350px"/>
 
 +++
 ### Nachrichten in Pools
 
 * Benachrichtigungen direkt als Task	
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/messages-in-processes4.bpmn" />
+<div class="bpmn" bpmn-src="bpmn/level2/messages-in-processes4.bpmn" style="height: 350px"/>
 
 ----
 ## Choreographie
@@ -233,7 +234,7 @@ Entsprechung Gateway?
 ----
 ## Ad-Hoc Prozesse
 
-<div class="bpmn stretch" bpmn-src="bpmn/level2/adhoc.bpmn" scale="1.2" />
+<div class="bpmn" bpmn-src="bpmn/level2/adhoc.bpmn" style="height: 350px" />
 
 ----
 ## Splitting und Merging
