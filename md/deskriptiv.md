@@ -1,6 +1,3 @@
-# Deskriptive Modelle
-
-----
 ## Level 1 Palette
 
 * Activity: Task (User, Service, None), Subprocess, Call Activity 
@@ -61,7 +58,7 @@ verschachtelte Lanes
 <div>
 	<div class="bpmn" bpmn-src="bpmn/level1/subprocess-collapsed.bpmn"></div>
 </div>
-<div class="fragment" >
+<div class="fragment">
 	<div class="bpmn" bpmn-src="bpmn/level1/subprocess-expanded.bpmn"></div>
 </div>
 

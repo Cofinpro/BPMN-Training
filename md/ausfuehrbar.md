@@ -1,5 +1,3 @@
-# Ausführbare Modelle
-----
 ## neue Elemente auf Ebene 3
 ----
 ### Event-Subprocess

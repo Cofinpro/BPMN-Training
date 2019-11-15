@@ -1,5 +1,3 @@
-# Analytische Modelle
-----
 ## Events
 
 +++

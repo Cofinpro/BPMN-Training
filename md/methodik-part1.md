@@ -56,7 +56,7 @@ Note:
 +++
 ### Child-Level
 
-<div class="bpmn" bpmn-src="bpmn/methodik1/child-level.bpmn" style="height: 300px;"/>
+<div class="bpmn" bpmn-src="bpmn/methodik1/child-level.bpmn" style="height: 400px;"/>
 
 +++
 ## Prozessende

@@ -1,5 +1,5 @@
 # Style
-----
++++
 ## Offizielle Regeln
 +++
 ### Sequenzflüsse
@@ -28,7 +28,8 @@ Abknickwinkel beachten
 	* Message-Events
 	* Back-Box-Pools
 
-----
++++
+
 ## Best-Practices
 
 +++
