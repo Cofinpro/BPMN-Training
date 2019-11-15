@@ -8,6 +8,11 @@ Reveal.initialize({
   width: '92%',
   center: true,
   slideNumber: 'c',
+  keyboard: {
+    // Customization for my spotlight
+    39: 'next', // Right Arrow
+    37: 'prev'  // Left Arrow
+  },
 
   viewDistance: 5,
 
